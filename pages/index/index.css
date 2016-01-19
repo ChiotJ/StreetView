@@ -1,0 +1,65 @@
+* {
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 1280px;
+    height: 720px;
+    font-family: Microsoft YaHei;
+    background: url("images/bg.png") 0 no-repeat;
+}
+
+.pageBody {
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    position: relative;
+}
+
+ul, li {
+    list-style: none;
+}
+
+.cloud {
+    width: 108px;
+    height: 68px;
+    background: url("images/cloud.png") 0 no-repeat;
+    position: absolute;
+}
+
+.logo {
+    width: 500px;
+    height: 150px;
+    background: url("images/logo.png") 0 no-repeat;
+    position: absolute;
+    left: 400px;
+    top: 55px;
+}
+
+.menu {
+    position: absolute;
+    top: 220px;
+}
+
+.menu li {
+    width: 150px;
+    text-align: center;
+    margin: 20px 30px;
+    float: left;
+    height: 156px;
+    outline: none;
+}
+
+.buttonName {
+    font-size: 28px;
+    display: block;
+    color: #7F8085;
+    height: 45px;
+    line-height: 40px;
+}
+
+audio {
+    display: none;
+}

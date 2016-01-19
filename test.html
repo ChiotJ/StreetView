@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="lib/jquery-2.1.3.min.js"></script>
+    <style>
+        div {
+            float: left;
+            width: 200px;
+            margin-top: 50px;
+            color: black;
+        }
+
+        #console {
+            margin-left: 200px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="console">找房接口<br/></div>
+<div id="console2">街景初始化接口<br/></div>
+<div id="console3">百度<br/></div>
+<div id="console4">街景图片21kb<br/></div>
+<div id="console5">美团图片90kb<br/></div>
+<script>
+    setInterval(function () {
+        var d = new Date();
+        $.ajax({
+            type: "get",
+            url: "http://172.16.200.18:82/com.zunhao.tv/conneturl?http://apis.map.qq.com/ws/streetview/v1/getpano?&location=39.91576994587704%2C116.39712799999998&key=4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU",
+            async: true,
+            success: function (data) {
+                $("#console").append("ok1用时：" + (new Date().getTime() - d.getTime()) + "<br/>");
+            },
+            error: function (data) {
+                $("#console").append("error<br/>");
+            }
+        })
+    }, 2000);
+
+    setInterval(function () {
+        var d = new Date();
+        $.ajax({
+            type: "get",
+            url: "http://172.16.200.18:82/com.zunhao.tv/conneturl?http://sv.map.qq.com/sv?pf=jsapi&svid=10011007131114122211600&from=http://localhost/ws/StreetView/pages/search/search.html?id=0&suid=4382713070&m=2&proxy=2",
+            async: true,
+            success: function (data) {
+                $("#console2").append("ok2用时：" + (new Date().getTime() - d.getTime()) + "<br/>");
+            },
+            error: function (data) {
+                $("#console2").append("error<br/>");
+            }
+        })
+    }, 2000);
+    setInterval(function () {
+        var d = new Date();
+        $.ajax({
+            type: "get",
+            url: "http://172.16.200.18:82/com.zunhao.tv/conneturl?http://www.baidu.com",
+            async: true,
+            success: function (data) {
+                $("#console3").append("ok3用时：" + (new Date().getTime() - d.getTime()) + "<br/>");
+            },
+            error: function (data) {
+                $("#console3").append("error<br/>");
+            }
+        })
+    }, 2000);
+    document.onkeydown = function (e) {
+        e = window.event || e;
+        switch (e.keyCode) {
+            case 13:
+                window.location.href = "http://10.191.255.161/index.html";
+                break;
+        }
+    };
+    setInterval(function () {
+        var d = new Date();
+        $.ajax({
+            type: "get",
+            url: "http://172.16.200.18:82/com.zunhao.tv/conneturl?http://sv7.map.qq.com/tile?svid=10011007131114122211600&x=7&y=2&from=web&level=0&v=2&m=2&proxy=2",
+            async: true,
+            success: function (data) {
+                $("#console4").append("ok4用时：" + (new Date().getTime() - d.getTime()) + "<br/>");
+            },
+            error: function (data) {
+                $("#console4").append("error<br/>");
+            }
+        })
+    }, 2000);
+    setInterval(function () {
+        var d = new Date();
+        $.ajax({
+            type: "get",
+            url: "http://172.16.200.18:82/com.zunhao.tv/conneturl?http://p1.meituan.net/deal/88e2f65cfb361b78873e69809ec378ff217276.jpg",
+            async: true,
+            success: function (data) {
+                $("#console5").append("ok5用时：" + (new Date().getTime() - d.getTime()) + "<br/>");
+            },
+            error: function (data) {
+                $("#console5").append("error<br/>");
+            }
+        })
+    }, 2000);
+
+    document.onkeydown = function (e) {
+        e = window.event || e;
+        switch (e.keyCode) {
+            case 13:
+                window.location.href = "http://10.191.255.161/index.html";
+                break;
+        }
+    };
+</script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{
+  "status": 1,
+  "name": "美食地图",
+  "icon": "8b5ca85b96138b65e11b100223016483/icon.png",
+  "searchUrl": "../search/search.html",
+  "list": [
+    {
+      "id": "9223a76ef92e72715b6e32fde2fc9f63",
+      "name": "热门推荐"
+    },
+    {
+      "id": "1a65325b90e279c0de2d8b34b553ee59",
+      "name": "北京特色"
+    },
+    {
+      "id": "89cea731e29b7bfc7c59a761d1b8c28a",
+      "name": "川湘菜"
+    },
+    {
+      "id": "97122830b9f9bda4f08edbd2a2db40ac",
+      "name": "火锅烧烤"
+    },
+    {
+      "id": "517266928a9ec74848ce7b3abd7f9b6c",
+      "name": "日韩料理"
+    },
+    {
+      "id": "09abe9e3ae8ab54abf33eb9e833aca44",
+      "name": "西餐厅"
+    },
+    {
+      "id": "ea740fdc4953985bfba6dbdad620ae64",
+      "name": "自助餐"
+    }
+  ]
+}

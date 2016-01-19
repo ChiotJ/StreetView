@@ -1,0 +1,47 @@
+{
+  "status": 1,
+  "list": [
+    {
+      "id": "d7b6338e720fe92bbd31e1ae52e56a5e",
+      "name": "街景地图",
+      "type": 1,
+      "icon": "d7b6338e720fe92bbd31e1ae52e56a5e.png",
+      "color": "#fc6c52"
+    },
+    {
+      "id": "cff4c78b6825bc3d112df4781700528c",
+      "name": "全景找房",
+      "type": 2,
+      "icon": "cff4c78b6825bc3d112df4781700528c.png",
+      "color": "#64adf6"
+    },
+    {
+      "id": "9223a76ef92e72715b6e32fde2fc9f63",
+      "name": "热门推荐",
+      "type": 2,
+      "icon": "9223a76ef92e72715b6e32fde2fc9f63.png",
+      "color": "#FD944E"
+    },
+    {
+      "id": "8524b7c3b8211bde617fa77502658e12",
+      "name": "旅游地图",
+      "type": 2,
+      "icon": "8524b7c3b8211bde617fa77502658e12.png",
+      "color": "#7ec842"
+    },
+    {
+      "id": "e1a871630a0d80393534315f1dc4ea1c",
+      "name": "北京周边",
+      "type": 2,
+      "icon": "e1a871630a0d80393534315f1dc4ea1c.png",
+      "color": "#a276df"
+    },
+    {
+      "id": "75454b6f4dc8eda70d0e1c322242a06e",
+      "name": "文化博览",
+      "type": 2,
+      "icon": "75454b6f4dc8eda70d0e1c322242a06e.png",
+      "color": "#3cc9ca"
+    }
+  ]
+}

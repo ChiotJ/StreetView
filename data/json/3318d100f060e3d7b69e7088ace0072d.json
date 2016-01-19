@@ -1,0 +1,37 @@
+{
+  "status": 1,
+  "name": "今日新闻",
+  "icon": "3318d100f060e3d7b69e7088ace0072d/icon.png",
+  "list": [
+    {
+      "id": "rss_newsgn",
+      "name": "国内新闻",
+      "xml": "http://news.qq.com/newsgn/rss_newsgn.xml"
+    },
+    {
+      "id": "rss_newswj",
+      "name": "国际新闻",
+      "xml": "http://news.qq.com/newsgj/rss_newswj.xml"
+    },
+    {
+      "id": "rss_newssh",
+      "name": "社会新闻",
+      "xml": "http://news.qq.com/newssh/rss_newssh.xml"
+    },
+    {
+      "id": "rss_domestic",
+      "name": "国内财经",
+      "xml": "http://finance.qq.com/financenews/domestic/rss_domestic.xml"
+    },
+    {
+      "id": "rss_international",
+      "name": "国际财经",
+      "xml": "http://finance.qq.com/financenews/international/rss_international.xml"
+    },
+    {
+      "id": "rss_zqxw",
+      "name": "证券新闻",
+      "xml": "http://finance.qq.com/stock/zhqxw/rss_zqxw.xml"
+    }
+  ]
+}

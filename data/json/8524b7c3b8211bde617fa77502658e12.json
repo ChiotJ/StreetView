@@ -1,0 +1,36 @@
+{
+  "status": 1,
+  "name": "旅游地图",
+  "icon": "8524b7c3b8211bde617fa77502658e12/icon.png",
+  "searchUrl":"../search/search.html",
+  "list": [
+    {
+      "id": "9223a76ef92e72715b6e32fde2fc9f63",
+      "name": "热门推荐"
+    },
+    {
+      "id": "74a8fb10615c8fca6a09d591851b4297",
+      "name": "电影片场"
+    },
+    {
+      "id": "b5c760e307c52683a0f37aa3c46a2985",
+      "name": "祖国名山"
+    },
+    {
+      "id": "0d24d1d5423181c7c7c61be60374cb35",
+      "name": "武学门派"
+    },
+    {
+      "id": "d5909d8aea7ef78df360bc6cf563eb76",
+      "name": "古镇寻悠"
+    },
+    {
+      "id": "1ec8078ac99ad46442e53db0c6ed198c",
+      "name": "大学校园"
+    },
+    {
+      "id": "7f5bbde78892b54c7cf257865b41bf85",
+      "name": "西湖十景"
+    }
+  ]
+}

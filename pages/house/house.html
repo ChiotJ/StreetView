@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="house.css" rel="stylesheet" type="text/css"/>
+    <script src="../../lib/closeFunction.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="pageBody">
+    <div id="panoCon"></div>
+    <div id="container"></div>
+
+    <div id="album">
+        <div id="albumCon">
+            <div id="albumTitle_wrapper">
+                <div id="albumTitleBody" class="scroller"></div>
+            </div>
+
+            <div id="viewBody_wrapper">
+                <div id="albumViewBody" class="scroller"></div>
+            </div>
+            <div id="detailIcon" class="houseDetailIcon"></div>
+        </div>
+        <div id="albumNotice">
+            <div></div>
+            <img src="images/mapPhoto_no.png" width="55px" height="206px">
+        </div>
+    </div>
+
+    <div class="search">
+        <!--<img class="sLogo" src="images/logo.png" width="83px" height="64px"/>-->
+
+        <div id="search_0" class="sInput" tabindex="-1">
+            <img class="sMag" src="images/mag_glass.png"/>
+            <input id="search_input" class="sText" type="text" placeholder="按“确定”搜索楼盘">
+        </div>
+        <!-- <div id="search_1" class="sDel" tabindex="-1"></div>-->
+        <div id="search_1" class="ssBut" tabindex="-1"></div>
+        <div id="search_2" class="srBut" tabindex="-1"></div>
+    </div>
+    <div id="tv_keyboard_div">
+        <table id="tv_keyboard">
+            <tbody>
+            <tr id="k1" class="">
+                <td><a href="javascript:void(0)">1</a></td>
+                <td><a href="javascript:void(0)">2</a></td>
+                <td><a href="javascript:void(0)">3</a></td>
+                <td><a href="javascript:void(0)">4</a></td>
+                <td><a href="javascript:void(0)">5</a></td>
+                <td><a href="javascript:void(0)">6</a></td>
+                <td><a href="javascript:void(0)">7</a></td>
+                <td><a href="javascript:void(0)">8</a></td>
+                <td><a href="javascript:void(0)">9</a></td>
+                <td><a href="javascript:void(0)">0</a></td>
+            </tr>
+            <tr id="k2" class="">
+                <td><a href="javascript:void(0)">q</a></td>
+                <td><a href="javascript:void(0)">w</a></td>
+                <td><a href="javascript:void(0)">e</a></td>
+                <td><a href="javascript:void(0)">r</a></td>
+                <td><a href="javascript:void(0)">t</a></td>
+                <td><a href="javascript:void(0)">y</a></td>
+                <td><a href="javascript:void(0)">u</a></td>
+                <td><a href="javascript:void(0)">i</a></td>
+                <td><a href="javascript:void(0)">o</a></td>
+                <td><a href="javascript:void(0)">p</a></td>
+            </tr>
+            <tr id="k3" class="">
+                <td><a href="javascript:void(0)">a</a></td>
+                <td><a href="javascript:void(0)">s</a></td>
+                <td><a href="javascript:void(0)">d</a></td>
+                <td><a href="javascript:void(0)">f</a></td>
+                <td><a href="javascript:void(0)">g</a></td>
+                <td><a href="javascript:void(0)">h</a></td>
+                <td><a href="javascript:void(0)">j</a></td>
+                <td><a href="javascript:void(0)">k</a></td>
+                <td><a href="javascript:void(0)">l</a></td>
+                <td><a href="javascript:void(0)">删除</a></td>
+            </tr>
+            <tr id="k4" class="">
+                <td><a href="javascript:void(0)">z</a></td>
+                <td><a href="javascript:void(0)">x</a></td>
+                <td><a href="javascript:void(0)">c</a></td>
+                <td><a href="javascript:void(0)">v</a></td>
+                <td><a href="javascript:void(0)">b</a></td>
+                <td><a href="javascript:void(0)">n</a></td>
+                <td><a href="javascript:void(0)">m</a></td>
+                <td><a href="javascript:void(0)">,</a></td>
+                <td><a href="javascript:void(0)">.</a></td>
+                <td><a href="javascript:void(0)">搜索</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="resultContainer">
+        <div class="scroller">
+            <ul id="searchList"></ul>
+        </div>
+    </div>
+    <script id="template-search" type="text/x-dot-template">
+        {{~it:value:index}}
+        <li tabindex="-1">
+            <button tabindex="-1" id="btn_4_{{= index || ''}}" data-index="{{= index || '0'}}" type="button"
+                    class="btn search_item" data-lat="{{= value.lat || ''}}" data-lng="{{= value.lng || ''}}"
+                    data-id="{{= value.hid || ''}}" data-tel="{{= value.telphone || ''}}">
+                <div class="title">{{= value.name || ''}}</div>
+                <div class="addr">{{= value.loupan_address || ''}}</div>
+            </button>
+        </li>
+        {{~}}
+    </script>
+
+    <div id="houseListContainer" class="houseList">
+        <div id="houseList" class="scroller">
+        </div>
+    </div>
+
+    <div id="houseDetailContainer" class="houseDetail">
+        <img id="houseQrCode"
+             src="http://web.sr.gehua.net.cn/api/common/Image/qrCode.png?text=http://www.hiweixiao.com/h5/zhaofangditu/detail.html?id=1465&size=110">
+
+        <div class="houseDetailText">扫一扫 看详情</div>
+        <div id="houseTel"></div>
+    </div>
+
+    <div id="houseDetail">
+    </div>
+
+    <div id="houseIntro">
+    </div>
+
+    <div id="housePeripheral">
+        <div id="mapPeripheral"></div>
+        <ul id="housePeripheralMenuList" class="housePeripheralMenu">
+            <li data-id="公交" tabindex="-1">
+                <img src="images/housePeripheralMenu_01.png">
+
+                <div>公交</div>
+            </li>
+            <li data-id="地铁" tabindex="-1">
+                <img src="images/housePeripheralMenu_02.png">
+
+                <div>地铁</div>
+            </li>
+            <li data-id="学校" tabindex="-1">
+                <img src="images/housePeripheralMenu_03.png">
+
+                <div>学校</div>
+            </li>
+            <li data-id="商场" tabindex="-1">
+                <img src="images/housePeripheralMenu_04.png">
+
+                <div>商超</div>
+            </li>
+            <li data-id="医院" tabindex="-1">
+                <img src="images/housePeripheralMenu_05.png">
+
+                <div>医院</div>
+            </li>
+            <li data-id="银行" tabindex="-1">
+                <img src="images/housePeripheralMenu_06.png">
+
+                <div>银行</div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="hintContainer" class="houseMap">
+        <span id="zoomHint" class="hint"></span>
+        <span id="pitchHint" class="hint"></span>
+    </div>
+    <div id="dialog"></div>
+
+    <div id="exit" onselectstart="return false">
+        返回
+    </div>
+
+    <audio id="au" loop="loop" autoplay="autoplay" controls="controls">
+        <source src="../../audio/BalladepourAdeline.mp3" type="audio/ogg"/>
+    </audio>
+    <video id="yyxgxVideo" src="video/100434K1140710161249090.mp4"></video>
+</div>
+<script id="template-house" type="text/x-dot-template">
+    {{~it:value:index}}
+    <li tabindex="-1" data-id="{{= value.hid || ''}}" data-lat="{{= value.FLongitude || ''}}"
+        data-lng="{{= value.FLatitude || ''}}"
+        data-tel="{{= value.telphone || '暂无联系方式'}}">
+        <img src="{{= value.cover || ''}}">
+
+        <div class="houseText">{{= value.name || ''}}</div>
+    </li>
+    {{~}}
+</script>
+<script id="template-house-detail" type="text/x-dot-template">
+    <img src="{{= it.cover || ''}}">
+    <div class="content">
+        <div>
+            <div class="name">{{= it.name || ''}}<span class="status">{{= it.xiaoshou_status || ''}}</span></div>
+            <div class="telephone"><span class="telIcon"></span>{{= it.telphone || '暂无联系方式'}}</div>
+            <div class="price"><span>{{= it.price || ''}}</span>元/平米</div>
+        </div>
+        <div>
+            <div class="address"><span class="posIcon"></span>{{= it.loupan_address || ''}}</div>
+            <p><span>开盘时间：</span>{{= it.open_time || ''}}</p>
+
+            <p><span>入住时间：</span>{{= it.jiaofang_time || ''}}</p>
+
+            <p><span>物业类型：</span>{{= it.wuye_type || ''}}</p>
+
+            <p><span>产权年限：</span>{{= it.prop_right || ''}}</p>
+
+            <p><span>装修情况：</span>{{= it.zhuangxiu_status || ''}}</p>
+
+            <p><span>建筑类别：</span>{{= it.jianzhu_type || ''}}</p>
+
+            <p><span>在售户型：</span>{{= it.huxing || ''}}</p>
+
+            <p><span>开发商：</span>{{= it.kaifashang || ''}}</p>
+
+            <p><span>预售证：</span>{{= it.yushou_license || ''}}</p>
+
+            <p><span>物业公司：</span>{{= it.wuye_company || ''}}</p>
+        </div>
+    </div>
+    <ul id="houseDetailMenuList" class="houseDetailMenu">
+        <li tabindex="1" data-id="0">
+            <div>项目介绍</div>
+            <img src="images/house_detail_01.png">
+        </li>
+        <li tabindex="1" data-id="1">
+            <div>周边生活</div>
+            <img src="images/house_detail_02.png">
+        </li>
+        <li tabindex="1" data-id="2">
+            <div>全景看房</div>
+            <img src="images/house_detail_03.png">
+        </li>
+        <li tabindex="1" data-id="3">
+            <div>一键找房</div>
+            <img src="images/house_detail_04.png">
+        </li>
+    </ul>
+</script>
+<script id="template-house-intro" type="text/x-dot-template">
+    <div>项目介绍</div>
+    <div class="detailLeft">
+        <img src="{{= it.cover_path || ''}}">
+
+        <div>
+            <div class="name">{{= it.name || ''}}<span class="status">{{= it.xiaoshou_status || ''}}</span></div>
+            <div class="telephone"><span class="telIcon"></span>{{= it.telphone || '暂无联系方式'}}</div>
+            <div class="price"><span>{{= it.price || ''}}</span>元/平米</div>
+        </div>
+        <div class="jieshao">
+            <div>项目介绍</div>
+            <div>{{= it.xiangmu_intro || ''}}</div>
+        </div>
+    </div>
+    <div class="detailRight">
+        <div class="jieshao">
+            <div>交通情况</div>
+            <div>{{= it.traffic_details || ''}}</div>
+        </div>
+    </div>
+</script>
+<script src="../../lib/jquery-2.1.3.min.js" type="text/javascript"></script>
+<script src="../../lib/pano.js" type="text/javascript"></script>
+<script src="../../lib/mapT.js?201509091600" type="text/javascript"></script>
+<script src="../../lib/common.js" type="text/javascript"></script>
+<script src="../../lib/mapMain.js" type="text/javascript"></script>
+<script src="../../lib/doT.min.js"></script>
+<script src="../../lib/iscroll/iscroll.js"></script>
+<script src="house.js?201509091600" type="text/javascript"></script>
+</body>
+</html>

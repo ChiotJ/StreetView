@@ -1,0 +1,939 @@
+* {
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 1280px;
+    height: 720px;
+    font-family: Microsoft YaHei;
+}
+
+.pageBody {
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    position: relative;
+}
+
+ul {
+    list-style: none;
+}
+
+#panoCon {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*房源列表*/
+.houseList {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: none;
+    height: 215px;
+    padding: 30px 65px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, .7);
+    overflow: hidden;
+    z-index: 1;
+}
+
+#houseList {
+    width: 6600px;
+    font-size: 0;
+}
+
+#houseList li {
+    display: inline-block;
+    position: relative;
+    margin: 2px 22px 2px 2px;
+    height: 135px;
+    width: 187px;
+    overflow: hidden;
+}
+
+#houseList li img {
+    height: 135px;
+    display: block;
+}
+
+#houseList li:focus {
+    border: 2px solid #00A0E9;
+    box-shadow: 0 0 15px #00A0E9;
+    margin: 0 20px 0 0;
+}
+
+.houseText {
+    background: -webkit-gradient(linear, center top, center bottom, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 1)));
+    height: 25px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    color: white;
+    font-size: 16px;
+    padding-left: 15px;
+    box-sizing: border-box;
+    line-height: 25px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/*房源详情二维码，电话*/
+.houseDetail {
+    width: 170px;
+    height: 220px;
+    position: absolute;
+    right: 0;
+    top: 60px;
+    display: none;
+    z-index: 99;
+}
+
+#houseDetailContainer {
+    box-sizing: border-box;
+    padding: 15px 50px 15px 10px;
+    background: rgba(0, 0, 0, .7);
+}
+
+.houseDetailText {
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+#houseTel {
+    background-color: white;
+    margin: 12px 0;
+    font-size: 15px;
+    text-align: center;
+    border-radius: 4px;
+    padding: 4px 0;
+}
+
+/*房源详情*/
+#houseDetail {
+    position: absolute;
+    padding: 50px 80px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.9);
+    background-size: 100% 100%;
+    opacity: 0;
+    top: 0;
+    font-size: 0;
+    left: 1280px;
+    transition: all 1s;
+    z-index: 3;
+}
+
+#houseDetail > img:nth-child(1) {
+    width: 225px;
+    display: block;
+    position: absolute;
+}
+
+#houseDetail .content {
+    color: white;
+    padding-left: 260px;
+    font-size: 18px;
+}
+
+#houseDetail .name {
+    font-size: 32px;
+}
+
+#houseDetail .status {
+    color: red;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+#houseDetail .address {
+    padding: 10px 0 20px;
+    font-size: 18px;
+}
+
+#houseDetail .telephone {
+    /*position: absolute;*/
+    /*top: 90px;*/
+    /*right: 110px;*/
+    padding: 20px 0;
+    font-size: 18px;
+}
+
+#houseDetail .telIcon {
+    background-image: url('images/tel.png');
+    width: 18px;
+    height: 20px;
+    display: inline-block;
+    margin: 2px 5px -3px;
+}
+
+#houseDetail .posIcon {
+    background-image: url('images/pos.png');
+    width: 18px;
+    height: 19px;
+    display: inline-block;
+    margin: 2px 5px -3px;
+}
+
+#houseDetail .price {
+    color: #ff3b3b;
+}
+
+#houseDetail .price span {
+    font-size: 46px;
+    margin: 0 10px 0 0;
+}
+
+#houseDetail p {
+    margin: 10px 0;
+}
+
+#houseDetail p span {
+    color: #8b97a3;
+    font-weight: bolder;
+}
+
+.content > div:nth-child(1) {
+    float: left;
+    width: 280px;
+}
+
+.content > div:nth-child(2) {
+    float: left;
+    width: 490px;
+}
+
+#houseDetail .error {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+}
+
+.houseDetailMenu {
+    width: 1136px;
+    position: absolute;
+    height: 204px;
+    top: 530px;
+}
+
+.houseDetailMenu div {
+    float: left;
+    width: 170px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    font-size: 26px;
+    color: #FFFFFF;
+    letter-spacing: 1px;
+}
+
+.houseDetailMenu img {
+    float: left;
+    width: 60px;
+    height: 60px;
+    margin: 45px 0;
+}
+
+.houseDetailMenu li {
+    width: 260px;
+    height: 150px;
+    float: left;
+    margin-left: 20px;
+}
+
+.houseDetailMenu > li:nth-child(1) {
+    border: 2px solid #FA6C56;
+    margin-left: 10px;
+    background-color: #FA6C56;
+}
+
+.houseDetailMenu > li:nth-child(2) {
+    border: 2px solid #3cc9ca;
+    background-color: #3cc9ca;
+}
+
+.houseDetailMenu > li:nth-child(3) {
+    border: 2px solid #80C649;
+    background-color: #80C649;
+}
+
+.houseDetailMenu > li:nth-child(4) {
+    border: 2px solid #FC9457;
+    background-color: #FC9457;
+}
+
+.houseDetailMenu li:focus {
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 0 15px #FFFFFF;
+}
+
+/*项目详情中的项目介绍*/
+#houseIntro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    top: 0;
+    left: 1280px;
+    padding: 20px 50px;
+    background-color: rgba(0, 0, 0, 0.9);
+    background-size: 100% 100%;
+    z-index: 3;
+}
+
+#houseIntro > div:nth-child(1) {
+    width: 1180px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 26px;
+    color: #FFFFFF;
+    overflow: hidden;
+    float: left;
+}
+
+#houseIntro .detailLeft, #houseIntro .detailRight {
+    padding: 20px;
+    width: 490px;
+    height: 510px;
+    float: left;
+    background-color: #FFFFFF;
+    overflow: hidden;
+}
+
+#houseIntro .detailLeft > img:nth-child(1) {
+    width: 200px;
+    float: left;
+}
+
+#houseIntro .detailLeft > div:nth-child(2) {
+    float: left;
+    width: 260px;
+    margin-left: 10px;
+}
+
+#houseIntro .detailLeft > div:nth-child(3) {
+    width: 450px;
+    float: left;
+}
+
+#houseIntro .name {
+    font-size: 26px;
+}
+
+#houseIntro .status {
+    color: red;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+#houseIntro .address {
+    padding: 10px 0 20px;
+    font-size: 18px;
+}
+
+#houseIntro .telephone {
+    padding: 20px 0;
+    font-size: 18px;
+    color: #a5a5a5;
+}
+
+#houseIntro .telIcon {
+    background-image: url('images/telIntro.png');
+    width: 18px;
+    height: 20px;
+    display: inline-block;
+    margin: 2px 5px -3px;
+}
+
+#houseIntro .price {
+    color: #ff3b3b;
+}
+
+#houseIntro .price span {
+    font-size: 40px;
+    margin-left: 10px;
+}
+
+#houseIntro .jieshao > div:nth-child(1) {
+    border-left: 4px solid #3b9cfb;
+    width: 480px;
+    height: 27px;
+    line-height: 24px;
+    font-size: 20px;
+    padding-left: 10px;
+}
+
+#houseIntro .detailLeft .jieshao {
+    margin-top: 20px;
+}
+
+#houseIntro .jieshao > div:nth-child(2) {
+    width: 490px;
+    line-height: 30px;
+    font-size: 16px;
+    color: #a5a5a5;
+    letter-spacing: 1px;
+}
+
+/*项目详情中的周边生活*/
+#housePeripheral {
+    position: absolute;
+    top: 0;
+    left: 1280px;
+    width: 1280px;
+    height: 720px;
+    background-color: rgba(0, 0, 0, 0.9);
+    background-size: 100% 100%;
+    z-index: 3;
+}
+
+#mapPeripheral{
+    width: 1180px;
+    height: 620px;
+    margin: 50px;
+}
+
+.housePeripheralMenu{
+    background-color: #FFFFFF;
+    position: absolute;
+    width: 540px;
+    height: 89px;
+    top: 530px;
+    left: 370px;
+}
+
+.housePeripheralMenu li{
+    width: 62px;
+    height: 85px;
+    float: left;
+    border: 2px solid #FFFFFF;
+    padding: 0 10px;
+    margin:0 2px;
+}
+.housePeripheralMenu li:focus{
+    border: 2px solid #00A0E9;
+    box-shadow: 0 0 15px #00A0E9;
+}
+
+.housePeripheralMenu li img{
+    width: 62px;
+    height: 62px;
+    float: left;
+
+}
+
+.housePeripheralMenu li div{
+    float: left;
+    width: 62px;
+    height: 25px;
+    line-height: 15px;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 3px;
+    color: #a5a5a5;
+}
+
+/*街景详情样式，如房源详情*/
+#album {
+    width: 1390px;
+    position: absolute;
+    bottom: 0;
+    left: -1280px;
+    height: 245px;
+    transition: left 2s;
+    display: none;
+    z-index: 2;
+}
+
+#albumCon {
+    float: left;
+    width: 1280px;
+    overflow: hidden;
+    height: 245px;
+    padding: 30px 65px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#albumNotice {
+    float: right;
+    width: 110px;
+    font-size: 20px;
+    color: #FFFFFF;
+    text-align: left;
+    word-break: break-all;
+}
+
+#albumNotice div {
+    width: 55px;
+    height: 152px;
+    background-color: rgba(0, 0, 0, 0.73);
+    float: left;
+    margin-top: 19px;
+}
+
+#albumNotice img {
+    float: left;
+    top: -35px;
+    position: relative;
+}
+
+#albumTitleBody li {
+    cursor: pointer;
+    float: left;
+    display: inline;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0 6px 0 0;
+    font-size: 16px;
+}
+
+#albumViewBody .cur {
+    border: 2px solid #97DCFF;
+    box-shadow: 0 0 15px #97DCFF;
+}
+
+.select {
+    background-color: #148fff;
+}
+
+#albumViewBody {
+    margin-left: 0;
+    height: 120px;
+    z-index: 1;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.PanoPhotoTitle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 186px;
+    height: 21px;
+    /*font-family: Arial;*/
+    text-align: center;
+    font-size: 9px;
+    color: #FFFFFF;
+    line-height: 21px;
+}
+
+.PanoPhotoCell {
+    position: relative;
+    float: left;
+    width: 186px;
+    height: 115px;
+    margin-right: 20px;
+    border: 2px solid transparent;
+}
+
+.PanoPhotoCell img {
+    width: 186px;
+    height: 115px;
+    display: block;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.PanoPhotoCell .PanoPhotoTitle {
+    background-color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 5px 0;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#albumTitleBody {
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    width: 1150px;
+    color: #FFFFFF;
+}
+
+#albumTitleBody li:focus {
+    background-color: #f2ae2a;
+}
+
+#albumTitle_wrapper .scroller{
+    width: auto;
+}
+
+#albumViewBody div.PanoPhotoCell:focus {
+    border: 2px solid #f2ae2a;
+    box-shadow: 0 0 15px #f2ae2a;
+}
+
+.houseDetailIcon{
+    width: 100%;
+    height: 40px;
+    background: url("images/houseDetailIcon.png") center center no-repeat;
+}
+
+#albumTitle_wrapper {
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    height: 25px;
+}
+
+#viewBody_wrapper {
+    position: relative;
+    top: 5px;
+    left: 0;
+    overflow: hidden;
+    height: 120px;
+    z-index: 1;
+    width: 100%;
+}
+
+
+/*提示信息*/
+#hintContainer {
+    position: absolute;
+    background: rgba(0, 0, 0, .5);
+    border-radius: 5px;
+    border: 2px rgb(129, 129, 129) solid;
+    box-shadow: 5px 5px 10px #000;
+    height: 40px;
+    box-sizing: border-box;
+    top: 30px;
+    left: 50px;
+    font-size: 0;
+}
+
+#zoomHint {
+    background: url('images/zoomHint.png');
+    width: 140px;
+    height: 39px;
+}
+
+#pitchHint {
+    background: url('images/pitchHint.png');
+    width: 140px;
+    height: 39px;
+}
+
+#detailHint {
+    background: url('images/detailHint.png');
+    width: 70px;
+    height: 39px;
+}
+
+.hint {
+    display: inline-block;
+}
+
+#hintContainer {
+    display: none;
+}
+
+.view #detailHint, .search #detailHint, .houseMap #detailHint, .houseMap #pitchHint {
+    display: none;
+}
+
+/*提示弹出框*/
+#dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: black;
+    opacity: .9;
+    border-radius: 20px;
+    width: 400px;
+    height: 200px;
+    margin: -100px -200px;
+    display: none;
+    color: white;
+    font-size: 1.8em;
+    line-height: 50px;
+    text-align: center;
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+/*搜索样式*/
+.search {
+    width: 1280px;
+    height: 148px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    transition: all 1s;
+}
+
+.sLogo {
+    margin-top: 42px;
+    margin-left: 70px;
+    float: left;
+}
+
+.sInput {
+    background-color: #FFFFFF;
+    border: 3px solid #00a0e9;
+    height: 56px;
+    line-height: 56px;
+    margin-top: 42px;
+    margin-left: 180px;
+    width: 500px;
+    outline: none;
+    float: left;
+}
+
+.sInput:focus {
+    box-shadow: 0 0 20px #00a0e9;
+}
+
+.sMag {
+    width: 46px;
+    height: 44px;
+    margin: 6px 10px;
+    float: left;
+}
+
+.sText {
+    border: none;
+    float: left;
+    font-size: 24px;
+    margin-left: 10px;
+    height: 54px;
+    line-height: 54px;
+    width: 410px;
+}
+
+.sDel {
+    width: 55px;
+    height: 30px;
+    float: left;
+    margin-left: 30px;
+    margin-top: 60px;
+    background: url("images/del_0.png") 0 no-repeat;
+    outline: none;
+}
+
+.sDel:focus {
+    background: url("images/del_1.png");
+}
+
+.ssBut {
+    width: 185px;
+    height: 69px;
+    float: left;
+    position: relative;
+    margin-left: 30px;
+    top: 39px;
+    background: url("images/ssBut_0.png") 0 no-repeat;
+    outline: none;
+}
+
+.ssBut:focus {
+    background: url("images/ssBut_1.png");
+}
+
+.srBut {
+    width: 185px;
+    height: 69px;
+    float: left;
+    position: relative;
+    margin-left: 30px;
+    top: 39px;
+    background: url("images/srBut_0.png") 0 no-repeat;
+    outline: none;
+}
+
+.srBut:focus {
+    background: url("images/srBut_1.png");
+}
+
+/*搜索结果*/
+#resultContainer {
+    position: absolute;
+    top:720px;
+    left: 0;
+    width: 1280px;
+    height: 572px;
+    overflow: hidden;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    transition: all 2s;
+}
+
+#searchList {
+    font-size: 28px;
+    color: white;
+}
+
+#searchList li {
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#searchList li button {
+    background: transparent;
+    color: white;
+    font-family: Microsoft YaHei;
+    padding: 0;
+    width: auto;
+    font-size: 35px;
+    height: 100px;
+    line-height: 100px;
+    margin: 0 auto;
+    border: 2px solid transparent;
+}
+
+#searchList li button .addr {
+    font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 10px;
+    float: left;
+}
+
+#searchList li button .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: left;
+}
+
+#searchList .cur {
+    background: rgba(0, 160, 233, .7);
+    border: 2px solid #00A0E9;
+    box-shadow: 0 0 20px #00A0E9;
+    padding: 0 40px;
+}
+
+/*键盘样式*/
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+#tv_keyboard_div {
+    width: 1280px;
+    height: 384px;
+    overflow: hidden;
+    position: absolute;
+    bottom: -384px;
+    left: 0;
+    box-sizing: border-box;
+    transition: all 1s;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+#tv_keyboard {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 40px auto;
+}
+
+#tv_keyboard a {
+    width: 90px;
+    height: 64px;
+    text-align: center;
+    line-height: 64px;
+    float: left;
+    font-size: 30px;
+    text-decoration: none;
+    margin: 5px;
+    color: #FFFFFF;
+    background-color: #A0A0A0;
+}
+
+#tv_keyboard a:focus {
+    outline: none;
+    background-color: #1EB8EA;
+}
+
+audio{
+    display: none;
+}
+
+#yyxgxVideo{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    z-index: 1;
+    background-color: #000000;
+    display: none;
+}
+
+.scroller {
+    position: absolute;
+    z-index: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+#exit {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    letter-spacing: 4px;
+    padding-left: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    font-family: "微软雅黑";
+    font-size: 24px;
+    border-radius: 5px;
+    z-index: 999;
+    display: none;
+
+}
