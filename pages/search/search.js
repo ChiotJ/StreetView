@@ -1,6 +1,7 @@
 !function (window, document) {
     var init = function () {
         Lib.mapInit(this);
+        vicinity.getData();
         $('#hintContainer').attr('class', 'searchMap').show();
         keyListener.container();
         keyListener.keyborad();
@@ -11,6 +12,718 @@
 
         if (Lib.getQueryString("click")) {
             $("#exit").show();
+        }
+    };
+
+    var vicinity = {
+        data: null,
+        label: [],
+        vicinityDot: doT.template($('#vicinityDot').text()),
+        getData: function () {
+            var self = this;
+            $.ajax({
+                url: "../../data/json/vicinity.json",
+                dataType: "json",
+                success: function (data) {
+                    self.data = data.list;
+                    if (data.status == 1) {
+                        self.showLabel(data.list);
+                        $("#vicinityList").html(self.vicinityDot(data.list))
+                        self.keyListener();
+                    }
+                }
+            });
+        },
+        showLabel: function (list) {
+            var Label = function (opts) {
+                qq.maps.Overlay.call(this, opts);
+            };
+
+            //继承Overlay基类
+            Label.prototype = new qq.maps.Overlay();
+            //定义construct,实现这个接口来初始化自定义的Dom元素
+            Label.prototype.construct = function () {
+                this.dom = document.createElement('div');
+                this.dom.style.cssText =
+                    'position:absolute;' +
+                    'text-align:center;';
+                this.dom.innerHTML = '<img src="' + this.image + '"/>';
+
+                this.getPanes().overlayMouseTarget.appendChild(this.dom);
+                //设置自定义覆盖物点击事件
+                this.dom.onclick = function () {
+                }
+            };
+            //绘制和更新自定义的dom元素
+            Label.prototype.draw = function () {
+                //获取地理经纬度坐标
+                var position = this.get('position');
+                if (position) {
+                    var d = this.dom;
+                    var pixel = this.getProjection().fromLatLngToDivPixel(position);
+                    d.style.left = pixel.getX() - 75 + 'px';
+                    d.style.top = pixel.getY() - 75 + 'px';
+                }
+            };
+
+            Label.prototype.destroy = function () {
+                //移除dom
+                this.dom.parentNode.removeChild(this.dom);
+            };
+
+            for (var i = 0; i < list.length; i++) {
+                var label = new Label({
+                    map: Lib.MAP,
+                    position: new qq.maps.LatLng(list[i].map.lat, list[i].map.lng),
+                    id: list[i].id,
+                    image: "../../data/images/vicinity/" + list[i].id + "_m.png"
+                });
+                this.label.push(label);
+            }
+        },
+        keyListener: function () {
+            var self = this;
+            GHSMLib.keyCon.listKeyListener({
+                id: "vicinityList",
+                columnNum: 6,
+                label: "li",
+                enter: function (item) {
+                    var idx = $(item).index();
+                    var id = self.data[idx].id;
+                    if (id == 1 || id == 3 || id == 7) {
+                        controlStatus.control(function () {
+                            $("#vicinityDetail").css("left", "0").find("img").attr("src", "../../data/images/vicinity/" + id + "_d.png");
+                            setTimeout(function () {
+                                $("#vicinityDetail").attr("tabindex", "-1").focus();
+                            }, 1000)
+                        }, 1000)
+                    } else if (id == 4 || id == 5) {
+                        controlStatus.control(function () {
+                            view.getView(self.data[idx]);
+                            $("#viewDetail").css("left", "0");
+                            setTimeout(function () {
+                                $($("#viewDetailMenuList").find("li")[0]).focus();
+                            }, 1000)
+                        }, 1000)
+                    } else if (id == 2) {
+                        buy.init();
+                    }
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                    }, 1000);
+                    return false;
+                }
+            });
+            GHSMLib.keyCon.keyListener({
+                id: "vicinityDetail",
+                enter: function (item) {
+                    controlStatus.control(function () {
+                        $("#vicinityDetail").css("left", "1280px");
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000)
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                        $("#vicinityDetail").css("left", "1280px");
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000);
+                    return false;
+                }
+            });
+        }
+    };
+
+    var buy = {
+        count: [],//存储菜单购买数量数组
+        price: [11, 9, 28, 9.5],//菜单价
+        CART_LIST: [],//购物车列表
+        MENU_DATA: [
+            {
+                name: '热销菜品',
+                num: 6,
+                page: 2,
+                list: [{
+                    name: '经典麦辣鸡腿汉堡',
+                    sold: 318,
+                    price: 11,
+                    num: 0,
+                    image: 'images/p_01.png'
+                }, {
+                    name: '麦辣鸡翅2块',
+                    sold: 148,
+                    price: 9,
+                    num: 0,
+                    image: 'images/p_02.png'
+                }, {
+                    name: '经典麦辣鸡腿汉堡中薯中可',
+                    sold: 138,
+                    price: 28,
+                    num: 0,
+                    image: 'images/p_03.png'
+                }, {
+                    name: '麦乐鸡5块',
+                    sold: 88,
+                    price: 9.5,
+                    num: 0,
+                    image: 'images/p_04.png'
+                }, {
+                    name: '麦乐鸡5块',
+                    sold: 88,
+                    price: 9.5,
+                    num: 0,
+                    image: 'images/p_04.png'
+                },
+                    {
+                        name: '经典麦辣鸡腿汉堡中薯中可',
+                        sold: 138,
+                        price: 28,
+                        num: 0,
+                        image: 'images/p_03.png'
+                    }]
+            },
+            {
+                name: '超值套餐',
+                num: 4,
+                page: 1,
+                list: [{
+                    name: '麦乐鸡5块',
+                    sold: 88,
+                    price: 9.5,
+                    num: 0,
+                    image: 'images/p_04.png'
+                }, {
+                    name: '经典麦辣鸡腿汉堡',
+                    sold: 318,
+                    price: 11,
+                    num: 0,
+                    image: 'images/p_01.png'
+                }, {
+                    name: '麦辣鸡翅2块',
+                    sold: 148,
+                    price: 9,
+                    num: 0,
+                    image: 'images/p_02.png'
+                },
+                    {
+                        name: '经典麦辣鸡腿汉堡中薯中可',
+                        sold: 138,
+                        price: 28,
+                        num: 0,
+                        image: 'images/p_03.png'
+                    }]
+            },
+            {
+                name: '开心乐园餐',
+                num: 4,
+                page: 1,
+                list: [{
+                    name: '经典麦辣鸡腿汉堡中薯中可',
+                    sold: 138,
+                    price: 28,
+                    num: 0,
+                    image: 'images/p_03.png'
+                }, {
+                    name: '麦乐鸡5块',
+                    sold: 88,
+                    price: 9.5,
+                    num: 0,
+                    image: 'images/p_04.png'
+                }, {
+                    name: '经典麦辣鸡腿汉堡',
+                    sold: 318,
+                    price: 11,
+                    num: 0,
+                    image: 'images/p_01.png'
+                }, {
+                    name: '麦辣鸡翅2块',
+                    sold: 148,
+                    price: 9,
+                    num: 0,
+                    image: 'images/p_02.png'
+                }]
+            }
+
+        ],
+        init: function () {
+            $(".detailImg").css("left", "0");
+        }
+    };
+
+    var view = {
+        viewDetailDot: doT.template($('#viewDetailDot').text()),
+        navDetailDot: doT.template($('#navDetailDot').text()),
+        ICON: {
+            viewCenter: {
+                path: 'images/viewCenter.png',
+                width: 56,
+                height: 56
+            }
+        },
+        POSITION_MAP: null,
+        getView: function (v) {
+            $('#viewDetail').html(this.viewDetailDot(v));
+            this.getPositionMap(v);
+            this.getNav(v);
+            this.keyListener();
+        },
+        keyListener: function () {
+            var self = this;
+            GHSMLib.keyCon.listKeyListener({
+                id: "viewDetailMenuList",
+                columnNum: 2,
+                label: "li",
+                focus: function (item) {
+                    var idx = $(item).index();
+                    $(item).find("img").attr("src", "images/view_detail_0" + (idx + 1) + "_focus.png");
+                },
+                blur: function (item) {
+                    var idx = $(item).index();
+                    $(item).find("img").attr("src", "images/view_detail_0" + (idx + 1) + ".png");
+                },
+                enter: function (item) {
+                    var idx = $(item).index();
+                    if (idx == 0) {
+                        $('#positionMap').css('left', '0');
+                        setTimeout(function () {
+                            $($($($('#positionMap').attr("tabindex", "-1").focus().children().children()[0]).children().children()[2]).children()[1]).trigger('click');
+                            $('#hintContainer').css("z-index", "5");
+                        }, 1000);
+                    } else if (idx == 1) {
+                        $('#navMap').css('left', '0');
+                        setTimeout(function () {
+                            $($('#navMenuList').find("li")[0]).focus();
+                        }, 500)
+                    }
+
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                        $("#viewDetail").css("left", "1280px");
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000);
+                        self.POSITION_MAP = null;
+                        $("#positionMap").html("");
+                    }, 1000);
+                    return false;
+                }
+            });
+            GHSMLib.keyCon.keyListener({
+                id: "positionMap",
+                pageUp: function () {
+                    self.POSITION_MAP.setZoom(self.POSITION_MAP.getZoom() + 1);
+                },
+                pageDown: function () {
+                    self.POSITION_MAP.setZoom(self.POSITION_MAP.getZoom() - 1);
+                },
+                click: function () {
+                    return false;
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                        $("#positionMap").css("left", "1280px");
+                        $('#hintContainer').css("z-index", "");
+                        setTimeout(function () {
+                            $("#viewDetail").trigger("click");
+                            $("#viewDetailMenuList").find("li")[0].focus();
+                        }, 1000)
+                    }, 1000);
+                    return false;
+                }
+            });
+            GHSMLib.keyCon.listKeyListener({
+                id: "navMenuList",
+                columnNum: 1,
+                label: "li",
+                focus: function (item) {
+                    var idx = $(item).index();
+                    var src = $(item).find("img").attr("src").replace("_focus.png", ".png").replace(".png", "_focus.png");
+                    $(item).find("img").attr("src", src);
+                    $("#navContent_" + idx).show();
+                },
+                blur: function (item) {
+                    var idx = $(item).index();
+                    var src = $(item).find("img").attr("src").replace("_focus.png", ".png");
+                    $(item).find("img").attr("src", src);
+                    $("#navContent_" + idx).hide();
+                },
+                enter: function (item) {
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                        $("#navMap").css("left", "1280px");
+                        setTimeout(function () {
+                            $("#viewDetailMenuList").find("li")[1].focus();
+                        }, 1000)
+                    }, 1000);
+                    return false;
+                }
+            });
+        },
+        getPositionMap: function (v) {
+            //位置地图初始化
+            var center = new qq.maps.LatLng(v.map.lat, v.map.lng);
+            if (!this.POSITION_MAP) {
+                //平面地图初始化
+                this.POSITION_MAP = new qq.maps.Map(document.getElementById('positionMap'), {
+                    center: center,
+                    zoom: v.map.zoom,
+                    disableDefaultUI: true
+                });
+            } else {
+                this.POSITION_MAP.panTo(center);
+            }
+
+            var iconType = "viewCenter", iconPath = this.ICON[iconType].path, iconWidth = this.ICON[iconType].width, iconHeight = this.ICON[iconType].height;
+            var anchor = new qq.maps.Point(iconWidth / 2, iconHeight),
+                size = new qq.maps.Size(iconWidth, iconHeight),
+                origin = new qq.maps.Point(0, 0),
+                icon = new qq.maps.MarkerImage(iconPath, size, origin, anchor);
+            var marker = new qq.maps.Marker({
+                icon: icon,
+                position: center,
+                map: this.POSITION_MAP
+            });
+        },
+        getNav: function (v) {
+            var uP = Lib.getUserPosition();
+            var nav = {};
+            nav.start = uP.address;
+            nav.end = v.name;
+            $("#navMapContent").html(this.navDetailDot(nav));
+            this.transfer(uP.map.lat, uP.map.lng, v.map.lat, v.map.lng);
+            this.driving(uP.map.lat, uP.map.lng, v.map.lat, v.map.lng);
+        },
+        transfer: function (sLat, sLng, eLat, eLng) {
+            var map,
+                transfer_plans,
+                start_marker,
+                end_marker,
+                station_markers = [],
+                transfer_lines = [],
+                walk_lines = [],
+                that = this;
+
+            var transferService = new qq.maps.TransferService({
+                location: "北京",
+                complete: function (result) {
+                    result = result.detail;
+                    var start = result.start,
+                        end = result.end;
+                    var anchor = new qq.maps.Point(12, 0),
+                        size = new qq.maps.Size(24, 36),
+                        start_icon = new qq.maps.MarkerImage(
+                            'images/busmarker.png',
+                            size
+                        ),
+                        end_icon = new qq.maps.MarkerImage(
+                            'images/busmarker.png',
+                            size,
+                            new qq.maps.Point(24, 0)
+                        );
+
+                    start_marker && start_marker.setMap(null);
+                    end_marker && end_marker.setMap(null);
+                    start_marker = new qq.maps.Marker({
+                        icon: start_icon,
+                        position: start.latLng,
+                        map: map
+                    });
+                    end_marker = new qq.maps.Marker({
+                        icon: end_icon,
+                        position: end.latLng,
+                        map: map
+                    });
+
+                    transfer_plans = result.plans;
+                    var plans_desc = [];
+                    var actions = transfer_plans[0].actions;
+                    for (var j = 0; j < actions.length; j++) {
+                        var action = actions[j],
+                            img_position;
+                        action.type == qq.maps.TransferActionType.BUS && (
+                            img_position = '-38px 0px'
+                        );
+                        action.type == qq.maps.TransferActionType.SUBWAY && (
+                            img_position = '-57px 0px'
+                        );
+                        action.type == qq.maps.TransferActionType.WALK && (
+                            img_position = '-76px 0px'
+                        );
+
+                        var action_img = '<li><span style="margin-bottom: -4px;' +
+                            'display:inline-block;background:url(images/busicon.png) ' +
+                            'no-repeat ' + img_position +
+                            ';width:19px;height:19px"></span>&nbsp;&nbsp;';
+                        plans_desc.push(action_img + action.instructions + "</li>");
+                    }
+
+                    document.getElementById('busPlan').innerHTML = plans_desc.join('');
+                    //渲染到地图上
+                    renderPlan(0);
+                    new IScroll('#bus_wrapper', {mouseWheel: true, click: true});
+                },
+                error: function () {
+                    that.transfer(sLat, sLng, eLat, eLng)
+                }
+            });
+
+            function init() {
+                map = new qq.maps.Map(document.getElementById("transferMap"), {
+                    // 地图的中心地理坐标。
+                    center: new qq.maps.LatLng(eLat, eLng),
+                    disableDefaultUI: true
+                });
+                that.TRANSFER_MAP = map;
+                calcPlan();
+            }
+
+            function calcPlan() {
+                transferService.search(new qq.maps.LatLng(sLat, sLng), new qq.maps.LatLng(eLat, eLng));
+                //transferService.setPolicy(qq.maps.TransferActionType.LEAST_TIME);
+            }
+
+            //清除地图上的marker
+            function clearOverlay(overlays) {
+                var overlay;
+                while (overlay = overlays.pop()) {
+                    overlay.setMap(null);
+                }
+            }
+
+            function renderPlan(index) {
+                var plan = transfer_plans[index],
+                    lines = plan.lines,
+                    walks = plan.walks,
+                    stations = plan.stations;
+                map.fitBounds(plan.bounds);
+
+                //clear overlays;
+                clearOverlay(station_markers);
+                clearOverlay(transfer_lines);
+                clearOverlay(walk_lines);
+                var anchor = new qq.maps.Point(6, 6),
+                    size = new qq.maps.Size(24, 36),
+                    bus_icon = new qq.maps.MarkerImage(
+                        'images/busmarker.png',
+                        size,
+                        new qq.maps.Point(48, 0)
+                    ),
+                    subway_icon = new qq.maps.MarkerImage(
+                        'images/busmarker.png',
+                        size,
+                        new qq.maps.Point(72, 0)
+                    );
+                //draw station marker
+                for (var j = 0; j < stations.length; j++) {
+                    var station = stations[j];
+                    if (station.type == qq.maps.PoiType.SUBWAY_STATION) {
+                        var station_icon = subway_icon;
+                    } else {
+                        var station_icon = bus_icon;
+                    }
+                    var station_marker = new qq.maps.Marker({
+                        icon: station_icon,
+                        position: station.latLng,
+                        map: map,
+                        zIndex: 0
+                    });
+                    station_markers.push(station_marker);
+                }
+
+                //draw bus line
+                for (var j = 0; j < lines.length; j++) {
+                    var line = lines[j];
+                    var polyline = new qq.maps.Polyline({
+                        path: line.path,
+                        strokeColor: '#3893F9',
+                        strokeWeight: 6,
+                        map: map
+                    });
+                    transfer_lines.push(polyline);
+                }
+
+                //draw walk line
+                for (var j = 0; j < walks.length; j++) {
+                    var walk = walks[j];
+                    var polyline = new qq.maps.Polyline({
+                        path: walk.path,
+                        strokeColor: '#3FD2A3',
+                        strokeWeight: 6,
+                        map: map
+                    });
+                    walk_lines.push(polyline);
+                }
+            }
+
+            init();
+        },
+        driving: function (sLat, sLng, eLat, eLng) {
+            var map,
+                directions_routes,
+                directions_placemarks = [],
+                directions_labels = [],
+                start_marker,
+                end_marker,
+                route_lines = [],
+                step_line,
+                route_steps = [],
+                that = this;
+
+            var directionsService = new qq.maps.DrivingService({
+                location: "北京",
+                complete: function (result) {
+                    result = result.detail;
+                    var start = result.start,
+                        end = result.end;
+                    var anchor = new qq.maps.Point(6, 6),
+                        size = new qq.maps.Size(24, 36),
+                        start_icon = new qq.maps.MarkerImage(
+                            'images/busmarker.png',
+                            size
+                        ),
+                        end_icon = new qq.maps.MarkerImage(
+                            'images/busmarker.png',
+                            size,
+                            new qq.maps.Point(24, 0)
+                        );
+
+                    start_marker && start_marker.setMap(null);
+                    end_marker && end_marker.setMap(null);
+                    start_marker = new qq.maps.Marker({
+                        icon: start_icon,
+                        position: start.latLng,
+                        map: map,
+                        zIndex: 1
+                    });
+                    end_marker = new qq.maps.Marker({
+                        icon: end_icon,
+                        position: end.latLng,
+                        map: map,
+                        zIndex: 1
+                    });
+
+
+                    directions_routes = result.routes;
+                    var routes_desc = [];
+                    //所有可选路线方案
+                    var route = directions_routes[0],
+                        legs = route;
+                    //调整地图窗口显示所有路线
+                    map.fitBounds(result.bounds);
+                    //所有路程信息
+                    //for(var j = 0 ; j < legs.length; j++){
+                    var steps = legs.steps;
+                    route_steps = steps;
+                    polyline = new qq.maps.Polyline(
+                        {
+                            path: route.path,
+                            strokeColor: '#3893F9',
+                            strokeWeight: 6,
+                            map: map
+                        }
+                    );
+                    route_lines.push(polyline);
+                    //所有路段信息
+                    for (var k = 0; k < steps.length; k++) {
+                        var step = steps[k];
+                        //路段途经地标
+                        directions_placemarks.push(step.placemarks);
+                        //转向
+                        var turning = step.turning,
+                            img_position;
+                        switch (turning.text) {
+                            case '左转':
+                                img_position = '0px 0px'
+                                break;
+                            case '右转':
+                                img_position = '-19px 0px'
+                                break;
+                            case '直行':
+                                img_position = '-38px 0px'
+                                break;
+                            case '偏左转':
+                            case '靠左':
+                                img_position = '-57px 0px'
+                                break;
+                            case '偏右转':
+                            case '靠右':
+                                img_position = '-76px 0px'
+                                break;
+                            case '左转调头':
+                                img_position = '-95px 0px'
+                                break;
+                            default:
+                                mg_position = ''
+                                break;
+                        }
+                        var turning_img = '<span' +
+                            ' style="margin-bottom: -3px;' +
+                            'display:inline-block;background:' +
+                            'url(images/turning.png) no-repeat ' +
+                            img_position + ';width:19px;height:' +
+                            '19px"></span>&nbsp;';
+                        routes_desc.push("<li>" + turning_img + step.instructions + "</li>");
+                    }
+                    //方案文本描述
+                    document.getElementById('carPlan').innerHTML = routes_desc.join('');
+                    new IScroll('#car_wrapper', {mouseWheel: true, click: true});
+                },
+                error: function () {
+                    that.driving(sLat, sLng, eLat, eLng)
+                }
+            });
+
+            function init() {
+                map = new qq.maps.Map(document.getElementById("drivingMap"), {
+                    // 地图的中心地理坐标。
+                    center: new qq.maps.LatLng(eLat, eLng),
+                    disableDefaultUI: true
+                });
+                that.DRIVING_MAP = map;
+                calcRoute();
+            }
+
+            function calcRoute() {
+                route_steps = [];
+                //directionsService.setPolicy(qq.maps.DrivingPolicy["LEAST_TIME"]);
+                directionsService.search(new qq.maps.LatLng(sLat, sLng), new qq.maps.LatLng(eLat, eLng));
+            }
+
+            //清除地图上的marker
+            function clearOverlay(overlays) {
+                var overlay;
+                while (overlay = overlays.pop()) {
+                    overlay.setMap(null);
+                }
+            }
+
+            init();
         }
     };
 
@@ -37,6 +750,73 @@
             $('#_panoSwf_0').focus().trigger('click');
             keyListener.pano();
             return true;
+        }
+    };
+
+    var map = {
+        searchDot: doT.template($('#searchDot').text()),
+        search: function () {
+            var input = $('#search_input').val(), lat1, lng1;
+            lat1 = Lib.MAP.getCenter().getLat();
+            lng1 = Lib.MAP.getCenter().getLng();
+            var result = this.suggestion(input, lat1, lng1);
+            var $searchList = $('#searchList');
+            if (result.status == 0) {
+                var count = result.count;
+                if (count == 0) {
+                    $searchList.html('<li style="text-align: center;">未找到相关地点</li>');
+                } else {
+                    $searchList.html(this.searchDot(result.data));
+                }
+                new IScroll('#resultContainer', {mouseWheel: true, click: true});
+            } else {
+                $searchList.html('<li style="text-align: center;">未找到相关地点</li>');
+            }
+            keyListener.searchList();
+            $($searchList.find("li")[0]).focus();
+        },
+        getSuggestionByCity: function (keyword, city) {
+            var r = new Object();
+            $.ajax({
+                url: TXConneturl + "http://apis.map.qq.com/ws/place/v1/suggestion?",
+                type: "GET",
+                async: false,
+                data: ({
+                    region: city,
+                    keyword: keyword,
+                    output: "json",
+                    key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
+                }),
+                success: function (data) {
+                    r = data;
+
+                }
+            });
+            return r;
+        },
+        suggestion: function (keyword, lat, lng) {
+            var city = '';
+            $.ajax({
+                url: TXConneturl + "http://apis.map.qq.com/ws/geocoder/v1?",
+                type: "GET",
+                async: false,
+                data: ({
+                    location: lat + ',' + lng,
+                    get_poi: 0,
+                    key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
+                }),
+                success: function (data) {
+                    if (data.status == 0) {
+                        city = data.result.address_component.city;
+                    } else {
+                        city = '北京市';
+                    }
+                },
+                error: function () {
+                    city = '北京市';
+                }
+            });
+            return this.getSuggestionByCity(keyword, city);
         }
     };
 
@@ -80,6 +860,14 @@
                     }, 500)
                 },
                 up: function () {
+                    controlStatus.control(function () {
+                        $("#search").css("top", "0");
+                        $("#tv_keyboard").css("bottom", "0");
+                        menus_effect(false);
+                        setTimeout(function () {
+                            $($("#tv_keyboard").find("li")[0]).focus();
+                        }, 1000);
+                    }, 1000)
 
                 },
                 down: function () {
@@ -130,7 +918,7 @@
                         $('#hintContainer').attr('class', 'searchMap');
                         Pano.PANO.changeArea(-1);
                         Lib.mapFocus();
-                    }, 100);
+                    }, 800);
                     return false;
                 }
             });
@@ -145,17 +933,16 @@
                     if (str == "删除") {
                         keyboard.backspace();
                     } else if (str == "搜索") {
-                        $("#tv_keyboard_div").css("bottom", "-384px");
-                        setTimeout(function () {
-                            $("#resultContainer").css("top", "148px");
-                            $('#searchList').html('<li style="text-align: center;">搜索中，请稍候。。。</li>');
+                        controlStatus.control(function () {
+                            $("#tv_keyboard").css("bottom", "-384px");
                             setTimeout(function () {
-                                $($('#searchList li')[0]).attr('tabindex', -1).focus();
-                            }, 2100);
-                        }, 1000);
-                        setTimeout(function () {
-                            that.search();
-                        }, 3500);
+                                $("#resultContainer").css("top", "148px");
+                                $('#searchList').html('<li style="text-align: center;">搜索中，请稍候。。。</li>');
+                            }, 1000);
+                            setTimeout(function () {
+                                map.search();
+                            }, 3500);
+                        }, 4000);
                     } else {
                         keyboard.str = keyboard.str + str;
                         if (keyboard.inputObj) {
@@ -163,15 +950,72 @@
                         }
                     }
                 },
-                click: function (item) {
-                    return false;
-                },
                 esc: function () {
-                    console.log("esc");
+                    exit();
                     return false;
                 },
                 back: function () {
-                    console.log("back");
+                    controlStatus.control(function () {
+                        $("#search").css("top", "-148px");
+                        $("#tv_keyboard").css("bottom", "-384px");
+                        keyboard.clear();
+                        Lib.mapFocus();
+                    }, 1800);
+                    return false;
+                }
+            });
+        },
+        searchList: function () {
+            GHSMLib.keyCon.listKeyListener({
+                id: "searchList",
+                columnNum: 1,
+                label: "li",
+                focus: function (item) {
+                    var b = $(item).find("button");
+                    if (b.length > 0)
+                        b.addClass("cur");
+                },
+                blur: function (item) {
+                    var b = $(item).find("button");
+                    if (b.length > 0)
+                        b.removeClass("cur");
+                },
+                enter: function (item) {
+                    var obj = $(item).find("button")[0];
+                    if (obj) {
+                        controlStatus.control(function () {
+                            Lib.MAP.panTo(new qq.maps.LatLng($(obj).attr('data-lat'), $(obj).attr('data-lng')));
+                            $("#search").css("top", "-148px");
+                            $("#resultContainer").css("top", "720px");
+                            keyboard.clear();
+                            Lib.mapFocus();
+                        }, 1000)
+                    } else {
+                        controlStatus.control(function () {
+                            $("#resultContainer").css("top", "720px");
+                            setTimeout(function () {
+                                $("#tv_keyboard").css("bottom", "0");
+                                setTimeout(function () {
+                                    $($("#tv_keyboard").find("li")[39]).focus();
+                                }, 1000);
+                            }, 2000);
+                        }, 3000);
+                    }
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    controlStatus.control(function () {
+                        $("#resultContainer").css("top", "720px");
+                        setTimeout(function () {
+                            $("#tv_keyboard").css("bottom", "0");
+                            setTimeout(function () {
+                                $($("#tv_keyboard").find("li")[39]).focus();
+                            }, 1000);
+                        }, 2000);
+                    }, 3000);
                     return false;
                 }
             });
@@ -196,7 +1040,7 @@
                 this.inputObj.val(this.str);
             }
         }
-    }
+    };
 
 
     var menus_effect = function (flag) {
@@ -311,5 +1155,15 @@
     };
 
     init();
+
+    var musicList = [
+        "../../audio/ajdwh.mp3",
+        "../../audio/cidm.mp3",
+        "../../audio/rtl.mp3",
+        "../../audio/sndqd.mp3",
+        "../../audio/Refrain.mp3"
+    ];
+
+    new GHSMLib.AudioPlayer(musicList, 2);
 
 }(window, document);

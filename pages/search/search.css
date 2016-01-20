@@ -274,7 +274,7 @@ audio {
     overflow: hidden;
     background: rgba(0, 0, 0, 0.7);
     position: absolute;
-    top: 0;
+    top: -148px;
     left: 0;
     display: block;
     transition: all 1s;
@@ -287,7 +287,7 @@ audio {
     line-height: 56px;
     margin-top: 42px;
     margin-left: 260px;
-    width: 530px;
+    width: 730px;
     outline: none;
     float: left;
 }
@@ -310,7 +310,7 @@ audio {
     margin-left: 10px;
     height: 54px;
     line-height: 54px;
-    width: 440px;
+    width: 640px;
 }
 
 .ssBut {
@@ -405,8 +405,7 @@ audio {
     height: 384px;
     overflow: hidden;
     position: absolute;
-    bottom: 0;
-    /*bottom: -384px;*/
+    bottom: -384px;
     left: 0;
     box-sizing: border-box;
     transition: bottom 1s;
@@ -430,4 +429,698 @@ audio {
 #tv_keyboard li:focus {
     outline: none;
     background-color: #1EB8EA;
+}
+
+/*附近*/
+#vicinity {
+    position: absolute;
+    bottom: 0;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
+
+}
+
+#vicinityList {
+    margin: 25px 58px;
+}
+
+#vicinityList li {
+    float: left;
+    width: 162px;
+    height: 194px;
+    border: 3px solid transparent;
+    margin: 0 13px;
+}
+
+#vicinityList li:focus {
+    border: 3px solid #148fff;
+}
+
+#vicinityDetail {
+    position: absolute;
+    left: 1280px;
+    top: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: all 1s;
+    height: 720px;
+    width: 1280px;
+}
+
+#vicinityDetail img {
+    margin: 62px 79px;
+}
+
+/*详细信息*/
+#viewDetail {
+    position: absolute;
+    padding: 70px 90px;
+    width: 1100px;
+    height: 580px;
+    background-color: rgba(0, 0, 0, 0.9);
+    top: 0;
+    left: 1280px;
+    transition: all 1s;
+    z-index: 3;
+    overflow: hidden;
+
+}
+
+#viewDetail .title img {
+    width: 300px;
+    height: 150px;
+    float: left;
+}
+
+#viewDetail .title div {
+    width: 720px;
+    float: left;
+    height: 150px;
+    line-height: 150px;
+    font-size: 26px;
+    margin-left: 40px;
+    color: #FFFFFF;
+    overflow: hidden;
+}
+
+#viewDetail .content {
+    height: 270px;
+    line-height: 30px;
+    letter-spacing: 1px;
+    font-size: 20px;
+    text-indent: 4ex;
+    color: #DADADA;
+    margin: 20px 0 10px 0;
+    float: left;
+    width: 1100px;
+    overflow: hidden;
+}
+
+.viewDetailMenu {
+    width: 560px;
+    height: 130px;
+    margin: 0 auto;
+}
+
+.viewDetailMenu img {
+    width: 260px;
+    height: 130px;
+}
+
+.viewDetailMenu li {
+    width: 260px;
+    height: 130px;
+    float: left;
+    margin: 0 10px;
+    overflow: hidden;
+}
+
+/*详细信息-位置地图*/
+#positionMap {
+    width: 1280px;
+    height: 720px;
+    position: absolute;
+    top: 0;
+    left: 1280px;
+    transition: all 1s;
+    z-index: 4;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/*详细信息-导航*/
+#navMap {
+    width: 1140px;
+    height: 580px;
+    position: absolute;
+    top: 0;
+    left: 1280px;
+    transition: all 1s;
+    z-index: 4;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 70px;
+}
+
+.navMap {
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+}
+
+.navMap #navMenuList {
+    float: left;
+    height: 380px;
+    width: 110px;
+    text-align: center;
+    background-color: #EEEEEE;
+    padding: 100px 0;
+}
+
+.navMap #navMenuList li {
+    height: 190px;
+    text-align: center;
+    line-height: 210px;
+}
+
+.navMap .navMapContent {
+    width: 1030px;
+    height: 580px;
+    overflow: hidden;
+}
+
+.navMap .navMapContent .position {
+    float: left;
+    width: 1030px;
+    border-bottom: 1px solid #D2D2D2;
+    font-size: 24px;
+}
+
+.navMap .navMapContent .position li {
+    width: 455px;
+    height: 69px;
+    line-height: 69px;
+    padding-left: 40px;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.navMap .navMapContent .position li span {
+    color: #7d7d7d;
+}
+
+.navMap .navMapContent .route {
+    float: left;
+    width: 500px;
+    height: 442px;
+    margin: 0 10px 8px 40px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    position: relative;
+    top: 5px;
+    left: 0;
+    z-index: 1;
+}
+
+.navMap .navMapContent .route:focus {
+    border: 2px solid #00A0E9;
+}
+
+.navMap .navMapContent .title {
+    float: left;
+    width: 500px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 22px;
+    margin: 6px 10px 0 30px;
+}
+
+.navMap .navMapContent .route ul {
+    overflow: hidden;
+}
+
+.navMap .navMapContent .route li {
+    font-size: 18px;
+    color: #535353;
+    line-height: 34px;
+    letter-spacing: 1px;
+    /*margin-top: 10px;*/
+}
+
+.navMap .navMapContent .map {
+    float: left;
+    width: 400px;
+    height: 260px;
+    margin: 50px 23px;
+    border: 2px solid transparent;
+}
+
+.navMap .navMapContent .map:focus {
+    border: 2px solid #00A0E9;
+}
+
+.navMap .navMapContent .mapFocus {
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    z-index: 5;
+}
+
+
+
+
+.detailImg {
+    position: absolute;
+    top: 0;
+    left: 1280px;
+    width: 1280px;
+    height: 720px;
+    z-index: 3;
+    transition: all 1s;
+}
+
+.detailStreet {
+    position: absolute;
+    top: 720px;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    z-index: 3;
+    transition: all 1s;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 70px;
+}
+
+.detailStreet div {
+    float: left;
+    width: 1100px;
+    padding: 20px;
+}
+
+.detailStreet .title {
+    background-color: #FFFFFF;
+}
+
+.detailStreet .title img {
+    width: 220px;
+    height: 110px;
+    float: left;
+}
+
+.detailStreet .title div {
+    width: 840px;
+    float: left;
+    height: 110px;
+    line-height: 110px;
+    font-size: 26px;
+    padding: 0 0 0 20px;
+}
+
+.detailStreet .content {
+    height: 390px;
+    line-height: 30px;
+    letter-spacing: 1px;
+    font-size: 20px;
+    background-color: #EEEEEE;
+    color: #979797;
+    text-indent: 4ex;
+}
+
+/*详情*/
+.detailBg {
+    background-color: rgba(0, 0, 0, .8);
+    width: 100%;
+    height: 100%;
+    padding: 100px 80px 70px;
+    box-sizing: border-box;
+}
+
+.detailImg .logo {
+    width: 210px;
+    height: 270px;
+    background-color: white;
+    position: absolute;
+}
+
+.detailImg .code {
+    width: 210px;
+    height: 290px;
+    background-color: white;
+    position: absolute;
+    bottom: 50px;
+}
+
+.detailImg img {
+    display: block;
+    width: 100%;
+}
+
+.logo span, .code span {
+    text-align: center;
+    display: block;
+}
+
+.detailContent {
+    width: 900px;
+    height: 570px;
+    background-color: white;
+    position: absolute;
+    left: 300px;
+    top: 100px;
+    box-sizing: border-box;
+}
+
+.detailImg .menu {
+    padding: 8px;
+    background-color: #eae9e9;
+}
+
+.detailImg .menu li {
+    font-size: 22px;
+    line-height: 60px;
+    padding: 0 20px;
+    display: inline-block;
+    border: 2px solid transparent;
+}
+
+.detailImg .menu .sel {
+    background-color: #f26d5f;
+    color: white;
+}
+
+/*菜单*/
+.product {
+    padding: 20px 10px 10px;
+    height: 320px;
+    overflow: hidden;
+}
+
+.productList {
+    min-height: 276px;
+}
+
+.productList li {
+    display: inline-block;
+    width: 49%;
+    padding: 15px 20px;
+    position: relative;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+}
+
+.productList li:focus {
+    border: solid 2px #f26d5f;
+}
+
+.productList .sel {
+    border: 2px solid #f26d5f !important;
+    padding: 15px 40px !important;
+}
+
+.productList .sel .text {
+    display: none;
+}
+
+.productList .sel .count {
+    font-size: 40px;
+    color: #f26d5f;
+    right: 170px !important;
+    width: 50px;
+}
+
+.productList .sel span {
+    font-size: 40px;
+    color: #f26d5f;
+    top: 6px !important;
+    right: 150px !important;
+    width: 20px;
+}
+
+.productList .sel:after {
+    content: " ";
+    width: 67px;
+    height: 100px;
+    display: block;
+    background-image: url(images/arrow.png);
+    position: absolute;
+    top: 18px;
+    right: 30px;
+}
+
+.productList img {
+    width: 100px;
+    display: inline-block;
+}
+
+.productList .text {
+    position: absolute;
+    left: 120px;
+    top: 0;
+    margin: 10px 0 0 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 215px;
+    background-color: #f4f3f3;
+}
+
+.productList .sale {
+    color: grey;
+    font-size: 14px;
+    padding: 10px 0;
+}
+
+.productList .count {
+    position: absolute;
+    top: 10px;
+    right: 40px;
+    line-height: 100px;
+    width: 40px;
+    border: none;
+    font-size: 16px;
+    text-align: center;
+}
+
+.productList span {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    line-height: 100px;
+    width: 40px;
+    border: none;
+    font-size: 16px;
+    text-align: center;
+}
+
+.pages {
+    font-size: 18px;
+    width: 300px;
+    margin: 10px auto;
+}
+
+.pages > div {
+    display: inline-block;
+}
+
+.previous span, .next span {
+    background-color: #C3C3C3;
+    padding: 5px;
+    border-radius: 20px;
+    margin: 5px;
+}
+
+.next span {
+    padding: 5px 8px;
+}
+
+.previous {
+    margin-right: 30px;
+}
+
+.next {
+    margin-left: 30px;
+}
+
+.pages .cur {
+    color: #f26d5f;
+}
+
+/*地址和购物车*/
+.bottom {
+    padding: 16px 20px 12px;
+    position: relative;
+    background-color: #eae9e9;
+}
+
+.bottom:before {
+    content: " ";
+    width: 315px;
+    height: 139px;
+    display: block;
+    background-color: #e1e1e1;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.adress {
+    font-weight: bold;
+    width: 600px;
+}
+
+.adress p:first-child {
+    margin-top: 0;
+}
+
+.adress span {
+    color: grey;
+}
+
+.cart .sum span {
+    color: #ff4c4c;
+}
+
+.cart {
+    font-size: 22px;
+    width: 270px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: inline-block;
+    margin-left: 30px;
+    padding: 20px 0 20px 20px;
+    outline: none;
+    border: 2px solid transparent;
+}
+
+.cart:focus {
+    border: 2px solid #ff4c4c;
+}
+
+.cart .sum em {
+    font-size: 30px;
+    font-style: normal;
+}
+
+.cart .img {
+    position: relative;
+    width: 50px;
+    display: inline-block;
+}
+
+.cart .img img {
+    width: 50px;
+}
+
+.cart .img span {
+    background-color: #ff4c4c;
+    color: white;
+    border-radius: 16px;
+    position: absolute;
+    top: -10px;
+    right: -14px;
+    font-size: 14px;
+    padding: 4px 10px;
+}
+
+.cart .sum {
+    display: inline-block;
+    margin-left: 30px;
+}
+
+/*购物车列表*/
+.shoppingCart .menu ul {
+    display: none;
+}
+
+.sc {
+    display: none;
+}
+
+.shoppingCart .sc {
+    display: block;
+    font-size: 22px;
+    line-height: 64px;
+    text-align: center;
+}
+
+.shoppingCart .pages {
+    display: none;
+}
+
+.shoppingCart .productList {
+    margin-bottom: 45px;
+}
+
+.shoppingCart .bottom:before, .orderDetail .bottom:before {
+    width: 350px;
+}
+
+.shoppingCart .bottom .img, .orderDetail .bottom .img {
+    display: none;
+}
+
+.shoppingCart .adress, .orderDetail .adress {
+    width: 520px;
+}
+
+.shoppingCart .cart, .orderDetail .cart {
+    width: 310px;
+}
+
+.shoppingCart .submitBill {
+    display: block;
+}
+
+.submitBill, .another {
+    display: none;
+    color: white;
+    background-color: #ff4c4c;
+    padding: 15px 30px;
+    width: 80px;
+    position: absolute;
+    right: 10px;
+    font-size: 20px;
+    top: 14px;
+}
+
+.shoppingCart .cart .sum, .orderDetail .cart .sum {
+    margin-left: 20px;
+}
+
+/*订单详情*/
+.bought, .orderDetail .buy, .another {
+    display: none;
+}
+
+.orderDetail .bought, .orderDetail .another {
+    display: block;
+}
+
+.bought {
+    padding: 20px 10px 10px;
+}
+
+.bought .heading {
+    color: #626262;
+    font-size: 18px;
+    padding: 2px 10px;
+    border-left: 4px solid #ff4c4c;
+    margin: 0 0 20px 10px;
+}
+
+.bought .shopName {
+    margin: 0 0 20px 20px;
+    font-size: 20px;
+}
+
+.boughtList {
+    color: #626262;
+    font-size: 18px;
+    margin: 0 20px;
+    min-height: 287px;
+}
+
+.boughtList li {
+    margin-bottom: 20px;
+}
+
+.boughtList li > div {
+    display: inline-block;
+}
+
+.boughtList li > div:nth-child(1) {
+    width: 240px;
+    margin-right: 30px;
+}
+
+.boughtList li > div:nth-child(2) {
+    width: 200px;
+    margin-right: 30px;
+}
+
+.boughtList li > div:nth-child(3) {
+    width: 300px;
 }

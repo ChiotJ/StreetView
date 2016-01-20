@@ -646,4 +646,14 @@
         }
     })();
     view.init();
+
+    var musicList = [
+        "../../audio/ajdwh.mp3",
+        "../../audio/cidm.mp3",
+        "../../audio/rtl.mp3",
+        "../../audio/sndqd.mp3",
+        "../../audio/Refrain.mp3"
+    ];
+
+    new GHSMLib.AudioPlayer(musicList, 2);
 })();
