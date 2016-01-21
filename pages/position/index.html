@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=GBK">
+    <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta id="mt-viewport" name="viewport"
+          content="width=320, initial-scale=1, maximum-scale=1.646875, user-scalable=no" servergenerated="true">
+    <title>修改地址</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Microsoft Yahei', Tahoma, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .adress {
+            padding: 20px 30px;
+            height: 200px;
+        }
+
+        #btn img {
+            width: 100px;
+        }
+
+        .footer {
+            margin: 40px 0 20px;
+        }
+
+        #save {
+            background-color: #f26d5f;
+            color: white;
+            padding: 12px 100px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .adress li {
+            position: relative;
+            height: 36px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .adress label {
+            position: absolute;
+            left: 0;
+            line-height: 36px;
+        }
+
+        .adress input, .adress textarea {
+            border-color: transparent;
+            font-size: 1em;
+            width: 200px;
+            position: absolute;
+            left: 60px;
+            font-family: 'Microsoft Yahei';
+            color: grey;
+        }
+
+        .adress input {
+            height: 30px;
+        }
+
+        .adress textarea {
+            height: 90px;
+        }
+
+        #notice {
+            height: 20px;
+            line-height: 20px;;
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+<div class="adress">
+    <ul>
+        <li>
+            <label>姓名</label>
+            <input id="name" type="text" placeholder="请填写姓名">
+        </li>
+        <li>
+            <label>电话</label>
+            <input id="tel" type="tel" placeholder="请填写电话">
+        </li>
+        <li>
+            <label>地址</label>
+            <textarea id="address" placeholder="请填写地址"></textarea>
+        </li>
+    </ul>
+</div>
+<div id="notice"></div>
+<div class="footer">
+    <a id="save" href="javascript:void(0)" onclick="save()">保存</a>
+</div>
+</body>
+</html>
+<script src="../../lib/jquery-2.1.3.min.js"></script>
+<script>
+    var latitude = "";
+    var longitude = "";
+
+    $(function () {
+        $.ajax({
+            url: "http://wx.digital-media.com.cn/wx/box/getBoxByCardId",
+            data: {"cardId": request.QueryString("cardId")},
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    $("#name").val(data.result.name);
+                    $("#tel").val(data.result.phone);
+                    $("#address").val(data.result.address);
+                    latitude = data.result.latitude;
+                    longitude = data.result.longitude;
+                    //getLocation();
+                    errorHandler();
+                }
+            },
+            error: function (data) {
+                alert("内部错误");
+            }
+        });
+    });
+    function save() {
+        var cardId = request.QueryString("cardId");
+        var address = $("#address").val();
+        var name = $("#name").val();
+        var tel = $("#tel").val();
+        $("#notice").html("保存中，请稍候");
+        if (address.trim() != "" && name.trim() != "" && tel.trim() != "") {
+            $.ajax({
+                url: "http://wx.digital-media.com.cn/wx/box/save",
+                type: "POST",
+                async: false,
+                data: ({
+                    cardId: cardId,
+                    address: address,
+                    name: name,
+                    phone: tel,
+                    latitude: latitude,
+                    longitude: longitude
+                }),
+                success: function (data) {
+                    $("#notice").html("保存成功");
+                },
+                error: function () {
+                    $("#notice").html("保存失败");
+                }
+            });
+        } else {
+            $("#notice").html("请补全信息后保存");
+        }
+    }
+
+    var request = {
+        QueryString: function (val) {
+            var uri = window.location.search;
+            var re = new RegExp("" + val + "\=([^\&\?]*)", "ig");
+            return ((uri.match(re)) ? (uri.match(re)[0].substr(val.length + 1)) : null);
+        },
+        QueryStrings: function () {
+            var uri = window.location.search;
+            var re = /\w*\=([^\&\?]*)/ig;
+            var retval = [];
+            while ((arr = re.exec(uri)) != null)
+                retval.push(arr[0]);
+            return retval;
+        },
+        setQuery: function (val1, val2) {
+            var a = this.QueryStrings();
+            var retval = "";
+            var seted = false;
+            var re = new RegExp("^" + val1 + "\=([^\&\?]*)$", "ig");
+            for (var i = 0; i < a.length; i++) {
+                if (re.test(a[i])) {
+                    seted = true;
+                    a[i] = val1 + "=" + val2;
+                }
+            }
+            retval = a.join("&");
+            return "?" + retval + (seted ? "" : (retval ? "&" : "") + val1 + "=" + val2);
+        }
+    };
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            document.getElementById('notice').innerHTML = "定位中，请稍候";
+            navigator.geolocation.getCurrentPosition(showLocation, errorHandler);
+        } else {
+            document.getElementById('notice').innerHTML = "您的浏览器暂不支持定位功能";
+        }
+    }
+
+    function showLocation(position) {
+        document.getElementById('notice').innerHTML = "定位成功，确认其他信息无误后保存生效";
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        var cardId = request.QueryString("cardId");
+        var address = $("#address").val();
+        var name = $("#name").val();
+        var tel = $("#tel").val();
+        $.ajax({
+            url: "http://wx.digital-media.com.cn/wx/box/save",
+            type: "POST",
+            data: ({
+                cardId: cardId,
+                address: address,
+                name: name,
+                phone: tel,
+                latitude: latitude,
+                longitude: longitude
+            }),
+            success: function (data) {
+            }
+        });
+    }
+
+    function errorHandler(err) {
+        //document.getElementById('notice').innerHTML = "定位失败，请重新定位";
+        $.ajax({
+            url: "http://apis.map.qq.com/ws/location/v1/ip",
+            type: "GET",
+            dataType: 'jsonp',
+            data: ({
+                key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
+            }),
+            success: function (data) {
+                console.log(data);
+            },
+            error: function () {
+                document.getElementById('notice').innerHTML = "定位失败，请重新定位"
+            }
+        });
+    }
+</script>

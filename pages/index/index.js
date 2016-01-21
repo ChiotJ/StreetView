@@ -164,7 +164,9 @@
                 },
                 back: function () {
                     $("#shuomingtu").css("top", "1280px");
-                    $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
+                    setTimeout(function () {
+                        $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
+                    }, 500);
                     return false;
                 }
             })
