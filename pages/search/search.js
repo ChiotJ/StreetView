@@ -46,8 +46,10 @@
                 this.dom = document.createElement('div');
                 this.dom.style.cssText =
                     'position:absolute;' +
-                    'text-align:center;';
-                this.dom.innerHTML = '<img src="' + this.image + '"/>';
+                    'text-align:center;' +
+                    'width:206px' +
+                    'height:122px';
+                this.dom.innerHTML = '<img src="' + this.image + '" style="position: absolute;top:0 ;z-index: 1"/><img src="images/ad.png" style="position: absolute;top: 0;left: 0;;">';
 
                 this.getPanes().overlayMouseTarget.appendChild(this.dom);
                 //设置自定义覆盖物点击事件
@@ -61,8 +63,8 @@
                 if (position) {
                     var d = this.dom;
                     var pixel = this.getProjection().fromLatLngToDivPixel(position);
-                    d.style.left = pixel.getX() - 75 + 'px';
-                    d.style.top = pixel.getY() - 75 + 'px';
+                    d.style.left = pixel.getX() - 63 + 'px';
+                    d.style.top = pixel.getY() - 122 + 'px';
                 }
             };
 
@@ -106,7 +108,9 @@
                             }, 1000)
                         }, 1000)
                     } else if (id == 2) {
-                        buy.init();
+                        controlStatus.control(function () {
+                            buy.init();
+                        }, 1000);
                     }
                 },
                 esc: function () {
@@ -114,8 +118,10 @@
                     return false;
                 },
                 back: function () {
+                    Lib.mapFocus();
                     controlStatus.control(function () {
-                    }, 1000);
+                        $("#vicinity").css("bottom", "-250px");
+                    }, 1800);
                     return false;
                 }
             });
@@ -150,6 +156,7 @@
         count: [],//存储菜单购买数量数组
         price: [11, 9, 28, 9.5],//菜单价
         CART_LIST: [],//购物车列表
+        CUR_BLOCK: null,
         MENU_DATA: [
             {
                 name: '热销菜品',
@@ -257,8 +264,379 @@
             }
 
         ],
+        TEMPLATE_ITEM: doT.template($('#template-item').text()),
         init: function () {
+            var that = this;
             $(".detailImg").css("left", "0");
+            var typeContent = '';
+            for (var i = 0; i < that.MENU_DATA.length; i++) {
+                typeContent += '<li tabindex="-1" data-id="' + i + '">' + that.MENU_DATA[i].name + '</li>'
+            }
+            that.initMenuList({
+                index: 0,
+                page: 1,
+                first: true
+            });
+
+            $('#typeList').html(typeContent);
+            that.CUR_BLOCK = "BUY";
+            that.keyListener();
+            $('#typeList li').focus(function () {
+                Lib["TYPE_INDEX"] = $(this).attr("data-id");
+                $('#typeList li').removeClass('sel');
+                $(this).addClass('sel');
+                that.initMenuList({
+                    index: Lib["TYPE_INDEX"],
+                    page: 1
+                });
+                $('#totalPage').html(that.MENU_DATA[Lib["TYPE_INDEX"]].page);
+                $('#curPage').html(1);
+            });
+
+            $("#pagePrevious").click(function () {
+                var curPage2 = $('#curPage'), page2 = Number(curPage2.html());
+                if (page2 > 1) {
+                    that.initMenuList({
+                        index: Lib["TYPE_INDEX"],
+                        page: --page2
+                    });
+                    curPage2.html(page2);
+                }
+            });
+
+            $("#pageNext").click(function () {
+                var curPage = $('#curPage'), page = Number(curPage.html());
+                if (page < that.MENU_DATA[Lib["TYPE_INDEX"]].page) {
+                    that.initMenuList({
+                        index: Lib["TYPE_INDEX"],
+                        page: ++page
+                    });
+                    curPage.html(page);
+                }
+            });
+
+            setTimeout(function () {
+                $($('.detailContent .menu li')[0]).attr('tabindex', -1).focus();
+            }, 1000);
+
+        },
+        /*菜单内容生成，根据类别改变*/
+        initMenuList: function (options) {
+            var that = this, list = that.MENU_DATA[options.index].list;
+            if (options.page == 0 || options.page) {
+                var start = 4 * (options.page - 1), end = 4 * options.page > list.length ? list.length : 4 * options.page;
+                list = list.slice(start, end);
+            }
+            $('#productList').html(that.TEMPLATE_ITEM(list));
+            $('#totalPage').html(that.MENU_DATA[options.index].page);
+            Lib["PRODUCT_INDEX"] = 0;
+
+            $('#productList li').click(function () {
+                $('#productList li').removeClass('sel');
+                $($('#productList li')[$(this).attr("data-id")]).addClass('sel');
+                that.originNum = $($('#productList li')[Lib["PRODUCT_INDEX"]]).find('.count').val();
+                that.CUR_BLOCK = 'NUM';
+            });
+        },
+        control: function (e) {
+            var that = this;
+
+            //麦当劳购买
+            if (that.CUR_BLOCK == 'BUY') {
+                Lib.listListener({
+                    e: e,
+                    listName: 'type',
+                    num: 6,
+                    down: function () {
+                        $($('#productList li')[0]).attr('tabindex', -1).focus();
+                        that.CUR_BLOCK = "BUYLIST";
+                    }
+                });
+                if (e && e.keyCode == 27) { // �?Esc/返回
+                    exit();
+                }
+                if (e && e.keyCode == 8) { // 返回
+                    controlStatus.control(function () {
+                        $(".detailImg").css("left", "1280px");
+                        that.CUR_BLOCK = 'LIST';
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000);
+                }
+            }
+            //菜单列表
+            else if (that.CUR_BLOCK == 'BUYLIST') {
+                Lib.listListener({
+                    e: e,
+                    listName: 'product',
+                    num: 4,
+                    columnNum: 2,
+                    height: 138,
+                    enter: function () {
+                        $($('#productList li')[Lib["PRODUCT_INDEX"]]).addClass('sel');
+                        that.originNum = $($('#productList li')[Lib["PRODUCT_INDEX"]]).find('.count').val();
+                        that.CUR_BLOCK = 'NUM';
+                    },
+                    up: function () {
+                        var column1 = 2, listDom = $('#productList li');//列表dom节点数组;
+                        if (Lib["PRODUCT_INDEX"] > column1 - 1) {
+                            Lib["PRODUCT_INDEX"] -= column1;
+                            $(listDom[Lib["PRODUCT_INDEX"]]).attr('tabindex', -1).focus();
+                        } else {
+                            $($('#typeList li')[Lib["TYPE_INDEX"]]).attr('tabindex', -1).focus();
+                            that.CUR_BLOCK = 'BUY';
+                        }
+                    },
+                    down: function () {
+                        var column1 = 2, listDom = $('#productList li');//列表dom节点数组;
+                        if (Lib["PRODUCT_INDEX"] < listDom.length - column1) {
+                            Lib["PRODUCT_INDEX"] += column1;
+                            $(listDom[Lib["PRODUCT_INDEX"]]).attr('tabindex', -1).focus();
+                        } else {
+                            $('.cart').attr('tabindex', -1).focus();
+                            that.CUR_BLOCK = 'CARTBTN';
+                        }
+                    }
+                });
+                if (e && e.keyCode == 27) { // �?Esc/返回
+                    exit();
+                }
+                if (e && e.keyCode == 8) { // 返回
+                    controlStatus.control(function () {
+                        $(".detailImg").css("left", "1280px");
+                        that.CUR_BLOCK = 'LIST';
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000);
+                }
+                else if (e && e.keyCode == 34) {//PgDn，下一页
+                    var curPage = $('#curPage'), page = Number(curPage.html());
+                    if (page < that.MENU_DATA[Lib["TYPE_INDEX"]].page) {
+                        that.initMenuList({
+                            index: Lib["TYPE_INDEX"],
+                            page: ++page
+                        });
+                        curPage.html(page);
+                        $($('#productList li')[0]).attr('tabindex', -1).focus();
+                    }
+                }
+                else if (e && e.keyCode == 33) {//PgUp，上一页
+                    var curPage2 = $('#curPage'), page2 = Number(curPage2.html());
+                    if (page2 > 1) {
+                        that.initMenuList({
+                            index: Lib["TYPE_INDEX"],
+                            page: --page2
+                        });
+                        curPage2.html(page2);
+                        $($('#productList li')[0]).attr('tabindex', -1).focus();
+                    }
+                }
+            }
+            //修改数量
+            else if (that.CUR_BLOCK == 'NUM') {
+                var count = $($('#productList li')[Lib["PRODUCT_INDEX"]]).find('.count');
+                var num = count.val();
+                var offset = (Number($('#curPage').html()) - 1) * 4;
+                if (e && e.keyCode == 40) {//下键减少
+                    if (num > 0) {
+                        count.val(--num);
+                        if ($('.shoppingCart').length == 1) {
+                            var temp = that.CART_LIST[Lib["PRODUCT_INDEX"]];
+                            that.MENU_DATA[temp.x].list[temp.y].num = num;
+                        } else {
+                            that.MENU_DATA[Lib["TYPE_INDEX"]].list[Lib["PRODUCT_INDEX"] + offset].num = num;
+                        }
+                    }
+                }
+                else if (e && e.keyCode == 38) {//上键增加
+                    count.val(++num);
+                    if ($('.shoppingCart').length == 1) {
+                        var temp = that.CART_LIST[Lib["PRODUCT_INDEX"]];
+                        that.MENU_DATA[temp.x].list[temp.y].num = num;
+                    } else {
+                        that.MENU_DATA[Lib["TYPE_INDEX"]].list[Lib["PRODUCT_INDEX"] + offset].num = num;
+                    }
+                }
+                if (e && e.keyCode == 27) { // �?Esc/返回
+                    exit();
+                }
+                if (e && e.keyCode == 8) { // 返回
+                    controlStatus.control(function () {
+                        $(".detailImg").css("left", "1280px");
+                        that.CUR_BLOCK = 'LIST';
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000);
+                }
+                else if (e && e.keyCode == 13) { // 回车确定
+                    window['count_' + Lib["PRODUCT_INDEX"]] = count.val();
+//                            that.count[Lib["PRODUCT_INDEX"]] = count.val();
+                    // 自定义一个事件，事件名为firework
+                    var evt = new CustomEvent('firework', {'detail': 'count'});
+                    window.dispatchEvent(evt);
+                    $($('#productList li')[Lib["PRODUCT_INDEX"]]).removeClass('sel').attr('tabindex', -1).focus();
+                    that.CUR_BLOCK = 'BUYLIST';
+                }
+            }
+            //购物车按键
+            else if (that.CUR_BLOCK == 'CARTBTN') {
+                if (e && e.keyCode == 27) { // �?Esc/返回
+                    exit();
+                }
+                if (e && e.keyCode == 8) { // 返回
+                    controlStatus.control(function () {
+                        $(".detailImg").css("left", "1280px");
+                        that.CUR_BLOCK = 'LIST';
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
+                    }, 1000);
+                }
+                else if (e && e.keyCode == 38) {//上键回到菜单
+                    $($('#productList li')[Lib["PRODUCT_INDEX"]]).attr('tabindex', -1).focus();
+                    that.CUR_BLOCK = 'BUYLIST';
+                } else if (e && e.keyCode == 13) { // 回车确定
+                    //提交订单
+                    if ($('.shoppingCart').length == 1) {
+                        $('#dialog').html('提交成功').show();
+                        setTimeout(function () {
+                            $('#dialog').hide();
+                            $(".detailImg").css("top", "720px");
+                            $('.shoppingCart').removeClass('shoppingCart');
+                        }, 2000);
+                        $($('#albumViewBody .PanoPhotoCell')[0]).attr('tabindex', -1).focus();
+                        that.CUR_BLOCK = 'LIST';
+                    } else {
+                        $('.detailContent').addClass('shoppingCart');
+                        $('#productList').html(that.TEMPLATE_ITEM(that.CART_LIST));
+                        that.CUR_BLOCK = 'CART';
+                    }
+                }
+            }
+            //购物车列表
+            else if (that.CUR_BLOCK == 'CART') {
+                if (e && e.keyCode == 27) { // �?Esc/返回
+                    exit();
+                }
+                if (e && e.keyCode == 8) { // esc返回
+                    $('.detailContent').removeClass('shoppingCart');
+                    that.initMenuList({
+                        index: Lib["TYPE_INDEX"],
+                        page: 1
+                    });
+                    that.CUR_BLOCK = 'CARTBTN';
+                } else if (e && e.keyCode == 38) {//上键
+                    Lib["PRODUCT_INDEX"] = 0;
+                    $($('#productList li')[Lib["PRODUCT_INDEX"]]).attr('tabindex', -1).focus();
+                    that.CUR_BLOCK = 'BUYLIST';
+                } else if (e && e.keyCode == 13) { // 回车确定
+                    $('#dialog').html('提交成功').show();
+                    setTimeout(function () {
+                        $('#dialog').hide();
+                        $('.shoppingCart').removeClass('shoppingCart');
+                        controlStatus.control(function () {
+                            $(".detailImg").css("left", "1280px");
+                            that.CUR_BLOCK = 'LIST';
+                            setTimeout(function () {
+                                $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                            }, 1000)
+                        }, 1000);
+                    }, 2000);
+                    that.CUR_BLOCK = 'LIST';
+                }
+
+            }
+            //订单详情
+            else if (that.CUR_BLOCK == 'ORDERDETAIL') {
+                if (e && e.keyCode == 27) { // Esc返回
+                    $(".detailImg").css("top", "720px");
+                    setTimeout(function () {
+                        $('.orderDetail').removeClass('orderDetail');
+                    }, 500);
+                    $($('#albumViewBody .PanoPhotoCell')[0]).attr('tabindex', -1).focus();
+                    that.CUR_BLOCK = 'LIST';
+                } else if (e && e.keyCode == 13) { // 回车重新选择菜品
+                    $('.detailContent').removeClass('orderDetail');
+                    //菜单选择清零
+                    for (var i = 0; i < that.MENU_DATA.length; i++) {
+                        var list = that.MENU_DATA[i].list;
+                        for (var j = 0; j < list.length; j++) {
+                            if (list[j].num > 0) {
+                                list[j].num = 0;
+                            }
+                        }
+                    }
+                    that.initMenuList({
+                        index: 0,
+                        page: 1,
+                        first: true
+                    });
+                    $('.sel').removeClass('sel');
+                    $($('.detailContent .menu li')[0]).attr('tabindex', -1).focus();
+                    $('#count, #money').html(0);
+                    that.CUR_BLOCK = "BUY";
+                }
+            }
+        },
+        keyListener: function () {
+            var that = this;
+            //菜单数量价格监听
+            window.addEventListener('firework', function (evt) {
+                that.CART_LIST = new Array();
+                if (evt.detail == 'count') {
+                    var sum = 0, total = 0;
+                    for (var i = 0; i < that.MENU_DATA.length; i++) {
+                        var list = that.MENU_DATA[i].list;
+                        for (var j = 0; j < list.length; j++) {
+                            if (list[j].num > 0) {
+                                list[j].x = i;
+                                list[j].y = j;
+                                that.CART_LIST.push(list[j]);
+                            }
+                            sum += Number(list[j].num);
+                            total += Number(list[j].price) * Number(list[j].num);
+                        }
+                    }
+                    $('#count').html(sum + "份");
+                    $('#money').html(total);
+                }
+            });
+
+            document.onkeydown = function (event) {
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                that.control(e);
+                return false;
+            };
+
+            $("#cart").click(function () {
+                //提交订单
+                console.log($('.shoppingCart'))
+                if ($('.shoppingCart').length == 1) {
+                    $('#dialog').html('提交成功').show();
+                    setTimeout(function () {
+                        $('#dialog').hide();
+                        $(".detailImg").css("top", "720px");
+                        $('.shoppingCart').removeClass('shoppingCart');
+                    }, 2000);
+                    $($('#albumViewBody .PanoPhotoCell')[0]).attr('tabindex', -1).focus();
+                    that.CUR_BLOCK = 'LIST';
+                } else {
+                    $('.detailContent').addClass('shoppingCart');
+                    $('#productList').html(that.TEMPLATE_ITEM(that.CART_LIST));
+                    that.CUR_BLOCK = 'CART';
+                }
+            });
+
+            if (Lib.getQueryString("click")) {
+                $("#exit").show().click(function () {
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                    e.keyCode = 27;
+                    that.control(e);
+                });
+            }
         }
     };
 
@@ -871,6 +1249,13 @@
 
                 },
                 down: function () {
+                    controlStatus.control(function () {
+                        $("#vicinity").css("bottom", "0");
+                        menus_effect(false);
+                        setTimeout(function () {
+                            $($("#vicinityList").find("li")[0]).focus();
+                        }, 1000);
+                    }, 1000)
 
                 },
                 left: function () {
@@ -1155,6 +1540,11 @@
     };
 
     init();
+
+    document.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        return false;
+    };
 
     var musicList = [
         "../../audio/ajdwh.mp3",

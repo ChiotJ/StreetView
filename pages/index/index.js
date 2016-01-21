@@ -105,6 +105,12 @@
                         }
                     }
                 },
+                n0: function (item) {
+                    $("#shuomingtu").css("top", 0);
+                    setTimeout(function () {
+                        $("#shuomingtu").attr("tabindex", "-1").focus();
+                    }, 1000);
+                },
                 blur: function (item) {
                     $(item).find(".buttonName").removeAttr("style");
                 },
@@ -136,7 +142,9 @@
                     return false;
                 },
                 esc: function () {
-                    console.log("esc");
+                    if (typeof CyberCloud != "undefined") {
+                        CyberCloud.ExitApp();
+                    }
                     return false;
                 },
                 back: function () {
@@ -144,6 +152,22 @@
                     return false;
                 }
             });
+
+            GHSMLib.keyCon.keyListener({
+                id: "shuomingtu",
+                esc: function () {
+                    $("#shuomingtu").css("top", "1280px");
+                    setTimeout(function () {
+                        $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
+                    }, 500);
+                    return false;
+                },
+                back: function () {
+                    $("#shuomingtu").css("top", "1280px");
+                    $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
+                    return false;
+                }
+            })
         }
     };
     var menu = new Menu();

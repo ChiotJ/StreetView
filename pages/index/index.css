@@ -59,3 +59,16 @@ ul, li {
     height: 45px;
     line-height: 40px;
 }
+
+.shuoming {
+    position: absolute;
+    bottom: 70px;
+    right: 100px;
+}
+
+.shuomingtu {
+    position: absolute;
+    top: 1280px;
+    left: 0;
+    transition: all 1s;
+}

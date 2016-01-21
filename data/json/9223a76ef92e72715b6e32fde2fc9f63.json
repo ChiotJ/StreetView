@@ -1,0 +1,28 @@
+{
+  "status": 1,
+  "name": "热门推荐",
+  "icon": "9223a76ef92e72715b6e32fde2fc9f63/icon.png",
+  "searchUrl": "../search/search.html",
+  "list": [
+    {
+      "id": "b5c760e307c52683a0f37aa3c46a2985",
+      "name": "祖国名山"
+    },
+    {
+      "id": "2cdf5bb18e86ba7de552ccba7a39b83a",
+      "name": "古城古镇"
+    },
+    {
+      "id": "560869d5eef268ad46867de74a0dbc85",
+      "name": "神奇的九寨"
+    },
+    {
+      "id": "260f9d63f75866b3a6b05bba9559a5ee",
+      "name": "影视片场"
+    },
+    {
+      "id": "031c5721b426c79388fd9f41d51ed14c",
+      "name": "中国石窟"
+    }
+  ]
+}

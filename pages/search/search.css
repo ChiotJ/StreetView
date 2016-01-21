@@ -434,11 +434,12 @@ audio {
 /*附近*/
 #vicinity {
     position: absolute;
-    bottom: 0;
+    bottom: -250px;
     height: 250px;
     width: 100%;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.7);
+    transition: all 1s;
 
 }
 
