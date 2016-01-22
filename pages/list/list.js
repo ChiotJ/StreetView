@@ -10,6 +10,7 @@
             CUR_BLOCK: 'MENU',
             DATAID: null,
             DATA: null,
+            ListScroll: null,
             init: function () {
                 var that = this;
                 that.initContent();
@@ -54,6 +55,15 @@
                         });
                     }
                 } else if (that.CUR_BLOCK == 'LIST') {
+                    if (e && (e.keyCode == 40 || e.keyCode == 39 && Lib.VIEW_INDEX % 9 == 8)) {//下键
+                        if (Lib.VIEW_INDEX % 9 > 5 && Lib.VIEW_INDEX % 9 < 9 && (that.ListScroll.currentPage.pageY + 1) < that.ListScroll.pages[0].length) {
+                            that.ListScroll.next(0);
+                        }
+                    } else if (e && e.keyCode == 38) {//上键
+                        if (Lib.VIEW_INDEX % 9 > -1 && Lib.VIEW_INDEX % 9 < 3 && Lib.VIEW_INDEX > 3) {
+                            that.ListScroll.prev(0);
+                        }
+                    }
                     if (e && e.keyCode == 37) {
                         if (Lib.VIEW_INDEX % 3 == 0) {
                             that.CUR_BLOCK = 'MENU';
@@ -132,6 +142,7 @@
                     if (result.status == 1) {
                         that.DATA = result;
                         that.list = result.list;
+                        $(".iScrollVerticalScrollbar").remove();
                         $('#viewList').html(that.TEMPLATE_LIST(result));
                         Lib.VIEW_INDEX = 0;
 
@@ -145,7 +156,12 @@
                             }
                         });
 
-                        new IScroll('#view_wrapper', {mouseWheel: true, click: true});
+                        that.ListScroll = new IScroll('#view_wrapper', {
+                            mouseWheel: true,
+                            click: true,
+                            scrollbars: true,
+                            snap: true
+                        });
                     }
                 });
             },

@@ -1,5 +1,6 @@
 !function (window, document) {
     var init = function () {
+        this.u = true;
         Lib.mapInit(this);
         vicinity.getData();
         $('#hintContainer').attr('class', 'searchMap').show();
@@ -30,6 +31,11 @@
                         self.showLabel(data.list);
                         $("#vicinityList").html(self.vicinityDot(data.list))
                         self.keyListener();
+
+                        var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=300";
+                        $("#DDCode").attr("src", qr);
+                        var qr2 = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=250";
+                        $("#vicinityDetailQr").attr("src", qr2);
                     }
                 }
             });
@@ -94,18 +100,19 @@
                     var id = self.data[idx].id;
                     if (id == 1 || id == 3 || id == 7) {
                         controlStatus.control(function () {
-                            $("#vicinityDetail").css("left", "0").find("img").attr("src", "../../data/images/vicinity/" + id + "_d.png");
+                            $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
                             setTimeout(function () {
                                 $("#vicinityDetail").attr("tabindex", "-1").focus();
                             }, 1000)
                         }, 1000)
                     } else if (id == 4 || id == 5) {
                         controlStatus.control(function () {
-                            view.getView(self.data[idx]);
-                            $("#viewDetail").css("left", "0");
-                            setTimeout(function () {
-                                $($("#viewDetailMenuList").find("li")[0]).focus();
-                            }, 1000)
+                            /*view.getView(self.data[idx]);
+                             $("#viewDetail").css("left", "0");
+                             setTimeout(function () {
+                             $($("#viewDetailMenuList").find("li")[0]).focus();
+                             }, 1000)*/
+                            window.location.href = self.data[idx].url;
                         }, 1000)
                     } else if (id == 2) {
                         controlStatus.control(function () {
@@ -267,6 +274,12 @@
         TEMPLATE_ITEM: doT.template($('#template-item').text()),
         init: function () {
             var that = this;
+
+            var user = Lib.getUserPosition();
+            $("#address").html(user.address);
+            $("#name").html(user.name);
+            $("#tel").html(user.phone);
+
             $(".detailImg").css("left", "0");
             var typeContent = '';
             for (var i = 0; i < that.MENU_DATA.length; i++) {

@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <meta id="mt-viewport" name="viewport"
           content="width=320, initial-scale=1, maximum-scale=1.646875, user-scalable=no" servergenerated="true">
-    <title>修改地址</title>
+    <title>修改地址定位</title>
     <style type="text/css">
         body {
             margin: 0;
@@ -126,8 +126,7 @@
                     $("#address").val(data.result.address);
                     latitude = data.result.latitude;
                     longitude = data.result.longitude;
-                    //getLocation();
-                    errorHandler();
+                    getLocation();
                 }
             },
             error: function (data) {
@@ -206,40 +205,71 @@
     }
 
     function showLocation(position) {
-        document.getElementById('notice').innerHTML = "定位成功，确认其他信息无误后保存生效";
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-        var cardId = request.QueryString("cardId");
-        var address = $("#address").val();
-        var name = $("#name").val();
-        var tel = $("#tel").val();
         $.ajax({
-            url: "http://wx.digital-media.com.cn/wx/box/save",
-            type: "POST",
+            url: "http://" + window.location.host + "/com.zunhao.tv/conneturl?http://apis.map.qq.com/ws/coord/v1/translate?",
+            type: "GET",
             data: ({
-                cardId: cardId,
-                address: address,
-                name: name,
-                phone: tel,
-                latitude: latitude,
-                longitude: longitude
+                locations: latitude + "," + longitude,
+                type: "1",
+                key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
             }),
             success: function (data) {
+                if (status == 0) {
+                    document.getElementById('notice').innerHTML = "定位成功，请确认其他信息无误后保存";
+                    latitude = data.locations[0].lat;
+                    longitude = data.locations[0].lng;
+                    var cardId = request.QueryString("cardId");
+                    $.ajax({
+                        url: "http://wx.digital-media.com.cn/wx/box/save",
+                        type: "POST",
+                        data: ({
+                            cardId: cardId,
+                            latitude: latitude,
+                            longitude: longitude
+                        }),
+                        success: function (data) {
+                        }
+                    });
+                } else {
+                    document.getElementById('notice').innerHTML = "定位失败，请重新定位"
+                }
+            },
+            error: function () {
+                document.getElementById('notice').innerHTML = "定位失败，请重新定位"
             }
         });
     }
 
     function errorHandler(err) {
-        //document.getElementById('notice').innerHTML = "定位失败，请重新定位";
+        document.getElementById('notice').innerHTML = "GPS定位失败，网络定位中，请稍候";
         $.ajax({
-            url: "http://apis.map.qq.com/ws/location/v1/ip",
+            url: "http://" + window.location.host + "/com.zunhao.tv/conneturl?http://apis.map.qq.com/ws/location/v1/ip?",
             type: "GET",
-            dataType: 'jsonp',
             data: ({
                 key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
             }),
             success: function (data) {
-                console.log(data);
+                if (status == 0) {
+                    document.getElementById('notice').innerHTML = "定位成功，请确认其他信息无误后保存";
+                    latitude = data.result.location.lat;
+                    longitude = data.result.location.lng;
+                    var cardId = request.QueryString("cardId");
+                    $.ajax({
+                        url: "http://wx.digital-media.com.cn/wx/box/save",
+                        type: "POST",
+                        data: ({
+                            cardId: cardId,
+                            latitude: latitude,
+                            longitude: longitude
+                        }),
+                        success: function (data) {
+                        }
+                    });
+                } else {
+                    document.getElementById('notice').innerHTML = "定位失败，请重新定位"
+                }
             },
             error: function () {
                 document.getElementById('notice').innerHTML = "定位失败，请重新定位"

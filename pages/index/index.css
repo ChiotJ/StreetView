@@ -63,12 +63,49 @@ ul, li {
 .shuoming {
     position: absolute;
     bottom: 70px;
-    right: 100px;
+    right: 220px;
 }
 
 .shuomingtu {
     position: absolute;
-    top: 1280px;
+    top: -1280px;
     left: 0;
     transition: all 1s;
+}
+
+.saoma {
+    position: absolute;
+    bottom: 70px;
+    right: 100px;
+}
+
+.saomatu {
+    position: absolute;
+    top: -1280px;
+    left: 0;
+    transition: all 1s;
+    background: rgba(0, 0, 0, 0.7);
+    width: 1280px;
+    height: 720px;
+}
+
+.saomatu img {
+    position: absolute;
+    top: 200px;
+    left: 515px;
+
+}
+
+.saomatu div {
+    color: #FFFFFF;
+    position: absolute;
+    top: 450px;
+    left: 515px;
+    width: 250px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 22px;
+
 }
