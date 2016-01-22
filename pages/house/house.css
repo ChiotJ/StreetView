@@ -302,6 +302,7 @@ ul {
     background-color: rgba(0, 0, 0, 0.9);
     background-size: 100% 100%;
     z-index: 3;
+    transition: all 1s;
 }
 
 #houseIntro > div:nth-child(1) {
@@ -408,6 +409,7 @@ ul {
     background-color: rgba(0, 0, 0, 0.9);
     background-size: 100% 100%;
     z-index: 3;
+    transition: all 1s;
 }
 
 #mapPeripheral{

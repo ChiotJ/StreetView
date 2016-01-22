@@ -103,12 +103,9 @@
 
                 //菜单
                 if (that.CUR_BLOCK == 'MENU') {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
-                        if (Lib.getQueryString('click')) {
-                            window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
-                        } else {
-                            window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c';
-                        }
+                    if (e && e.keyCode == 8 || e && e.keyCode == 27) { //返回
+                        that.exit();
+                        return false;
                     } else if (e && e.keyCode == 39) {//右键
                         if ((that.MENU_INDEX + 1) < that.MENU_LENGTH) {
                             that.MENU_INDEX++;
@@ -126,18 +123,20 @@
                         }
                     } else if (e && e.keyCode == 13) {//enter 键
                         if (that.MENU_INDEX == 0) {
-                            that.CUR_BLOCK = 'SEARCH';
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
                             $("#tv_keyboard_div").css("bottom", "0px");
                             setTimeout(function () {
+                                that.CUR_BLOCK = 'SEARCH';
                                 if ($("#tv_keyboard_div").css("bottom") == "0px") {
                                     that.KEYBOARD.changeItem();
                                 }
                             }, 1100);
-                        }/* else if (that.MENU_INDEX == 1) {
-                         that.KEYBOARD.backspace();
-                         }*/ else if (that.MENU_INDEX == 1) {
+                        } else if (that.MENU_INDEX == 1) {
                             var time = 1000;
-                            that.CUR_BLOCK = 'SEARCH';
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
+
                             that.SEARCH_PROCESS = 'SEARCHLIST';
                             if ($("#tv_keyboard_div").css("bottom") == "0px") {
                                 $("#tv_keyboard_div").css("bottom", "-384px");
@@ -168,10 +167,13 @@
                 //搜索
                 else if (that.CUR_BLOCK == 'SEARCH') {
                     if (that.SEARCH_PROCESS == 'SEARCH') {
-                        if (e && e.keyCode == 27) { // 按 Esc/返回
+                        if (e && e.keyCode == 8) { // 返回
                             $("#tv_keyboard_div").css("bottom", "-384px");
                             that.CUR_BLOCK = 'MENU';
                             $("#search_" + that.MENU_INDEX).focus();
+                            return false;
+                        } else if (e && e.keyCode == 27) {
+                            that.exit();
                         }
                     } else if (that.SEARCH_PROCESS == 'SEARCHLIST') {
                         if (e.target.id != 'enterKey') {
@@ -212,13 +214,16 @@
                                 up: 'default',
                                 down: 'default'
                             });
-                            if (e && e.keyCode == 27) { // 按 Esc/返回
+                            if (e && e.keyCode == 8) { //返回
                                 $("#resultContainer").css("top", "720px");
                                 Lib.SEARCH_INDEX = 0;
                                 that.CUR_BLOCK = 'MENU';
                                 that.SEARCH_PROCESS = 'SEARCH';
                                 $("#search_" + that.MENU_INDEX).focus();
                                 that.KEYBOARD.clear();
+                                return false;
+                            } else if (e && e.keyCode == 27) {
+                                that.exit();
                             }
                             return false;
                         }
@@ -227,13 +232,18 @@
                 //地图
                 else if (that.CUR_BLOCK == 'MAP') {
                     $('#dialog').fadeOut();
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { //返回
                         that.showMenu();
                         $(".search").trigger('click');
                         $("#search_" + that.MENU_INDEX).focus();
                         $('#hintContainer').hide();
                         that.CUR_BLOCK = 'MENU';
+                        return false;
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     } else if (e && e.keyCode == 13) {//enter 键
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
                         that.search();
                     }
                     Lib.zoomListener(e);
@@ -271,68 +281,74 @@
                             that.changeMarker(lib.HOUSE_INDEX, 'houseFocus');
                         }
                     });
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { //返回
                         $('.houseList').hide();
                         that.deleteOverlays();
                         Lib.MAP_CENTER = true;
                         Lib.mapFocus();
                         Lib.HOUSE_INDEX = 0;
                         that.CUR_BLOCK = 'MAP';
+                        return false;
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     }
                 }
                 //街景
                 else if (that.CUR_BLOCK == 'PANO') {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { // 按 Esc/返回
                         if (!$("#yyxgxVideo").is(':hidden')) {
                             $("#yyxgxVideo").hide();
                             document.getElementById("yyxgxVideo").pause();
-                            document.getElementById("au").play();
+                            audioBG.play();
                             that.PANO.changeArea(2);
-                            return false;
-                        }
-                        if (that.RECOMMEND) {
-                            if (Lib.getQueryString('click')) {
-                                window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
-                            } else {
-                                window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c';
-                            }
                         } else {
-                            if (that.IS_SEARCH) {
-                                $('#panoCon').hide();
-                                $('.houseDetail').hide();
-                                $('#container').show();
-                                $('#album').hide();
-                                that.PANO.changeArea(-1);
-                                that.showMenu();
-                                $("#resultContainer").css("top", "148px");
-                                setTimeout(function () {
-                                    $("#search_" + that.MENU_INDEX).trigger('click');
-                                    $($('#searchList button')[Lib.SEARCH_INDEX]).attr('tabindex', -1).focus();
-                                }, 1000);
-                                $('#hintContainer').hide();
-                                that.CUR_BLOCK = 'SEARCH';
+                            if (that.RECOMMEND) {
+                                that.exit();
                             } else {
-                                $('#panoCon').hide();
-                                $('.houseDetail').hide();
-                                $('#container').show();
-                                $('.houseList').show();
-                                $('#album').hide();
-                                that.PANO.changeArea(-1);
-                                $($('#houseList li')[Lib.HOUSE_INDEX]).attr('tabindex', -1).focus();
-                                Lib.MAP.setOptions({keyboardShortcuts: true});
-                                $('#hintContainer').attr('class', 'houseMap');
-                                $("#housePeripheralMenuList li").off("focus").off("blur");
-                                that.CUR_BLOCK = 'LIST';
+                                if (that.IS_SEARCH) {
+                                    that.CUR_BLOCK = "PAGE_BODY";
+                                    $("#pageBody").focus();
+
+                                    $('#panoCon').hide();
+                                    $('.houseDetail').hide();
+                                    $('#container').show();
+                                    $('#album').hide();
+                                    that.PANO.changeArea(-1);
+                                    that.showMenu();
+                                    $("#resultContainer").css("top", "148px");
+                                    setTimeout(function () {
+                                        that.CUR_BLOCK = 'SEARCH';
+                                        $("#search_" + that.MENU_INDEX).trigger('click');
+                                        $($('#searchList button')[Lib.SEARCH_INDEX]).attr('tabindex', -1).focus();
+                                    }, 1000);
+                                    $('#hintContainer').hide();
+                                } else {
+                                    $('#panoCon').hide();
+                                    $('.houseDetail').hide();
+                                    $('#container').show();
+                                    $('.houseList').show();
+                                    $('#album').hide();
+                                    that.PANO.changeArea(-1);
+                                    $($('#houseList li')[Lib.HOUSE_INDEX]).attr('tabindex', -1).focus();
+                                    Lib.MAP.setOptions({keyboardShortcuts: true});
+                                    $('#hintContainer').attr('class', 'houseMap');
+                                    $("#housePeripheralMenuList li").off("focus").off("blur");
+                                    that.CUR_BLOCK = 'LIST';
+                                }
                             }
                         }
+
+                        return false;
                     } else if (e && e.keyCode == 13) {
                         if (!that.PANO.PANO.planeInfo) {
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
                             //详情
                             $('#houseDetail').css('left', '0px').css('opacity', '1');
                             that.AREA = that.PANO.area;
                             that.PANO.changeArea(-1);
-                            that.CUR_BLOCK = 'DETAIL';
                             setTimeout(function () {
+                                that.CUR_BLOCK = 'DETAIL';
                                 $($('.houseDetailMenu li')[0]).attr('tabindex', -1).focus();
                             }, 500);
                             return false;
@@ -343,30 +359,49 @@
                                         $("#yyxgxVideo").show();
                                         document.getElementById("yyxgxVideo").load();
                                         document.getElementById("yyxgxVideo").play();
-                                        document.getElementById("au").pause();
+                                        audioBG.pause();
                                     }
                                 } else {
                                     $("#yyxgxVideo").hide();
                                     document.getElementById("yyxgxVideo").pause();
-                                    document.getElementById("au").play();
+                                    audioBG.play();
                                 }
                             }
                         }
                     } else if (e && e.keyCode == 40) {
                         if (that.PANO.PANO.planeInfo && that.PANO.area == 2) {
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
+
                             $('#houseDetail').css('left', '0px').css('opacity', '1');
                             that.AREA = that.PANO.area;
                             that.PANO.changeArea(-1);
-                            that.CUR_BLOCK = 'DETAIL';
                             setTimeout(function () {
+                                that.CUR_BLOCK = 'DETAIL';
                                 $($('.houseDetailMenu li')[0]).attr('tabindex', -1).focus();
                             }, 500);
                             return false;
                         }
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     }
                 }
                 //详情
                 else if (that.CUR_BLOCK == 'DETAIL') {
+                    if (e && e.keyCode == 8) {
+                        $('#houseDetail').css('left', '1280px').css('opacity', '0');
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
+                        setTimeout(function () {
+                            that.PANO.changeArea(that.AREA);
+                            that.CUR_BLOCK = 'PANO';
+                        }, 500);
+
+                        return false;
+                    }
+                    else if (e && e.keyCode == 27) {
+                        that.exit();
+                    }
                     Lib.listAreaListener({
                         e: e,
                         columnNum: 4,
@@ -377,49 +412,69 @@
                                 $('#houseIntro').css('left', '0');
                                 that.CUR_BLOCK = 'INTRO';
                             } else if (id == 1) {
+                                that.CUR_BLOCK = "PAGE_BODY";
+                                $("#pageBody").focus();
+
                                 $('#housePeripheral').css('left', '0');
-                                $($('.housePeripheralMenu li')[0]).attr('tabindex', -1).focus();
-                                that.CUR_BLOCK = 'PERIPHERAL';
+                                setTimeout(function () {
+                                    $($('.housePeripheralMenu li')[0]).attr('tabindex', -1).focus();
+                                    that.CUR_BLOCK = 'PERIPHERAL';
+                                }, 1000);
                             } else if (id == 2) {
+                                that.CUR_BLOCK = "PAGE_BODY";
+                                $("#pageBody").focus();
+
                                 $('#houseDetail').css('left', '1280px').css('opacity', '0');
                                 Lib["houseDetailMenu".toUpperCase() + '_INDEX'] = 0;
                                 setTimeout(function () {
+                                    that.CUR_BLOCK = 'PANO';
                                     that.PANO.changeArea(that.AREA);
                                 }, 1000);
-                                that.CUR_BLOCK = 'PANO';
+
                             } else if (id == 3) {
                                 window.location.href = "house.html";
                             }
                             return false;
-                        },
-                        esc: function () {
-                            $('#houseDetail').css('left', '1280px').css('opacity', '0');
-                            that.PANO.changeArea(that.AREA);
-                            that.CUR_BLOCK = 'PANO';
                         }
                     });
                     return false;
                 } else if (that.CUR_BLOCK == 'INTRO') {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { // 返回
                         $('#houseIntro').css('left', '1280px');
                         $($('.houseDetailMenu li')[0]).attr('tabindex', -1).focus();
                         that.CUR_BLOCK = 'DETAIL';
+                        return false;
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     }
                 } else if (that.CUR_BLOCK == 'PERIPHERAL') {
+                    if (e && e.keyCode == 8) {
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
+
+                        $('#housePeripheral').css('left', '1280px');
+                        setTimeout(function () {
+                            $($('.houseDetailMenu li')[1]).attr('tabindex', -1).focus();
+                            that.CUR_BLOCK = 'DETAIL';
+                        }, 1000);
+                        return false;
+                    }
+                    else if (e && e.keyCode == 27) {
+                        that.exit();
+                    }
                     Lib.listAreaListener({
                         e: e,
                         columnNum: 6,
                         type: 'housePeripheralMenu',
                         enter: function () {
                             return false;
-                        },
-                        esc: function () {
-                            $('#housePeripheral').css('left', '1280px');
-                            $($('.houseDetailMenu li')[1]).attr('tabindex', -1).focus();
-                            that.CUR_BLOCK = 'DETAIL';
                         }
                     });
                     return false;
+                } else if (that.CUR_BLOCK == 'PAGE_BODY') {
+                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                        return false;
+                    }
                 }
             },
             keyListener: function () {
@@ -427,7 +482,7 @@
                 document.onkeydown = function (event) {
                     var e = event || window.event || arguments.callee.caller.arguments[0];
                     //console.log(that.CUR_BLOCK + "-" + e.keyCode);
-                    that.control(e);
+                    return that.control(e);
                 };
 
                 $("#detailIcon").click(function () {
@@ -511,7 +566,7 @@
                     var src = $(this).find("img").attr("src").replace(".png", "_focus.png");
                     $(this).find("img").attr("src", src);
                     searchService = new qq.maps.SearchService({
-                        error:function(err){
+                        error: function (err) {
                             console.log(err);
                         },
                         complete: function (results) {
@@ -769,6 +824,7 @@
                         perpage: 30
                     },
                     success: function (result) {
+                        that.CUR_BLOCK = 'SEARCH';
                         if (result.status) {
                             $('#searchList').html(that.TEMPLATE_SEARCH(result.data));
                             that.bindFocus('.search_item');
@@ -802,6 +858,7 @@
                         }
                     },
                     error: function () {
+                        that.CUR_BLOCK = 'SEARCH';
                         $('#searchList').html('<li style="text-align: center;">搜索失败，请稍后再试</li>');
                         $($('#searchList li')[0]).attr('tabindex', -1).focus();
                     }
@@ -915,9 +972,10 @@
                                     if (str == "删除") {
                                         t.backspace();
                                     } else if (str == "搜索") {
+                                        that.CUR_BLOCK = "PAGE_BODY";
+                                        $("#pageBody").focus();
                                         $("#tv_keyboard_div").css("bottom", "-384px");
                                         setTimeout(function () {
-                                            that.CUR_BLOCK = 'SEARCH';
                                             that.SEARCH_PROCESS = 'SEARCHLIST';
                                             $("#resultContainer").css("top", "148px");
                                             $('#searchList').html('<li style="text-align: center;">搜索中，请稍候。。。</li>');
@@ -957,6 +1015,13 @@
                 };
                 that.KEYBOARD = new that.keyboard(0, 0, $('#search_input'));
                 that.KEYBOARD.init();
+            },
+            exit: function () {
+                if (Lib.getQueryString('click')) {
+                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
+                } else {
+                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c';
+                }
             }
 
         }
@@ -972,6 +1037,6 @@
         "../../audio/Refrain.mp3"
     ];
 
-    new GHSMLib.AudioPlayer(musicList, 2);
+    var audioBG = new GHSMLib.AudioPlayer(musicList, 2);
 
 })();

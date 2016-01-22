@@ -6,6 +6,7 @@
         $('#hintContainer').attr('class', 'searchMap').show();
         keyListener.container();
         keyListener.keyborad();
+        keyListener.pageBody();
         window.onload = function () {
             Lib.mapFocus();
         };
@@ -99,25 +100,22 @@
                     var idx = $(item).index();
                     var id = self.data[idx].id;
                     if (id == 1 || id == 3 || id == 7) {
-                        controlStatus.control(function () {
-                            $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
-                            setTimeout(function () {
-                                $("#vicinityDetail").attr("tabindex", "-1").focus();
-                            }, 1000)
-                        }, 1000)
-                    } else if (id == 4 || id == 5) {
-                        controlStatus.control(function () {
-                            /*view.getView(self.data[idx]);
-                             $("#viewDetail").css("left", "0");
-                             setTimeout(function () {
-                             $($("#viewDetailMenuList").find("li")[0]).focus();
-                             }, 1000)*/
-                            window.location.href = self.data[idx].url;
-                        }, 1000)
-                    } else if (id == 2) {
-                        controlStatus.control(function () {
-                            buy.init();
+                        $("#pageBody").focus();
+                        $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
+                        setTimeout(function () {
+                            $("#vicinityDetail").attr("tabindex", "-1").focus();
                         }, 1000);
+                    } else if (id == 4 || id == 5) {
+                        $("#pageBody").focus();
+                        /*view.getView(self.data[idx]);
+                         $("#viewDetail").css("left", "0");
+                         setTimeout(function () {
+                         $($("#viewDetailMenuList").find("li")[0]).focus();
+                         }, 1000)*/
+                        window.location.href = self.data[idx].url;
+                    } else if (id == 2) {
+                        $("#pageBody").focus();
+                        buy.init();
                     }
                 },
                 esc: function () {
@@ -126,20 +124,18 @@
                 },
                 back: function () {
                     Lib.mapFocus();
-                    controlStatus.control(function () {
-                        $("#vicinity").css("bottom", "-250px");
-                    }, 1800);
+                    $("#pageBody").focus();
+                    $("#vicinity").css("bottom", "-250px");
                     return false;
                 }
             });
             GHSMLib.keyCon.keyListener({
                 id: "vicinityDetail",
                 enter: function (item) {
-                    controlStatus.control(function () {
-                        $("#vicinityDetail").css("left", "1280px");
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
+                    $("#pageBody").focus();
+                    $("#vicinityDetail").css("left", "1280px");
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
                     }, 1000)
                 },
                 esc: function () {
@@ -147,12 +143,11 @@
                     return false;
                 },
                 back: function () {
-                    controlStatus.control(function () {
-                        $("#vicinityDetail").css("left", "1280px");
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
-                    }, 1000);
+                    $("#pageBody").focus();
+                    $("#vicinityDetail").css("left", "1280px");
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                    }, 1000)
                     return false;
                 }
             });
@@ -620,8 +615,7 @@
 
             document.onkeydown = function (event) {
                 var e = event || window.event || arguments.callee.caller.arguments[0];
-                that.control(e);
-                return false;
+                return that.control(e);
             };
 
             $("#cart").click(function () {
@@ -1213,6 +1207,17 @@
 
 
     var keyListener = {
+        pageBody: function () {
+            GHSMLib.keyCon.keyListener({
+                id: "pageBody",
+                esc: function () {
+                    return false;
+                },
+                back: function () {
+                    return false;
+                }
+            });
+        },
         container: function () {
             GHSMLib.keyCon.keyListener({
                 id: "container",
@@ -1223,10 +1228,12 @@
                     Lib.MAP.setZoom(Lib.MAP.getZoom() - 1);
                 },
                 enter: function () {
-                    controlStatus.control(function () {
-                        menus_effect(true);
-                        keyListener.menus();
-                    }, 500)
+                    $("#pageBody").focus();
+                    menus_effect(true);
+                    keyListener.menus();
+                    setTimeout(function () {
+                        $("#menus").attr("tabindex", "-1").focus().trigger("click");
+                    }, 500);
                 },
                 click: function () {
                     return false;
@@ -1245,31 +1252,26 @@
             GHSMLib.keyCon.keyListener({
                 id: "menus",
                 enter: function () {
-                    controlStatus.control(function () {
-                        menus_effect(false);
-                        Lib.mapFocus();
-                    }, 500)
+                    $("#pageBody").focus();
+                    menus_effect(false);
+                    Lib.mapFocus();
                 },
                 up: function () {
-                    controlStatus.control(function () {
-                        $("#search").css("top", "0");
-                        $("#tv_keyboard").css("bottom", "0");
-                        menus_effect(false);
-                        setTimeout(function () {
-                            $($("#tv_keyboard").find("li")[0]).focus();
-                        }, 1000);
-                    }, 1000)
-
+                    $("#pageBody").focus();
+                    $("#search").css("top", "0");
+                    $("#tv_keyboard").css("bottom", "0");
+                    menus_effect(false);
+                    setTimeout(function () {
+                        $($("#tv_keyboard").find("li")[0]).focus();
+                    }, 1000);
                 },
                 down: function () {
-                    controlStatus.control(function () {
-                        $("#vicinity").css("bottom", "0");
-                        menus_effect(false);
-                        setTimeout(function () {
-                            $($("#vicinityList").find("li")[0]).focus();
-                        }, 1000);
-                    }, 1000)
-
+                    $("#pageBody").focus();
+                    $("#vicinity").css("bottom", "0");
+                    menus_effect(false);
+                    setTimeout(function () {
+                        $($("#vicinityList").find("li")[0]).focus();
+                    }, 1000);
                 },
                 left: function () {
                     controlStatus.control(function () {
@@ -1278,9 +1280,8 @@
                     }, 100)
                 },
                 right: function () {
-                    controlStatus.control(function () {
-                        window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
-                    }, 500)
+                    $("#pageBody").focus();
+                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
                 },
                 click: function (item) {
                     return false;
@@ -1290,10 +1291,9 @@
                     return false;
                 },
                 back: function () {
-                    controlStatus.control(function () {
-                        menus_effect(false);
-                        Lib.mapFocus();
-                    }, 500);
+                    $("#pageBody").focus();
+                    menus_effect(false);
+                    Lib.mapFocus();
                     return false;
                 }
             });
@@ -1309,14 +1309,13 @@
                     return false;
                 },
                 back: function () {
-                    controlStatus.control(function () {
-                        $('#container').show();
-                        $('#panoCon').hide();
-                        $('#album').hide();
-                        $('#hintContainer').attr('class', 'searchMap');
-                        Pano.PANO.changeArea(-1);
-                        Lib.mapFocus();
-                    }, 800);
+                    $("#pageBody").focus();
+                    $('#container').show();
+                    $('#panoCon').hide();
+                    $('#album').hide();
+                    $('#hintContainer').attr('class', 'searchMap');
+                    Pano.PANO.changeArea(-1);
+                    Lib.mapFocus();
                     return false;
                 }
             });
@@ -1331,16 +1330,15 @@
                     if (str == "删除") {
                         keyboard.backspace();
                     } else if (str == "搜索") {
-                        controlStatus.control(function () {
-                            $("#tv_keyboard").css("bottom", "-384px");
-                            setTimeout(function () {
-                                $("#resultContainer").css("top", "148px");
-                                $('#searchList').html('<li style="text-align: center;">搜索中，请稍候。。。</li>');
-                            }, 1000);
-                            setTimeout(function () {
-                                map.search();
-                            }, 3500);
-                        }, 4000);
+                        $("#pageBody").focus();
+                        $("#tv_keyboard").css("bottom", "-384px");
+                        setTimeout(function () {
+                            $("#resultContainer").css("top", "148px");
+                            $('#searchList').html('<li style="text-align: center;">搜索中，请稍候。。。</li>');
+                        }, 1000);
+                        setTimeout(function () {
+                            map.search();
+                        }, 3500);
                     } else {
                         keyboard.str = keyboard.str + str;
                         if (keyboard.inputObj) {
@@ -1353,12 +1351,11 @@
                     return false;
                 },
                 back: function () {
-                    controlStatus.control(function () {
-                        $("#search").css("top", "-148px");
-                        $("#tv_keyboard").css("bottom", "-384px");
-                        keyboard.clear();
-                        Lib.mapFocus();
-                    }, 1800);
+                    $("#pageBody").focus();
+                    $("#search").css("top", "-148px");
+                    $("#tv_keyboard").css("bottom", "-384px");
+                    keyboard.clear();
+                    Lib.mapFocus();
                     return false;
                 }
             });
@@ -1381,31 +1378,14 @@
                 enter: function (item) {
                     var obj = $(item).find("button")[0];
                     if (obj) {
-                        controlStatus.control(function () {
-                            Lib.MAP.panTo(new qq.maps.LatLng($(obj).attr('data-lat'), $(obj).attr('data-lng')));
-                            $("#search").css("top", "-148px");
-                            $("#resultContainer").css("top", "720px");
-                            keyboard.clear();
-                            Lib.mapFocus();
-                        }, 1000)
+                        $("#pageBody").focus();
+                        Lib.MAP.panTo(new qq.maps.LatLng($(obj).attr('data-lat'), $(obj).attr('data-lng')));
+                        $("#search").css("top", "-148px");
+                        $("#resultContainer").css("top", "720px");
+                        keyboard.clear();
+                        Lib.mapFocus();
                     } else {
-                        controlStatus.control(function () {
-                            $("#resultContainer").css("top", "720px");
-                            setTimeout(function () {
-                                $("#tv_keyboard").css("bottom", "0");
-                                setTimeout(function () {
-                                    $($("#tv_keyboard").find("li")[39]).focus();
-                                }, 1000);
-                            }, 2000);
-                        }, 3000);
-                    }
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    controlStatus.control(function () {
+                        $("#pageBody").focus();
                         $("#resultContainer").css("top", "720px");
                         setTimeout(function () {
                             $("#tv_keyboard").css("bottom", "0");
@@ -1413,7 +1393,21 @@
                                 $($("#tv_keyboard").find("li")[39]).focus();
                             }, 1000);
                         }, 2000);
-                    }, 3000);
+                    }
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    $("#pageBody").focus();
+                    $("#resultContainer").css("top", "720px");
+                    setTimeout(function () {
+                        $("#tv_keyboard").css("bottom", "0");
+                        setTimeout(function () {
+                            $($("#tv_keyboard").find("li")[39]).focus();
+                        }, 1000);
+                    }, 2000);
                     return false;
                 }
             });
@@ -1444,7 +1438,7 @@
     var menus_effect = function (flag) {
         var time = 500;
         if (flag) {
-            $("#menus").attr("tabindex", "-1").focus().trigger("click").animate({
+            $("#menus").animate({
                 width: "300px",
                 height: "300px",
                 top: "210px",

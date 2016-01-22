@@ -82,6 +82,17 @@
         },
         menuKeyListener: function () {
             var self = this;
+
+            GHSMLib.keyCon.keyListener({
+                id: "pageBody",
+                esc: function () {
+                    return false;
+                },
+                back: function () {
+                    return false;
+                }
+            });
+
             GHSMLib.keyCon.listKeyListener({
                 id: "menu",
                 columnNum: self.lineNum,
@@ -108,12 +119,14 @@
                     }
                 },
                 n0: function (item) {
+                    $("#pageBody").focus();
                     $("#shuomingtu").css("top", 0);
                     setTimeout(function () {
                         $("#shuomingtu").attr("tabindex", "-1").focus();
                     }, 1000);
                 },
                 n1: function (item) {
+                    $("#pageBody").focus();
                     $("#saomatu").css("top", 0);
                     setTimeout(function () {
                         $("#saomatu").attr("tabindex", "-1").focus();
@@ -123,6 +136,7 @@
                     $(item).find(".buttonName").removeAttr("style");
                 },
                 enter: function (item) {
+                    $("#pageBody").focus();
                     var idx = $(item).index();
                     var m = self.menuList[idx];
                     var type = m.type;

@@ -24,11 +24,17 @@
             },
             control: function (e) {
                 var that = this;
-                console.log(that.CUR_BLOCK + "-" + e.keyCode);
+                //console.log(that.CUR_BLOCK + "-" + e.keyCode);
                 if (that.CUR_BLOCK == 'MENU') {
                     if (e && e.keyCode == 39) {//右键
                         that.CUR_BLOCK = 'LIST';
-                        $($('#viewList li')[Lib.VIEW_INDEX]).focus();
+                        $($('#viewList').find("li")[Lib.VIEW_INDEX]).focus();
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
+                        return false;
+                    } else if (e && e.keyCode == 8) {
+                        that.exit();
+                        return false;
                     } else {
                         if (e && e.keyCode == 40) {//下键
                             if ((Lib["MENU_INDEX"] + 1) % 6 == 0) {
@@ -47,10 +53,6 @@
                                 if (!$(e.target).attr("data-id")) {
                                     window.location.href = that.MENU.searchUrl;
                                 }
-                            },
-                            esc: function () {
-                                //返回首页
-                                window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
                             }
                         });
                     }
@@ -63,14 +65,20 @@
                         if (Lib.VIEW_INDEX % 9 > -1 && Lib.VIEW_INDEX % 9 < 3 && Lib.VIEW_INDEX > 3) {
                             that.ListScroll.prev(0);
                         }
-                    }
-                    if (e && e.keyCode == 37) {
+                    } else if (e && e.keyCode == 37) {
                         if (Lib.VIEW_INDEX % 3 == 0) {
                             that.CUR_BLOCK = 'MENU';
-                            $($("#menuList li")[Lib["menu".toUpperCase() + '_INDEX']]).focus();
+                            $($("#menuList").find("li")[Lib["menu".toUpperCase() + '_INDEX']]).focus();
                             return false;
                         }
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
+                        return false;
+                    } else if (e && e.keyCode == 8) {
+                        that.exit();
+                        return false;
                     }
+
                     Lib.listAreaListener({
                         e: e,
                         columnNum: 3,
@@ -83,19 +91,19 @@
                             } else {
                                 window.location.href = '../view/view.html?id=' + id + '&cid=' + that.DATAID + "&" + $(e.target).attr('data-pano').split('#')[1];
                             }
-                        },
-                        esc: function () {
-                            //返回首页
-                            window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
                         }
                     });
+                } else if (that.CUR_BLOCK == 'PAGE_BODY') {
+                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                        return false;
+                    }
                 }
             },
             keyListener: function () {
                 var that = this;
                 document.onkeydown = function (event) {
                     var e = event || window.event || arguments.callee.caller.arguments[0];
-                    that.control(e);
+                    return that.control(e);
                 };
                 if (Lib.getQueryString("click")) {
                     $("#exit").show().click(function () {
@@ -177,6 +185,9 @@
 
                     }
                 });
+            },
+            exit: function () {
+                window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
             }
         }
     })();

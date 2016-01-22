@@ -55,25 +55,23 @@
                 var that = this;
 
                 if (that.CUR_BLOCK == "PANO") {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
-                        if (Lib.getQueryString('click')) {
-                            window.location.href = '../list/list.html?id=' + Lib.getQueryString('id') + "&click=true";
-                        } else {
-                            window.location.href = '../list/list.html?id=' + Lib.getQueryString('id');
-                        }
-
+                    if (e && e.keyCode == 27 || e && e.keyCode == 8) { // 按 Esc/返回
+                        that.exit();
                     } else if (e && e.keyCode == 40) {
-                        if (that.PANO.PANO.planeInfo && that.PANO.area == 2 && that.DETAIL) {
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
+                        if (((that.PANO.PANO.planeInfo && that.PANO.area == 2 ) || !that.PANO.PANO.planeInfo) && that.DETAIL) {
                             $('#viewDetail').css('left', '0px');
                             that.AREA = that.PANO.area;
                             that.PANO.changeArea(-1);
-                            that.CUR_BLOCK = 'DETAIL';
                             Lib['VIEWDETAILMENU_INDEX'] = 0;
                             setTimeout(function () {
+                                that.CUR_BLOCK = 'DETAIL';
                                 $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).attr('tabindex', -1).focus();
-                            }, 500);
+                            }, 1000);
                             return false;
                         }
+
                     }
                 } else if (that.CUR_BLOCK == "DETAIL") {
                     Lib.listAreaListener({
@@ -83,50 +81,74 @@
                         enter: function () {
                             var id = $(e.target).attr('data-id');
                             if (id == 0) {
+                                that.CUR_BLOCK = "PAGE_BODY";
+                                $("#pageBody").focus();
                                 $('#positionMap').css('left', '0');
-                                that.CUR_BLOCK = 'POSITION_MAP';
                                 setTimeout(function () {
+                                    that.CUR_BLOCK = 'POSITION_MAP';
                                     $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).blur();
                                     $($($($('#positionMap').children().children()[0]).children().children()[2]).children()[1]).trigger('click');
                                     $('#hintContainer').attr('class', 'mapHint').css("z-index", "5");
+                                    $(".txzc").css("z-index", "5");
                                 }, 800);
                             } else if (id == 1) {
+                                that.CUR_BLOCK = "PAGE_BODY";
+                                $("#pageBody").focus();
                                 $('#navMap').css('left', '0');
-                                that.CUR_BLOCK = 'NAVMAP';
                                 setTimeout(function () {
+                                    that.CUR_BLOCK = 'NAVMAP';
                                     $($('#navMenuList li')[0]).focus();
                                 }, 500)
                             }
                             return false;
                         },
                         esc: function () {
+                            that.exit();
+                        },
+                        back: function () {
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
                             $('#viewDetail').css('left', '1280px');
-                            that.PANO.changeArea(that.AREA);
-                            that.CUR_BLOCK = 'PANO';
+                            setTimeout(function () {
+                                that.PANO.changeArea(that.AREA);
+                                that.CUR_BLOCK = 'PANO';
+                            }, 1000);
+                            return false;
                         }
                     });
                     return false;
                 } else if (that.CUR_BLOCK == "POSITION_MAP") {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { //返回
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
                         $('#positionMap').css('left', '1280px');
-                        that.CUR_BLOCK = 'DETAIL';
                         $('#hintContainer').attr('class', 'view').css("z-index", "0");
+                        $(".txzc").css("z-index", "");
                         setTimeout(function () {
+                            that.CUR_BLOCK = 'DETAIL';
                             $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).focus();
-                        }, 500);
+                        }, 800);
+                        return false;
                     } else if (e && e.keyCode == 34) {//PgDn缩小
                         that.POSITION_MAP.setZoom(that.POSITION_MAP.getZoom() - 1);
                     } else if (e && e.keyCode == 33) {//PgUp放大
                         that.POSITION_MAP.setZoom(that.POSITION_MAP.getZoom() + 1);
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     }
                 } else if (that.CUR_BLOCK == "NAVMAP") {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { //返回
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
                         $('#navMap').css('left', '1280px');
-                        that.CUR_BLOCK = 'DETAIL';
                         $('#hintContainer').attr('class', 'view').css("z-index", "0");
                         setTimeout(function () {
+                            that.CUR_BLOCK = 'DETAIL';
                             $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).focus();
-                        }, 500);
+                        }, 800);
+                        return false;
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
                     } else if (e && e.keyCode == 40) {//下键
                         if (that.NAV_MENU < (that.NAV_MENU_LENGTH - 1) && that.NAV_SEL == 0) {
                             $(".navContent ul").css("margin-top", 0);
@@ -188,14 +210,17 @@
                         }
                     }
                 } else if (that.CUR_BLOCK == "NAVMAP_SHOWMAP") {
-                    if (e && e.keyCode == 27) { // 按 Esc/返回
+                    if (e && e.keyCode == 8) { // 按 Esc/返回
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
                         $("#navContent_" + that.NAV_MENU + " .mapFocus").removeClass("mapFocus").addClass("map");
-                        that.CUR_BLOCK = 'NAVMAP';
                         $('#hintContainer').attr('class', 'view').css("z-index", "0");
                         setTimeout(function () {
+                            that.CUR_BLOCK = 'NAVMAP';
                             $("#navContent_" + that.NAV_MENU).trigger('click');
                             $("#navContent_" + that.NAV_MENU + " .map").attr('tabindex', -1).focus();
                         }, 500);
+                        return false;
                     } else if (e && e.keyCode == 34) {//PgDn缩小
                         if (that.NAV_MENU == 0) {
                             that.DRIVING_MAP.setZoom(that.DRIVING_MAP.getZoom() - 1);
@@ -209,6 +234,12 @@
                         } else {
                             that.TRANSFER_MAP.setZoom(that.TRANSFER_MAP.getZoom() + 1);
                         }
+                    } else if (e && e.keyCode == 27) {
+                        that.exit();
+                    }
+                } else if (that.CUR_BLOCK == 'PAGE_BODY') {
+                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                        return false;
                     }
                 }
             },
@@ -216,8 +247,8 @@
                 var that = this;
                 document.onkeydown = function (event) {
                     var e = event || window.event || arguments.callee.caller.arguments[0];
-                    console.log(that.CUR_BLOCK + "-" + e.keyCode);
-                    that.control(e);
+                    //console.log(that.CUR_BLOCK + "-" + e.keyCode);
+                    return that.control(e);
                 };
 
 
@@ -641,6 +672,13 @@
                 }
 
                 init();
+            },
+            exit: function () {
+                if (Lib.getQueryString('click')) {
+                    window.location.href = '../list/list.html?id=' + Lib.getQueryString('id') + "&click=true";
+                } else {
+                    window.location.href = '../list/list.html?id=' + Lib.getQueryString('id');
+                }
             }
 
         }
