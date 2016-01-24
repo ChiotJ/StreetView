@@ -218,6 +218,12 @@ ul {
     height: 39px;
 }
 
+#enterHint {
+    background: url('images/enterHint.png');
+    width: 108px;
+    height: 39px;
+}
+
 #detailHint {
     background: url('images/detailHint.png');
     width: 70px;
@@ -228,7 +234,7 @@ ul {
     display: inline-block;
 }
 
-.searchMap #pitchHint {
+.searchMap #pitchHint, .panoMap #enterHint {
     display: none;
 }
 
