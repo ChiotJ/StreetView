@@ -15,6 +15,28 @@
         if (Lib.getQueryString("click")) {
             $("#exit").show();
         }
+
+        changeAdd();
+    };
+
+    var changeAdd = function () {
+        var sock = new SockJS('http://wx.digital-media.com.cn/wx/tvapi?token=card1');
+        var stompClient = Stomp.over(sock);
+        stompClient.debug = function (str) {
+            //console.log(str);
+        };
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe("/topic/address", function (data) {
+                data = JSON.parse(data.body);
+                if (data) {
+                    $("#address").html(data.address);
+                    $("#name").html(data.name);
+                    $("#tel").html(data.phone);
+                }
+            });
+        }, function (msg) {
+            //console.log(msg)
+        });
     };
 
     var vicinity = {

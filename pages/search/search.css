@@ -474,13 +474,13 @@ audio {
     height: 720px;
     width: 1280px;
 }
+
 .vicinityDetailQr {
     position: absolute;
-    top:330px;
+    top: 330px;
     width: 170px;
     left: 24px;
 }
-
 
 #vicinityDetail img {
     margin: 62px 79px;
@@ -962,11 +962,23 @@ audio {
     width: 600px;
 }
 
-.adress p:first-child {
+.adress div:first-child {
     margin-top: 0;
 }
 
-.adress span {
+.adressDiv {
+    float: left;
+    width: 550px;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+}
+
+.adressDiv div {
+    float: left;
+}
+
+.adressDiv div:first-child {
     color: grey;
 }
 

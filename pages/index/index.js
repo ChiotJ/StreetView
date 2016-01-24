@@ -47,7 +47,7 @@
     Menu.prototype = {
         init: function () {
             this.getMenuList();
-            var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=250";
+            var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=150";
             $("#saoma").attr("src", qr);
         },
         getMenuList: function () {
@@ -125,13 +125,13 @@
                         $("#shuomingtu").attr("tabindex", "-1").focus();
                     }, 1000);
                 },
-                n1: function (item) {
+                /*n1: function (item) {
                     $("#pageBody").focus();
                     $("#saomatu").css("top", 0);
                     setTimeout(function () {
                         $("#saomatu").attr("tabindex", "-1").focus();
                     }, 1000);
-                },
+                },*/
                 blur: function (item) {
                     $(item).find(".buttonName").removeAttr("style");
                 },
@@ -193,23 +193,6 @@
                 }
             });
 
-            GHSMLib.keyCon.keyListener({
-                id: "saomatu",
-                esc: function () {
-                    $("#saomatu").css("top", "-1280px");
-                    setTimeout(function () {
-                        $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
-                    }, 500);
-                    return false;
-                },
-                back: function () {
-                    $("#saomatu").css("top", "-1280px");
-                    setTimeout(function () {
-                        $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
-                    }, 500);
-                    return false;
-                }
-            });
         }
     };
     var menu = new Menu();
