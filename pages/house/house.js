@@ -565,12 +565,59 @@
                 $("#housePeripheralMenuList li").focus(function () {
                     var src = $(this).find("img").attr("src").replace(".png", "_focus.png");
                     $(this).find("img").attr("src", src);
-                    searchService = new qq.maps.SearchService({
-                        error: function (err) {
-                            console.log(err);
-                        },
-                        complete: function (results) {
-                            var pois = results.detail.pois;
+                    /*searchService = new qq.maps.SearchService({
+                     error: function (err) {
+                     console.log(err);
+                     },
+                     complete: function (results) {
+                     var pois = results.detail.pois;
+                     for (var i = 0, l = pois.length; i < l; i++) {
+                     var poi = pois[i];
+                     var mAnchor = new qq.maps.Point(57 / 2, 57 / 2),
+                     mSize = new qq.maps.Size(57, 57),
+                     mOrigin = new qq.maps.Point(0, 0),
+                     mIcon = new qq.maps.MarkerImage(src.replace("_focus.png", "_map.png"), mSize, mOrigin, mAnchor);
+
+                     var mMarker = new qq.maps.Marker({
+                     icon: mIcon,
+                     map: that.MAP_PERIPHERAL,
+                     position: poi.latLng
+                     });
+
+                     mMarker.setTitle(i + 1);
+                     markers.push(mMarker);
+
+                     var mInfo = new qq.maps.InfoWindow({
+                     map: that.MAP_PERIPHERAL,
+                     position: poi.latLng
+                     });
+
+                     var content = poi.name + "（距离" + parseInt(poi.dist) + "米）";
+                     mInfo.setContent(content);
+                     mInfo.open();
+                     infos.push(mInfo);
+
+                     }
+                     }
+                     });
+
+                     var keyword = $(this).attr("data-id");
+                     searchService.setPageCapacity(5);
+                     searchService.searchNearBy(keyword, center, 500);*/
+                    var keyword = $(this).attr("data-id");
+                    $.ajax({
+                        url: TXConneturl + "http://apis.map.qq.com/ws/place/v1/search?",
+                        type: "GET",
+                        async: false,
+                        data: ({
+                            boundary: "nearby(" + lat + "," + lng + ",500)",
+                            keyword: keyword,
+                            output: "json",
+                            key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU",
+                            page_size: 5
+                        }),
+                        success: function (json) {
+                            var pois = json.data;
                             for (var i = 0, l = pois.length; i < l; i++) {
                                 var poi = pois[i];
                                 var mAnchor = new qq.maps.Point(57 / 2, 57 / 2),
@@ -578,32 +625,32 @@
                                     mOrigin = new qq.maps.Point(0, 0),
                                     mIcon = new qq.maps.MarkerImage(src.replace("_focus.png", "_map.png"), mSize, mOrigin, mAnchor);
 
+
+                                var position = new qq.maps.LatLng(poi.location.lat, poi.location.lng);
                                 var mMarker = new qq.maps.Marker({
                                     icon: mIcon,
                                     map: that.MAP_PERIPHERAL,
-                                    position: poi.latLng
+                                    position: position
                                 });
 
                                 mMarker.setTitle(i + 1);
                                 markers.push(mMarker);
 
+                                var content = poi.title + "（距离" + parseInt(poi._distance) + "米）";
                                 var mInfo = new qq.maps.InfoWindow({
                                     map: that.MAP_PERIPHERAL,
-                                    position: poi.latLng
+                                    position: position,
+                                    content: content,
+                                    visible: true
                                 });
 
-                                var content = poi.name + "（距离" + parseInt(poi.dist) + "米）";
-                                mInfo.setContent(content);
-                                mInfo.open();
                                 infos.push(mInfo);
-
                             }
+                            setTimeout(function () {
+                                that.MAP_PERIPHERAL.panTo(center);
+                            }, 1000)
                         }
                     });
-
-                    var keyword = $(this).attr("data-id");
-                    searchService.setPageCapacity(5);
-                    searchService.searchNearBy(keyword, center, 500);
                 }).blur(function () {
                     var src = $(this).find("img").attr("src").replace("_focus.png", ".png");
                     $(this).find("img").attr("src", src);

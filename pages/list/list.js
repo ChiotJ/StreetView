@@ -167,7 +167,7 @@
                         that.ListScroll = new IScroll('#view_wrapper', {
                             mouseWheel: true,
                             click: true,
-                            scrollbars: true,
+                            scrollbars: "custom",
                             snap: true
                         });
                     }

@@ -94,7 +94,7 @@ ul {
     padding: 0;
 }
 
-#viewList{
+#viewList {
     float: left;
 }
 
@@ -102,7 +102,7 @@ ul {
     position: relative;
     width: 300px;
     height: 170px;
-    margin: 0 15px 15px 0;
+    margin: 7px 8px 8px 7px;
     float: left;
     border: 4px solid transparent;
     overflow: hidden;
@@ -175,7 +175,7 @@ audio {
     overflow: hidden;
 }
 
-.scroller{
+.scroller {
     float: left;
 }
 
@@ -198,3 +198,31 @@ audio {
     display: none;
 
 }
+
+/* Styled scrollbars */
+.iScrollVerticalScrollbar {
+    position: absolute;
+    z-index: 9999;
+    width: 9px;
+    bottom: 2px;
+    top: 2px;
+    right: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.iScrollVerticalScrollbar.iScrollBothScrollbars {
+    bottom: 18px;
+}
+
+.iScrollIndicator {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+}
+
+.iScrollVerticalScrollbar .iScrollIndicator {
+    width: 100%;
+}
+
+/* end */
