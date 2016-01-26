@@ -636,19 +636,18 @@
                                 mMarker.setTitle(i + 1);
                                 markers.push(mMarker);
 
-                                var content = poi.title + "（距离" + parseInt(poi._distance) + "米）";
-                                var mInfo = new qq.maps.InfoWindow({
-                                    map: that.MAP_PERIPHERAL,
-                                    position: position,
-                                    content: content,
-                                    visible: true
-                                });
+                                if (parseInt(poi._distance) < 500) {
+                                    var content = poi.title + "（距离" + parseInt(poi._distance) + "米）";
+                                    var mInfo = new qq.maps.InfoWindow({
+                                        map: that.MAP_PERIPHERAL,
+                                        position: position,
+                                        content: content,
+                                        visible: true
+                                    });
 
-                                infos.push(mInfo);
+                                    infos.push(mInfo);
+                                }
                             }
-                            setTimeout(function () {
-                                that.MAP_PERIPHERAL.panTo(center);
-                            }, 1000)
                         }
                     });
                 }).blur(function () {
