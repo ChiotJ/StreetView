@@ -7,9 +7,7 @@
         keyListener.container();
         keyListener.keyborad();
         keyListener.pageBody();
-        window.onload = function () {
-            Lib.mapFocus();
-        };
+        Lib.mapFocus();
         controlStatus.status = true;
 
         if (Lib.getQueryString("click")) {
