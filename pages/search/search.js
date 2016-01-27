@@ -7,7 +7,9 @@
         keyListener.container();
         keyListener.keyborad();
         keyListener.pageBody();
-        Lib.mapFocus();
+        window.onload = function () {
+            Lib.mapFocus();
+        };
         controlStatus.status = true;
 
         if (Lib.getQueryString("click")) {
@@ -1255,18 +1257,18 @@
                         $("#menus").attr("tabindex", "-1").focus().trigger("click");
                     }, 500);
                 },
-                left: function () {
-                    Lib.MAP.panBy(-5, 0);
-                },
-                right: function () {
-                    Lib.MAP.panBy(5, 0);
-                },
-                up: function () {
-                    Lib.MAP.panBy(0, -5);
-                },
-                down: function () {
-                    Lib.MAP.panBy(0, 5);
-                },
+                /*left: function () {
+                 Lib.MAP.panBy(-20, 0);
+                 },
+                 right: function () {
+                 Lib.MAP.panBy(20, 0);
+                 },
+                 up: function () {
+                 Lib.MAP.panBy(0, -20);
+                 },
+                 down: function () {
+                 Lib.MAP.panBy(0, 20);
+                 },*/
                 click: function () {
                     return false;
                 },
