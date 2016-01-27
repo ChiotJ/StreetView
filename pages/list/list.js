@@ -37,7 +37,7 @@
                         return false;
                     } else {
                         if (e && e.keyCode == 40) {//下键
-                            if ((Lib["MENU_INDEX"] + 1) % 6 == 0) {
+                            if ((Lib["MENU_INDEX"] + 1) % 6 == 0 && that.MENU.length > 6) {
                                 $("#menuList").css("margin-top", "-" + parseInt((Lib["MENU_INDEX"] + 1) / 6) * 486 + "px");
                             }
                         } else if (e && e.keyCode == 38) {//上键
@@ -187,7 +187,8 @@
                 });
             },
             exit: function () {
-                window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
+                //window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
+                window.history.go(-1);
             }
         }
     })();

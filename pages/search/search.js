@@ -1255,6 +1255,18 @@
                         $("#menus").attr("tabindex", "-1").focus().trigger("click");
                     }, 500);
                 },
+                left: function () {
+                    Lib.MAP.panBy(-5, 0);
+                },
+                right: function () {
+                    Lib.MAP.panBy(5, 0);
+                },
+                up: function () {
+                    Lib.MAP.panBy(0, -5);
+                },
+                down: function () {
+                    Lib.MAP.panBy(0, 5);
+                },
                 click: function () {
                     return false;
                 },
@@ -1563,7 +1575,8 @@
     };
 
     var exit = function () {
-        window.location.href = '../index/index.html';
+        window.history.go(-1);
+        //window.location.href = '../index/index.html';
     };
 
     init();

@@ -87,7 +87,8 @@
                                 setTimeout(function () {
                                     that.CUR_BLOCK = 'POSITION_MAP';
                                     $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).blur();
-                                    $($($($('#positionMap').children().children()[0]).children().children()[2]).children()[1]).trigger('click');
+                                    //$($($($('#positionMap').children().children()[0]).children().children()[2]).children()[1]).trigger('click');
+                                    $('#positionMap').focus();
                                     $('#hintContainer').attr('class', 'mapHint').css("z-index", "5");
                                     $(".txzc").css("z-index", "5");
                                 }, 800);
@@ -135,7 +136,16 @@
                         that.POSITION_MAP.setZoom(that.POSITION_MAP.getZoom() + 1);
                     } else if (e && e.keyCode == 27) {
                         that.exit();
+                    } else if (e && e.keyCode == 37) {
+                        that.POSITION_MAP.panBy(-5, 0);
+                    } else if (e && e.keyCode == 39) {
+                        that.POSITION_MAP.panBy(5, 0);
+                    } else if (e && e.keyCode == 38) {
+                        that.POSITION_MAP.panBy(0, -5);
+                    } else if (e && e.keyCode == 40) {
+                        that.POSITION_MAP.panBy(0, 5);
                     }
+
                 } else if (that.CUR_BLOCK == "NAVMAP") {
                     if (e && e.keyCode == 8) { //返回
                         that.CUR_BLOCK = "PAGE_BODY";
@@ -203,8 +213,8 @@
                         }
                     } else if (e && e.keyCode == 13) {
                         if (that.NAV_SEL == 2) {
-                            $($($($("#navContent_" + that.NAV_MENU + " .map").children().children()[0]).children().children()[2]).children()[1]).trigger('click');
-                            $("#navContent_" + that.NAV_MENU + " .map").removeClass("map").addClass("mapFocus");
+                            //$($($($("#navContent_" + that.NAV_MENU + " .map").children().children()[0]).children().children()[2]).children()[1]).trigger('click');
+                            $("#navContent_" + that.NAV_MENU + " .map").focus().removeClass("map").addClass("mapFocus");
                             $('#hintContainer').attr('class', 'mapHint').css("z-index", "5");
                             that.CUR_BLOCK = "NAVMAP_SHOWMAP";
                         }
@@ -236,6 +246,31 @@
                         }
                     } else if (e && e.keyCode == 27) {
                         that.exit();
+                    } else if (e && e.keyCode == 37) {
+                        if (that.NAV_MENU == 0) {
+                            that.DRIVING_MAP.panBy(-5, 0);
+                        } else {
+                            that.TRANSFER_MAP.panBy(-5, 0);
+                        }
+
+                    } else if (e && e.keyCode == 39) {
+                        if (that.NAV_MENU == 0) {
+                            that.DRIVING_MAP.panBy(5, 0);
+                        } else {
+                            that.TRANSFER_MAP.panBy(5, 0);
+                        }
+                    } else if (e && e.keyCode == 38) {
+                        if (that.NAV_MENU == 0) {
+                            that.DRIVING_MAP.panBy(0, -5);
+                        } else {
+                            that.TRANSFER_MAP.panBy(0, -5);
+                        }
+                    } else if (e && e.keyCode == 40) {
+                        if (that.NAV_MENU == 0) {
+                            that.DRIVING_MAP.panBy(0, 5);
+                        } else {
+                            that.TRANSFER_MAP.panBy(0, 5);
+                        }
                     }
                 } else if (that.CUR_BLOCK == 'PAGE_BODY') {
                     if (e && e.keyCode == 27 || e && e.keyCode == 8) {
@@ -674,11 +709,12 @@
                 init();
             },
             exit: function () {
-                if (Lib.getQueryString('click')) {
+               /* if (Lib.getQueryString('click')) {
                     window.location.href = '../list/list.html?id=' + Lib.getQueryString('id') + "&click=true";
                 } else {
                     window.location.href = '../list/list.html?id=' + Lib.getQueryString('id');
-                }
+                }*/
+                window.history.go(-1);
             }
 
         }
