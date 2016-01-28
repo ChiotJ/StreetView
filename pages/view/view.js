@@ -239,7 +239,9 @@
                         that.exit();
                     }
                 } else if (that.CUR_BLOCK == 'PAGE_BODY') {
-                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                    if (e && e.keyCode == 27) {
+                        that.exit();
+                    } else if (e && e.keyCode == 8) {
                         return false;
                     }
                 }

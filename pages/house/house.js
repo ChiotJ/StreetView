@@ -472,7 +472,9 @@
                     });
                     return false;
                 } else if (that.CUR_BLOCK == 'PAGE_BODY') {
-                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                    if (e && e.keyCode == 27) {
+                        that.exit();
+                    } else if (e && e.keyCode == 8) {
                         return false;
                     }
                 }
@@ -1063,11 +1065,12 @@
                 that.KEYBOARD.init();
             },
             exit: function () {
-                if (Lib.getQueryString('click')) {
-                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
-                } else {
-                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c';
-                }
+                window.history.go(-1);
+                /*if (Lib.getQueryString('click')) {
+                 window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
+                 } else {
+                 window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c';
+                 }*/
             }
 
         }

@@ -46,9 +46,13 @@
     };
     Menu.prototype = {
         init: function () {
+            if (!sessionStorage["StreetView.history.index.menu"]) {
+                sessionStorage["StreetView.history.index.menu"] = 0;
+            }
             this.getMenuList();
             var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=150";
             $("#saoma").attr("src", qr);
+
         },
         getMenuList: function () {
             var self = this;
@@ -69,13 +73,7 @@
                         var $menu = $("#menu");
                         $menu.css("width", self.lineNum * 210 + "px").css("left", (1280 - self.lineNum * 210) / 2 + "px").html(menuDot(self.menuList));
                         self.menuKeyListener();
-                        var f = GHSMLib.utils.getQueryString("id");
-                        if (f) {
-                            $($("#" + f)[0]).focus();
-                        } else {
-                            $($menu.find("li")[0]).focus();
-                        }
-
+                        $($menu.find("li")[sessionStorage["StreetView.history.index.menu"]]).focus();
                     }
                 }
             });
@@ -86,6 +84,9 @@
             GHSMLib.keyCon.keyListener({
                 id: "pageBody",
                 esc: function () {
+                    if (typeof CyberCloud != "undefined") {
+                        CyberCloud.ExitApp();
+                    }
                     return false;
                 },
                 back: function () {
@@ -126,12 +127,12 @@
                     }, 1000);
                 },
                 /*n1: function (item) {
-                    $("#pageBody").focus();
-                    $("#saomatu").css("top", 0);
-                    setTimeout(function () {
-                        $("#saomatu").attr("tabindex", "-1").focus();
-                    }, 1000);
-                },*/
+                 $("#pageBody").focus();
+                 $("#saomatu").css("top", 0);
+                 setTimeout(function () {
+                 $("#saomatu").attr("tabindex", "-1").focus();
+                 }, 1000);
+                 },*/
                 blur: function (item) {
                     $(item).find(".buttonName").removeAttr("style");
                 },
@@ -141,6 +142,7 @@
                     var m = self.menuList[idx];
                     var type = m.type;
                     var dataId = m.id;
+                    sessionStorage["StreetView.history.index.menu"] = idx;
                     if (type == 1) {
                         if (dataId == "d7b6338e720fe92bbd31e1ae52e56a5e") {
                             window.location.href = "../search/search.html";

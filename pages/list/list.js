@@ -12,6 +12,9 @@
             DATA: null,
             ListScroll: null,
             init: function () {
+                if (!sessionStorage["StreetView.history.list.menu"]) {
+                    sessionStorage["StreetView.history.list.menu"] = 0;
+                }
                 var that = this;
                 that.initContent();
                 that.keyListener();
@@ -94,7 +97,9 @@
                         }
                     });
                 } else if (that.CUR_BLOCK == 'PAGE_BODY') {
-                    if (e && e.keyCode == 27 || e && e.keyCode == 8) {
+                    if (e && e.keyCode == 27) {
+                        that.exit();
+                    } else if (e && e.keyCode == 8) {
                         return false;
                     }
                 }
@@ -124,7 +129,7 @@
                         $("#listTitle > div").html(result.name);
                         $("#menuList").html(that.TEMPLATE_MENU_LIST(result.list));
                         that.bindFocus("#menuList li");
-                        $('#menuList li:first-child').attr('tabindex', -1).focus();
+
                         $('#menuList li').focus(function () {
                             var src = $('#menuList li:last-child').find("img").attr("src").replace("_02", "_01");
                             $('#menuList li:last-child').find("img").attr("src", src);
@@ -134,11 +139,15 @@
                         $('#menuList li:last-child').focus(function () {
                             var src = $(this).find("img").attr("src").replace("_01", "_02");
                             $(this).find("img").attr("src", src);
+                            $('#viewList').html('<div class="enterNotice">按“确定”键进入</div>');
                         }).click(function () {
                             window.location.href = that.MENU.searchUrl + "?click=true";
                         });
 
                         new IScroll('#menu_wrapper', {mouseWheel: true, click: true});
+
+                        Lib["MENU_INDEX"] = sessionStorage["StreetView.history.list.menu"];
+                        $($('#menuList li')[sessionStorage["StreetView.history.list.menu"]]).attr('tabindex', -1).focus();
 
                     }
                 });
@@ -182,13 +191,15 @@
                     if ($(this).attr("data-id") && that.DATAID != $(this).attr("data-id")) {
                         that.DATAID = $(this).attr("data-id");
                         that.getListData($(this).attr("data-id"));
-
                     }
+                    sessionStorage["StreetView.history.list.menu"] = $(this).index();
+                    Lib["MENU_INDEX"] = $(this).index();
                 });
             },
             exit: function () {
                 //window.location.href = '../index/index.html?id=' + Lib.getQueryString('id');
                 window.history.go(-1);
+                sessionStorage["StreetView.history.list.menu"] = 0;
             }
         }
     })();

@@ -1233,6 +1233,7 @@
             GHSMLib.keyCon.keyListener({
                 id: "pageBody",
                 esc: function () {
+                    exit();
                     return false;
                 },
                 back: function () {
