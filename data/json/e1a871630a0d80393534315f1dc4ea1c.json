@@ -5,6 +5,10 @@
   "searchUrl": "../search/search.html",
   "list": [
     {
+      "id": "7470a9eecdbae29f209ae61df28ab443",
+      "name": "昌平区"
+    },
+    {
       "id": "394002393da4c0b9ef33821f7fe8586f",
       "name": "门头沟区"
     },
@@ -17,16 +21,12 @@
       "name": "房山区"
     },
     {
-      "id": "7470a9eecdbae29f209ae61df28ab443",
-      "name": "昌平区"
+      "id": "6a56014f887dc0831b13f6650ec1241c",
+      "name": "延庆县"
     },
     {
       "id": "6a4a28b88d26d9383fcd74e1eb9c7dde",
       "name": "怀柔区"
-    },
-    {
-      "id": "6a56014f887dc0831b13f6650ec1241c",
-      "name": "延庆县"
     },
     {
       "id": "6bf332ce1f48e50419d13d0bf8bc2d8b",
