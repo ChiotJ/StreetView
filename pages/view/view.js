@@ -350,7 +350,7 @@
                                     }
                                 });
 
-                                var uP = Lib.getUserPosition();
+                                var uP = Lib.getUserPosition(GHSMLib.cardId);
                                 var nav = {};
                                 nav.start = uP.address;
                                 nav.end = result.name;

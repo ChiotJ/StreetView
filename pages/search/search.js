@@ -1,7 +1,5 @@
 !function (window, document) {
     var init = function () {
-        console.log(GHSMLib.cardId);
-
         Lib.mapInit(this, GHSMLib.cardId);
         vicinity.getData();
         $('#hintContainer').attr('class', 'searchMap').show();

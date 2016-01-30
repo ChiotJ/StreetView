@@ -46,7 +46,7 @@
                 }
             },
             init: function () {
-                Lib.mapInit();
+                Lib.mapInit({}, GHSMLib.cardId);
                 this.keyboardInit();
                 this.keyListener();
                 $(".sInput").focus();
