@@ -172,7 +172,7 @@
                     return false;
                 },
                 back: function () {
-                    window.history.go(-1);
+                    window.location.href = "http://172.16.188.26/web/flytvYun/pages/index/index.html";
                     return false;
                 }
             });
