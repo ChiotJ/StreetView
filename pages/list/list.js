@@ -191,6 +191,8 @@
                     if ($(this).attr("data-id") && that.DATAID != $(this).attr("data-id")) {
                         that.DATAID = $(this).attr("data-id");
                         that.getListData($(this).attr("data-id"));
+                    } else {
+                        that.DATAID = "search";
                     }
                     sessionStorage["StreetView.history.list.menu"] = $(this).index();
                     Lib["MENU_INDEX"] = $(this).index();

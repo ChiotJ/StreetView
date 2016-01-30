@@ -50,7 +50,7 @@
                 sessionStorage["StreetView.history.index.menu"] = 0;
             }
             this.getMenuList();
-            var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=150";
+            var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=150";
             $("#saoma").attr("src", qr);
 
         },

@@ -2,7 +2,7 @@
   "status": 1,
   "name": "旅游地图",
   "icon": "8524b7c3b8211bde617fa77502658e12/icon.png",
-  "searchUrl":"../search/search.html",
+  "searchUrl": "../search/search.html",
   "list": [
     {
       "id": "9223a76ef92e72715b6e32fde2fc9f63",
@@ -23,6 +23,10 @@
     {
       "id": "0eca62b4173e72ead58c59d4dc50fffe",
       "name": "探秘人祖山"
+    },
+    {
+      "id": "5e9bde61a311f04123a93dda7cbe5bde",
+      "name": "致春树"
     }
   ]
 }

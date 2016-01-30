@@ -115,7 +115,7 @@
 
     $(function () {
         $.ajax({
-            url: "http://wx.digital-media.com.cn/wx/box/getBoxByCardId",
+            url: "http://211.99.155.46/chaowai/box/getBoxByCardId",
             data: {"cardId": request.QueryString("cardId")},
             type: "POST",
             dataType: 'json',
@@ -142,7 +142,7 @@
         $("#notice").html("保存中，请稍候");
         if (address.trim() != "" && name.trim() != "" && tel.trim() != "") {
             $.ajax({
-                url: "http://wx.digital-media.com.cn/wx/box/save",
+                url: "http://211.99.155.46/chaowai/box/save",
                 type: "POST",
                 async: false,
                 data: ({
@@ -208,7 +208,7 @@
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
         $.ajax({
-            url: "http://" + window.location.host + "/com.zunhao.tv/conneturl?http://apis.map.qq.com/ws/coord/v1/translate?",
+            url: "http://" + window.location.host + "/TVMap/transfer?http://apis.map.qq.com/ws/coord/v1/translate?",
             type: "GET",
             data: ({
                 locations: latitude + "," + longitude,

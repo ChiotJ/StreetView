@@ -1,7 +1,8 @@
 !function (window, document) {
     var init = function () {
-        this.u = true;
-        Lib.mapInit(this);
+        console.log(GHSMLib.cardId);
+
+        Lib.mapInit(this, GHSMLib.cardId);
         vicinity.getData();
         $('#hintContainer').attr('class', 'searchMap').show();
         keyListener.container();
@@ -20,7 +21,7 @@
     };
 
     var changeAdd = function () {
-        var sock = new SockJS('http://wx.digital-media.com.cn/wx/tvapi?token=card1');
+        var sock = new SockJS('http://wx.digital-media.com.cn/wx/tvapi?token=' + GHSMLib.cardId);
         var stompClient = Stomp.over(sock);
         stompClient.debug = function (str) {
             //console.log(str);
@@ -55,9 +56,9 @@
                         $("#vicinityList").html(self.vicinityDot(data.list))
                         self.keyListener();
 
-                        var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=300";
+                        var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=300";
                         $("#DDCode").attr("src", qr);
-                        var qr2 = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + Lib.user.CardID + "&size=250";
+                        var qr2 = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=250";
                         $("#vicinityDetailQr").attr("src", qr2);
                     }
                 }
