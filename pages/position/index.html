@@ -222,7 +222,7 @@
                     longitude = data.locations[0].lng;
                     var cardId = request.QueryString("cardId");
                     $.ajax({
-                        url: "http://wx.digital-media.com.cn/wx/box/save",
+                        url: "http://211.99.155.46/chaowai/box/save",
                         type: "POST",
                         data: ({
                             cardId: cardId,
@@ -245,7 +245,7 @@
     function errorHandler(err) {
         document.getElementById('notice').innerHTML = "GPS定位失败，网络定位中，请稍候";
         $.ajax({
-            url: "http://" + window.location.host + "/com.zunhao.tv/conneturl?http://apis.map.qq.com/ws/location/v1/ip?",
+            url: "http://" + window.location.host + "/TVMap/transfer??http://apis.map.qq.com/ws/location/v1/ip?",
             type: "GET",
             data: ({
                 key: "4F5BZ-ZQSCP-FM6DI-VT2TU-HDRU7-OWBBU"
@@ -257,7 +257,7 @@
                     longitude = data.result.location.lng;
                     var cardId = request.QueryString("cardId");
                     $.ajax({
-                        url: "http://wx.digital-media.com.cn/wx/box/save",
+                        url: "http://211.99.155.46/chaowai/box/save",
                         type: "POST",
                         data: ({
                             cardId: cardId,
