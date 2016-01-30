@@ -46,20 +46,17 @@
 </script>
 
 <script id="template-menu-list" type="text/x-dot-template">
-    {{~it:value:index}}
+    {{~it.list:value:index}}
     <li data-id="{{= value.id || ''}}" tabindex="-1">
         {{= value.name || ''}}
     </li>
     {{~}}
+
     <li tabindex="-1">
         <img src="images/search_01.png">
 
-        <div>搜索</div>
+        <div>{{=it.searchName||"搜索"}}</div>
     </li>
-    <!--<li tabindex="-1">
-        <img src="images/filter_01.png">
-        <div>筛选</div>
-    </li>-->
 </script>
 
 <script src="../../lib/jquery-2.1.3.min.js"></script>

@@ -127,7 +127,7 @@
                         that.MENU = result;
                         $("#listTitle > img").attr("src", "../../data/images/" + result.icon);
                         $("#listTitle > div").html(result.name);
-                        $("#menuList").html(that.TEMPLATE_MENU_LIST(result.list));
+                        $("#menuList").html(that.TEMPLATE_MENU_LIST(result));
                         that.bindFocus("#menuList li");
 
                         $('#menuList li').focus(function () {
