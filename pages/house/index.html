@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地图街景</title>
+    <link href="index.css" rel="stylesheet" type="text/css"/>
+    <script src="../../lib/closeFunction.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="pageBody" class="pageBody" tabindex="-1">
+    <div id="panoCon"></div>
+    <div id="container"></div>
+    <div id="album">
+        <div id="albumCon">
+            <div id="albumTitle_wrapper">
+                <div id="albumTitleBody" class="scroller"></div>
+            </div>
+
+            <div id="viewBody_wrapper">
+                <div id="albumViewBody" class="scroller"></div>
+            </div>
+            <div id="detailIcon" class="houseDetailIcon"></div>
+        </div>
+        <div id="albumNotice">
+            <div></div>
+            <img src="images/mapPhoto_no.png" width="55px" height="206px">
+        </div>
+    </div>
+    <div id="hintContainer" class="searchMap">
+        <span id="zoomHint" class="hint"></span>
+        <span id="pitchHint" class="hint"></span>
+        <span id="enterHint" class="hint"></span>
+    </div>
+    <img class="txzc" src="images/txzc.png">
+
+
+    <div id="menus" class="menus">
+        <img id="menus_top" src="images/menus_shang.png">
+        <img id="menus_zuo" src="images/menus_zuo.png">
+        <img id="menus_zhong" src="images/menus_zhong.png">
+        <img id="menus_you" src="images/menus_you.png">
+        <img id="menus_xia" src="images/menus_xia.png">
+    </div>
+
+    <div id="search" class="search">
+        <div id="search_0" class="sInput" tabindex="-1">
+            <img class="sMag" src="images/mag_glass.png"/>
+            <input id="search_input" class="sText" type="text" placeholder=" 输入楼盘首字母即可搜索，如：输入“ghds” 搜索 “歌华大厦”">
+        </div>
+        <!--<div id="search_1" class="ssBut" tabindex="-1"></div>
+        <div class="notice">
+            输入首字母即可搜索，如：输入“ghds” 可搜索 “歌华大厦”
+        </div>-->
+    </div>
+
+    <ul id="tv_keyboard">
+        <li tabindex="-1">1</li>
+        <li tabindex="-1">2</li>
+        <li tabindex="-1">3</li>
+        <li tabindex="-1">4</li>
+        <li tabindex="-1">5</li>
+        <li tabindex="-1">6</li>
+        <li tabindex="-1">7</li>
+        <li tabindex="-1">8</li>
+        <li tabindex="-1">9</li>
+        <li tabindex="-1">0</li>
+        <li tabindex="-1">q</li>
+        <li tabindex="-1">w</li>
+        <li tabindex="-1">e</li>
+        <li tabindex="-1">r</li>
+        <li tabindex="-1">t</li>
+        <li tabindex="-1">y</li>
+        <li tabindex="-1">u</li>
+        <li tabindex="-1">i</li>
+        <li tabindex="-1">o</li>
+        <li tabindex="-1">p</li>
+        <li tabindex="-1">a</li>
+        <li tabindex="-1">s</li>
+        <li tabindex="-1">d</li>
+        <li tabindex="-1">f</li>
+        <li tabindex="-1">g</li>
+        <li tabindex="-1">h</li>
+        <li tabindex="-1">j</li>
+        <li tabindex="-1">k</li>
+        <li tabindex="-1">l</li>
+        <li tabindex="-1">删除</li>
+        <li tabindex="-1">z</li>
+        <li tabindex="-1">x</li>
+        <li tabindex="-1">c</li>
+        <li tabindex="-1">v</li>
+        <li tabindex="-1">b</li>
+        <li tabindex="-1">n</li>
+        <li tabindex="-1">m</li>
+        <li tabindex="-1">,</li>
+        <li tabindex="-1">.</li>
+        <li tabindex="-1">搜索</li>
+    </ul>
+
+    <div id="resultContainer">
+        <div>
+            <ul id="searchList"></ul>
+        </div>
+    </div>
+
+    <div id="houseListContainer" class="houseList">
+        <div id="houseList" class="scroller">
+        </div>
+    </div>
+
+    <div id="houseDetailContainer" class="houseDetail">
+        <img id="houseQrCode"
+             src="http://web.sr.gehua.net.cn/api/common/Image/qrCode.png?text=http://www.hiweixiao.com/h5/zhaofangditu/detail.html?id=1465&size=110">
+
+        <div class="houseDetailText">扫一扫 看详情</div>
+        <div id="houseTel"></div>
+    </div>
+
+    <div id="houseDetail">
+    </div>
+
+    <div id="houseIntro">
+    </div>
+
+    <div id="housePeripheral">
+        <div id="mapPeripheral"></div>
+        <ul id="housePeripheralMenuList" class="housePeripheralMenu">
+            <li data-id="公交" tabindex="-1">
+                <img src="images/housePeripheralMenu_01.png">
+
+                <div>公交</div>
+            </li>
+            <li data-id="地铁" tabindex="-1">
+                <img src="images/housePeripheralMenu_02.png">
+
+                <div>地铁</div>
+            </li>
+            <li data-id="学校" tabindex="-1">
+                <img src="images/housePeripheralMenu_03.png">
+
+                <div>学校</div>
+            </li>
+            <li data-id="商场" tabindex="-1">
+                <img src="images/housePeripheralMenu_04.png">
+
+                <div>商超</div>
+            </li>
+            <li data-id="医院" tabindex="-1">
+                <img src="images/housePeripheralMenu_05.png">
+
+                <div>医院</div>
+            </li>
+            <li data-id="银行" tabindex="-1">
+                <img src="images/housePeripheralMenu_06.png">
+
+                <div>银行</div>
+            </li>
+        </ul>
+    </div>
+
+        <div id="dialog"></div>
+
+    <video id="yyxgxVideo" src="video/100434K1140710161249090.mp4"></video>
+
+    <div id="exit" onselectstart="return false">
+        返回
+    </div>
+
+
+</div>
+<script id="searchDot" type="text/x-dot-template">
+    {{~it:value:index}}
+    <li tabindex="-1">
+        <button tabindex="-1" id="btn_4_{{= index || ''}}" data-index="{{= index || '0'}}" type="button"
+                class="btn search_item" data-lat="{{= value.lat || ''}}" data-lng="{{= value.lng || ''}}"
+                data-id="{{= value.hid || ''}}" data-tel="{{= value.telphone || ''}}">
+            <div class="title">{{= value.name || ''}}</div>
+            <div class="addr">{{= value.loupan_address || ''}}</div>
+        </button>
+    </li>
+    {{~}}
+</script>
+<script id="template-house" type="text/x-dot-template">
+    {{~it:value:index}}
+    <li tabindex="-1" data-id="{{= value.hid || ''}}" data-lat="{{= value.FLongitude || ''}}"
+        data-lng="{{= value.FLatitude || ''}}"
+        data-tel="{{= value.telphone || '暂无联系方式'}}">
+        <img src="{{= value.cover || ''}}">
+
+        <div class="houseText">{{= value.name || ''}}</div>
+    </li>
+    {{~}}
+</script>
+<script id="template-house-detail" type="text/x-dot-template">
+    <img src="{{= it.cover || ''}}">
+    <div class="content">
+        <div>
+            <div class="name">{{= it.name || ''}}<span class="status">{{= it.xiaoshou_status || ''}}</span></div>
+            <div class="telephone"><span class="telIcon"></span>{{= it.telphone || '暂无联系方式'}}</div>
+            <div class="price"><span>{{= it.price || ''}}</span>元/平米</div>
+        </div>
+        <div>
+            <div class="address"><span class="posIcon"></span>{{= it.loupan_address || ''}}</div>
+            <p><span>开盘时间：</span>{{= it.open_time || ''}}</p>
+
+            <p><span>入住时间：</span>{{= it.jiaofang_time || ''}}</p>
+
+            <p><span>物业类型：</span>{{= it.wuye_type || ''}}</p>
+
+            <p><span>产权年限：</span>{{= it.prop_right || ''}}</p>
+
+            <p><span>装修情况：</span>{{= it.zhuangxiu_status || ''}}</p>
+
+            <p><span>建筑类别：</span>{{= it.jianzhu_type || ''}}</p>
+
+            <p><span>在售户型：</span>{{= it.huxing || ''}}</p>
+
+            <p><span>开发商：</span>{{= it.kaifashang || ''}}</p>
+
+            <p><span>预售证：</span>{{= it.yushou_license || ''}}</p>
+
+            <p><span>物业公司：</span>{{= it.wuye_company || ''}}</p>
+        </div>
+    </div>
+    <ul id="houseDetailMenuList" class="houseDetailMenu">
+        <li tabindex="1" data-id="0">
+            <div>项目介绍</div>
+            <img src="images/house_detail_01.png">
+        </li>
+        <li tabindex="1" data-id="1">
+            <div>周边生活</div>
+            <img src="images/house_detail_02.png">
+        </li>
+        <li tabindex="1" data-id="2">
+            <div>全景看房</div>
+            <img src="images/house_detail_03.png">
+        </li>
+        <li tabindex="1" data-id="3">
+            <div>一键找房</div>
+            <img src="images/house_detail_04.png">
+        </li>
+    </ul>
+</script>
+<script id="template-house-intro" type="text/x-dot-template">
+    <div>项目介绍</div>
+    <div class="detailLeft">
+        <img src="{{= it.cover_path || ''}}">
+
+        <div>
+            <div class="name">{{= it.name || ''}}<span class="status">{{= it.xiaoshou_status || ''}}</span></div>
+            <div class="telephone"><span class="telIcon"></span>{{= it.telphone || '暂无联系方式'}}</div>
+            <div class="price"><span>{{= it.price || ''}}</span>元/平米</div>
+        </div>
+        <div class="jieshao">
+            <div>项目介绍</div>
+            <div>{{= it.xiangmu_intro || ''}}</div>
+        </div>
+    </div>
+    <div class="detailRight">
+        <div class="jieshao">
+            <div>交通情况</div>
+            <div>{{= it.traffic_details || ''}}</div>
+        </div>
+    </div>
+</script>
+<script src="../../lib/jquery-2.1.3.min.js" type="text/javascript"></script>
+<script src="../../lib/common.js" type="text/javascript"></script>
+<script src="../../lib/pano.js" type="text/javascript"></script>
+<script src="../../lib/mapT.js" type="text/javascript"></script>
+<script src="../../lib/mapMain.js" type="text/javascript"></script>
+<script src="../../lib/doT.min.js"></script>
+<script src="../../lib/iscroll/iscroll.js"></script>
+<script src="../../lib/sockjs-1.0.0.min.js" type="text/javascript"></script>
+<script src="../../lib/stomp.min.js" type="text/javascript"></script>
+<script id="GHSMLib" src="http://172.16.188.26/web/GHSMLib/GHSMLib-1.0.0.min.js" type="text/javascript"></script>
+<script src="index.js" type="text/javascript"></script>
+</body>
+</html>

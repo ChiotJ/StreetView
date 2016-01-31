@@ -3,7 +3,7 @@
   "name": "全景找房",
   "icon": "cff4c78b6825bc3d112df4781700528c/icon.png",
   "searchName": "搜房",
-  "searchUrl": "../house/house.html",
+  "searchUrl": "../house/index.html",
   "list": [
     {
       "id": "9223a76ef92e72715b6e32fde2fc9f63",

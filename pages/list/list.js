@@ -90,7 +90,7 @@
                             var id = Lib.getQueryString('id');
                             if (id == "cff4c78b6825bc3d112df4781700528c") {
                                 var house = that.list[$(e.target).attr('data-index')];
-                                window.location.href = '../house/house.html?hid=' + house.hid + '&tel=' + house.tel + '&lat=' + house.lat + '&lng=' + house.lng + "&" + $(e.target).attr('data-pano').split('#')[1];
+                                window.location.href = '../house/index.html?hid=' + house.hid + '&tel=' + house.tel + '&lat=' + house.lat + '&lng=' + house.lng + "&" + $(e.target).attr('data-pano').split('#')[1];
                             } else {
                                 window.location.href = '../view/view.html?id=' + id + '&cid=' + that.DATAID + "&" + $(e.target).attr('data-pano').split('#')[1];
                             }
@@ -167,7 +167,7 @@
                             var id = Lib.getQueryString('id');
                             if (id == "cff4c78b6825bc3d112df4781700528c") {
                                 var house = that.list[$(this).attr('data-index')];
-                                window.location.href = '../house/house.html?hid=' + house.hid + '&tel=' + house.tel + '&lat=' + house.lat + '&lng=' + house.lng + "&" + $(this).attr('data-pano').split('#')[1] + "&click=true";
+                                window.location.href = '../house/index.html?hid=' + house.hid + '&tel=' + house.tel + '&lat=' + house.lat + '&lng=' + house.lng + "&" + $(this).attr('data-pano').split('#')[1] + "&click=true";
                             } else {
                                 window.location.href = '../view/view.html?id=' + id + '&cid=' + that.DATAID + '&' + $(this).attr('data-pano').split('#')[1] + "&click=true";
                             }
