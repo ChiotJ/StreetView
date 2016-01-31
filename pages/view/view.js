@@ -57,21 +57,6 @@
                 if (that.CUR_BLOCK == "PANO") {
                     if (e && e.keyCode == 27 || e && e.keyCode == 8) { // 按 Esc/返回
                         that.exit();
-                    } else if (e && e.keyCode == 40) {
-                        that.CUR_BLOCK = "PAGE_BODY";
-                        $("#pageBody").focus();
-                        if (((that.PANO.PANO.planeInfo && that.PANO.area == 2 ) || !that.PANO.PANO.planeInfo) && that.DETAIL) {
-                            $('#viewDetail').css('left', '0px');
-                            that.AREA = that.PANO.area;
-                            that.PANO.changeArea(-1);
-                            Lib['VIEWDETAILMENU_INDEX'] = 0;
-                            setTimeout(function () {
-                                that.CUR_BLOCK = 'DETAIL';
-                                $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).attr('tabindex', -1).focus();
-                            }, 1000);
-                            return false;
-                        }
-
                     }
                 } else if (that.CUR_BLOCK == "DETAIL") {
                     Lib.listAreaListener({
@@ -252,6 +237,26 @@
                     var e = event || window.event || arguments.callee.caller.arguments[0];
                     //console.log(that.CUR_BLOCK + "-" + e.keyCode);
                     return that.control(e);
+                };
+
+
+                document.getElementById("viewBody_wrapper").onkeydown = function (e) {
+                    if (e && e.keyCode == 40) {
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
+                        if ((that.PANO.PANO.planeInfo || !that.PANO.PANO.planeInfo) && that.DETAIL) {
+                            $('#viewDetail').css('left', '0px');
+                            that.AREA = that.PANO.area;
+                            that.PANO.changeArea(-1);
+                            Lib['VIEWDETAILMENU_INDEX'] = 0;
+                            setTimeout(function () {
+                                that.CUR_BLOCK = 'DETAIL';
+                                $($('.viewDetailMenu li')[Lib['VIEWDETAILMENU_INDEX']]).attr('tabindex', -1).focus();
+                            }, 1000);
+                            return false;
+                        }
+
+                    }
                 };
 
 

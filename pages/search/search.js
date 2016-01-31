@@ -1,22 +1,207 @@
 !function (window, document) {
     var init = function () {
-        Lib.mapInit(this, GHSMLib.cardId);
+        $("#pageBody").focus();
+        container.init();
         vicinity.getData();
-        $('#hintContainer').attr('class', 'searchMap').show();
-        keyListener.container();
+        menus.keyListener();
         keyListener.keyborad();
-        keyListener.pageBody();
-        window.onload = function () {
-            Lib.mapFocus();
-        };
-        controlStatus.status = true;
+        pageBody.keyListener();
+
 
         if (Lib.getQueryString("click")) {
             $("#exit").show();
         }
 
-        changeAdd();
+        //changeAdd();
     };
+
+    var container = {
+        init: function () {
+            Lib.mapInit(this, GHSMLib.cardId);
+            $('#hintContainer').attr('class', 'searchMap').show();
+            this.keyListener();
+            window.onload = function () {
+                Lib.mapFocus();
+            };
+        },
+        keyListener: function () {
+            GHSMLib.keyCon.keyListener({
+                id: "container",
+                pageUp: function () {
+                    Lib.MAP.setZoom(Lib.MAP.getZoom() + 1);
+                },
+                pageDown: function () {
+                    Lib.MAP.setZoom(Lib.MAP.getZoom() - 1);
+                },
+                enter: function () {
+                    $("#pageBody").focus();
+                    menus.menus_effect(true);
+                    setTimeout(function () {
+                        $("#menus").attr("tabindex", "-1").focus().trigger("click");
+                    }, 500);
+                },
+                click: function () {
+                    return false;
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    exit();
+                    return false;
+                }
+            });
+        }
+    };
+
+
+    var menus = {
+        menus_effect: function (flag) {
+            var time = 500;
+            if (flag) {
+                $("#menus").animate({
+                    width: "300px",
+                    height: "300px",
+                    top: "210px",
+                    left: "490px",
+                    opacity: "1"
+                }, time);
+                $("#menus_top").animate({
+                    width: "98px",
+                    height: "88px",
+                    top: "6px",
+                    left: "101px"
+                }, time);
+
+                $("#menus_zuo").animate({
+                    width: "98px",
+                    height: "88px",
+                    top: "112px",
+                    left: "0"
+                }, time);
+
+                $("#menus_you").animate({
+                    width: "98px",
+                    height: "88px",
+                    top: "112px",
+                    right: "0"
+                }, time);
+
+                $("#menus_xia").animate({
+                    width: "98px",
+                    height: "88px",
+                    bottom: "0",
+                    left: "101px"
+                }, time);
+
+                $("#menus_zhong").animate({
+                    width: "76px",
+                    height: "76px",
+                    top: "112px",
+                    left: "112px"
+                }, time);
+            } else {
+                $("#menus").animate({
+                    width: "0",
+                    height: "0",
+                    top: "360px",
+                    left: "640px",
+                    opacity: "0"
+                }, time);
+                $("#menus_top").animate({
+                    width: "0",
+                    height: "0",
+                    top: "0",
+                    left: "0"
+                }, time);
+
+                $("#menus_zuo").animate({
+                    width: "0",
+                    height: "0",
+                    top: "0",
+                    left: "0"
+                }, time);
+
+                $("#menus_you").animate({
+                    width: "0",
+                    height: "0",
+                    top: "0",
+                    right: "0"
+                }, time);
+
+                $("#menus_xia").animate({
+                    width: "0",
+                    height: "0",
+                    bottom: "0",
+                    left: "0"
+                }, time);
+
+                $("#menus_zhong").animate({
+                    width: "0",
+                    height: "0",
+                    top: "0",
+                    left: "0"
+                }, time);
+            }
+        },
+        keyListener: function () {
+            var self = this;
+            GHSMLib.keyCon.keyListener({
+                id: "menus",
+                enter: function () {
+                    $("#pageBody").focus();
+                    self.menus_effect(false);
+                    Lib.mapFocus();
+                },
+                up: function () {
+                    $("#pageBody").focus();
+                    $("#search").css("top", "0");
+                    $("#tv_keyboard").css("bottom", "0");
+                    self.menus_effect(false);
+                    setTimeout(function () {
+                        $($("#tv_keyboard").find("li")[0]).focus();
+                    }, 1000);
+                },
+                down: function () {
+                    $("#pageBody").focus();
+                    $("#vicinity").css("bottom", "0");
+                    self.menus_effect(false);
+                    setTimeout(function () {
+                        $($("#vicinityList").find("li")[0]).focus();
+                    }, 1000);
+                },
+                left: function () {
+                    $("#pageBody").focus();
+                    self.menus_effect(false);
+                    var flag = Pano.showPano();
+                    if (!flag) {
+                        $('#dialog').html('此地暂无街景，敬请期待').fadeIn();
+                        Lib.mapFocus();
+                    }
+                },
+                right: function () {
+                    $("#pageBody").focus();
+                    sessionStorage["StreetView.history.list.menu"] = 0;
+                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
+                },
+                click: function (item) {
+                    return false;
+                },
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    $("#pageBody").focus();
+                    self.menus_effect(false);
+                    Lib.mapFocus();
+                    return false;
+                }
+            });
+        }
+    };
+
 
     var changeAdd = function () {
         var sock = new SockJS('http://wx.digital-media.com.cn/wx/tvapi?token=' + GHSMLib.cardId);
@@ -168,7 +353,7 @@
                     $("#vicinityDetail").css("left", "1280px");
                     setTimeout(function () {
                         $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                    }, 1000)
+                    }, 1000);
                     return false;
                 }
             });
@@ -385,13 +570,12 @@
                     exit();
                 }
                 if (e && e.keyCode == 8) { // 返回
-                    controlStatus.control(function () {
-                        $(".detailImg").css("left", "1280px");
-                        that.CUR_BLOCK = 'LIST';
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
-                    }, 1000);
+                    $("#pageBody").focus();
+                    $(".detailImg").css("left", "1280px");
+                    that.CUR_BLOCK = 'LIST';
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                    }, 1000)
                 }
             }
             //菜单列表
@@ -432,13 +616,12 @@
                     exit();
                 }
                 if (e && e.keyCode == 8) { // 返回
-                    controlStatus.control(function () {
-                        $(".detailImg").css("left", "1280px");
-                        that.CUR_BLOCK = 'LIST';
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
-                    }, 1000);
+                    $("#pageBody").focus();
+                    $(".detailImg").css("left", "1280px");
+                    that.CUR_BLOCK = 'LIST';
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                    }, 1000)
                 }
                 else if (e && e.keyCode == 34) {//PgDn，下一页
                     var curPage = $('#curPage'), page = Number(curPage.html());
@@ -492,13 +675,12 @@
                     exit();
                 }
                 if (e && e.keyCode == 8) { // 返回
-                    controlStatus.control(function () {
-                        $(".detailImg").css("left", "1280px");
-                        that.CUR_BLOCK = 'LIST';
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
-                    }, 1000);
+                    $("#pageBody").focus();
+                    $(".detailImg").css("left", "1280px");
+                    that.CUR_BLOCK = 'LIST';
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                    }, 1000)
                 }
                 else if (e && e.keyCode == 13) { // 回车确定
                     window['count_' + Lib["PRODUCT_INDEX"]] = count.val();
@@ -516,13 +698,12 @@
                     exit();
                 }
                 if (e && e.keyCode == 8) { // 返回
-                    controlStatus.control(function () {
-                        $(".detailImg").css("left", "1280px");
-                        that.CUR_BLOCK = 'LIST';
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000)
-                    }, 1000);
+                    $("#pageBody").focus();
+                    $(".detailImg").css("left", "1280px");
+                    that.CUR_BLOCK = 'LIST';
+                    setTimeout(function () {
+                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                    }, 1000)
                 }
                 else if (e && e.keyCode == 38) {//上键回到菜单
                     $($('#productList li')[Lib["PRODUCT_INDEX"]]).attr('tabindex', -1).focus();
@@ -563,16 +744,15 @@
                     that.CUR_BLOCK = 'BUYLIST';
                 } else if (e && e.keyCode == 13) { // 回车确定
                     $('#dialog').html('提交成功').show();
+                    $("#pageBody").focus();
                     setTimeout(function () {
                         $('#dialog').hide();
                         $('.shoppingCart').removeClass('shoppingCart');
-                        controlStatus.control(function () {
-                            $(".detailImg").css("left", "1280px");
-                            that.CUR_BLOCK = 'LIST';
-                            setTimeout(function () {
-                                $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                            }, 1000)
-                        }, 1000);
+                        $(".detailImg").css("left", "1280px");
+                        that.CUR_BLOCK = 'LIST';
+                        setTimeout(function () {
+                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        }, 1000)
                     }, 2000);
                     that.CUR_BLOCK = 'LIST';
                 }
@@ -668,470 +848,6 @@
         }
     };
 
-    var view = {
-        viewDetailDot: doT.template($('#viewDetailDot').text()),
-        navDetailDot: doT.template($('#navDetailDot').text()),
-        ICON: {
-            viewCenter: {
-                path: 'images/viewCenter.png',
-                width: 56,
-                height: 56
-            }
-        },
-        POSITION_MAP: null,
-        getView: function (v) {
-            $('#viewDetail').html(this.viewDetailDot(v));
-            this.getPositionMap(v);
-            this.getNav(v);
-            this.keyListener();
-        },
-        keyListener: function () {
-            var self = this;
-            GHSMLib.keyCon.listKeyListener({
-                id: "viewDetailMenuList",
-                columnNum: 2,
-                label: "li",
-                focus: function (item) {
-                    var idx = $(item).index();
-                    $(item).find("img").attr("src", "images/view_detail_0" + (idx + 1) + "_focus.png");
-                },
-                blur: function (item) {
-                    var idx = $(item).index();
-                    $(item).find("img").attr("src", "images/view_detail_0" + (idx + 1) + ".png");
-                },
-                enter: function (item) {
-                    var idx = $(item).index();
-                    if (idx == 0) {
-                        $('#positionMap').css('left', '0');
-                        setTimeout(function () {
-                            $($($($('#positionMap').attr("tabindex", "-1").focus().children().children()[0]).children().children()[2]).children()[1]).trigger('click');
-                            $('#hintContainer').css("z-index", "5");
-                        }, 1000);
-                    } else if (idx == 1) {
-                        $('#navMap').css('left', '0');
-                        setTimeout(function () {
-                            $($('#navMenuList').find("li")[0]).focus();
-                        }, 500)
-                    }
-
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    controlStatus.control(function () {
-                        $("#viewDetail").css("left", "1280px");
-                        setTimeout(function () {
-                            $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
-                        }, 1000);
-                        self.POSITION_MAP = null;
-                        $("#positionMap").html("");
-                    }, 1000);
-                    return false;
-                }
-            });
-            GHSMLib.keyCon.keyListener({
-                id: "positionMap",
-                pageUp: function () {
-                    self.POSITION_MAP.setZoom(self.POSITION_MAP.getZoom() + 1);
-                },
-                pageDown: function () {
-                    self.POSITION_MAP.setZoom(self.POSITION_MAP.getZoom() - 1);
-                },
-                click: function () {
-                    return false;
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    controlStatus.control(function () {
-                        $("#positionMap").css("left", "1280px");
-                        $('#hintContainer').css("z-index", "");
-                        setTimeout(function () {
-                            $("#viewDetail").trigger("click");
-                            $("#viewDetailMenuList").find("li")[0].focus();
-                        }, 1000)
-                    }, 1000);
-                    return false;
-                }
-            });
-            GHSMLib.keyCon.listKeyListener({
-                id: "navMenuList",
-                columnNum: 1,
-                label: "li",
-                focus: function (item) {
-                    var idx = $(item).index();
-                    var src = $(item).find("img").attr("src").replace("_focus.png", ".png").replace(".png", "_focus.png");
-                    $(item).find("img").attr("src", src);
-                    $("#navContent_" + idx).show();
-                },
-                blur: function (item) {
-                    var idx = $(item).index();
-                    var src = $(item).find("img").attr("src").replace("_focus.png", ".png");
-                    $(item).find("img").attr("src", src);
-                    $("#navContent_" + idx).hide();
-                },
-                enter: function (item) {
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    controlStatus.control(function () {
-                        $("#navMap").css("left", "1280px");
-                        setTimeout(function () {
-                            $("#viewDetailMenuList").find("li")[1].focus();
-                        }, 1000)
-                    }, 1000);
-                    return false;
-                }
-            });
-        },
-        getPositionMap: function (v) {
-            //位置地图初始化
-            var center = new qq.maps.LatLng(v.map.lat, v.map.lng);
-            if (!this.POSITION_MAP) {
-                //平面地图初始化
-                this.POSITION_MAP = new qq.maps.Map(document.getElementById('positionMap'), {
-                    center: center,
-                    zoom: v.map.zoom,
-                    disableDefaultUI: true
-                });
-            } else {
-                this.POSITION_MAP.panTo(center);
-            }
-
-            var iconType = "viewCenter", iconPath = this.ICON[iconType].path, iconWidth = this.ICON[iconType].width, iconHeight = this.ICON[iconType].height;
-            var anchor = new qq.maps.Point(iconWidth / 2, iconHeight),
-                size = new qq.maps.Size(iconWidth, iconHeight),
-                origin = new qq.maps.Point(0, 0),
-                icon = new qq.maps.MarkerImage(iconPath, size, origin, anchor);
-            var marker = new qq.maps.Marker({
-                icon: icon,
-                position: center,
-                map: this.POSITION_MAP
-            });
-        },
-        getNav: function (v) {
-            var uP = Lib.getUserPosition();
-            var nav = {};
-            nav.start = uP.address;
-            nav.end = v.name;
-            $("#navMapContent").html(this.navDetailDot(nav));
-            this.transfer(uP.map.lat, uP.map.lng, v.map.lat, v.map.lng);
-            this.driving(uP.map.lat, uP.map.lng, v.map.lat, v.map.lng);
-        },
-        transfer: function (sLat, sLng, eLat, eLng) {
-            var map,
-                transfer_plans,
-                start_marker,
-                end_marker,
-                station_markers = [],
-                transfer_lines = [],
-                walk_lines = [],
-                that = this;
-
-            var transferService = new qq.maps.TransferService({
-                location: "北京",
-                complete: function (result) {
-                    result = result.detail;
-                    var start = result.start,
-                        end = result.end;
-                    var anchor = new qq.maps.Point(12, 0),
-                        size = new qq.maps.Size(24, 36),
-                        start_icon = new qq.maps.MarkerImage(
-                            'images/busmarker.png',
-                            size
-                        ),
-                        end_icon = new qq.maps.MarkerImage(
-                            'images/busmarker.png',
-                            size,
-                            new qq.maps.Point(24, 0)
-                        );
-
-                    start_marker && start_marker.setMap(null);
-                    end_marker && end_marker.setMap(null);
-                    start_marker = new qq.maps.Marker({
-                        icon: start_icon,
-                        position: start.latLng,
-                        map: map
-                    });
-                    end_marker = new qq.maps.Marker({
-                        icon: end_icon,
-                        position: end.latLng,
-                        map: map
-                    });
-
-                    transfer_plans = result.plans;
-                    var plans_desc = [];
-                    var actions = transfer_plans[0].actions;
-                    for (var j = 0; j < actions.length; j++) {
-                        var action = actions[j],
-                            img_position;
-                        action.type == qq.maps.TransferActionType.BUS && (
-                            img_position = '-38px 0px'
-                        );
-                        action.type == qq.maps.TransferActionType.SUBWAY && (
-                            img_position = '-57px 0px'
-                        );
-                        action.type == qq.maps.TransferActionType.WALK && (
-                            img_position = '-76px 0px'
-                        );
-
-                        var action_img = '<li><span style="margin-bottom: -4px;' +
-                            'display:inline-block;background:url(images/busicon.png) ' +
-                            'no-repeat ' + img_position +
-                            ';width:19px;height:19px"></span>&nbsp;&nbsp;';
-                        plans_desc.push(action_img + action.instructions + "</li>");
-                    }
-
-                    document.getElementById('busPlan').innerHTML = plans_desc.join('');
-                    //渲染到地图上
-                    renderPlan(0);
-                    new IScroll('#bus_wrapper', {mouseWheel: true, click: true});
-                },
-                error: function () {
-                    that.transfer(sLat, sLng, eLat, eLng)
-                }
-            });
-
-            function init() {
-                map = new qq.maps.Map(document.getElementById("transferMap"), {
-                    // 地图的中心地理坐标。
-                    center: new qq.maps.LatLng(eLat, eLng),
-                    disableDefaultUI: true
-                });
-                that.TRANSFER_MAP = map;
-                calcPlan();
-            }
-
-            function calcPlan() {
-                transferService.search(new qq.maps.LatLng(sLat, sLng), new qq.maps.LatLng(eLat, eLng));
-                //transferService.setPolicy(qq.maps.TransferActionType.LEAST_TIME);
-            }
-
-            //清除地图上的marker
-            function clearOverlay(overlays) {
-                var overlay;
-                while (overlay = overlays.pop()) {
-                    overlay.setMap(null);
-                }
-            }
-
-            function renderPlan(index) {
-                var plan = transfer_plans[index],
-                    lines = plan.lines,
-                    walks = plan.walks,
-                    stations = plan.stations;
-                map.fitBounds(plan.bounds);
-
-                //clear overlays;
-                clearOverlay(station_markers);
-                clearOverlay(transfer_lines);
-                clearOverlay(walk_lines);
-                var anchor = new qq.maps.Point(6, 6),
-                    size = new qq.maps.Size(24, 36),
-                    bus_icon = new qq.maps.MarkerImage(
-                        'images/busmarker.png',
-                        size,
-                        new qq.maps.Point(48, 0)
-                    ),
-                    subway_icon = new qq.maps.MarkerImage(
-                        'images/busmarker.png',
-                        size,
-                        new qq.maps.Point(72, 0)
-                    );
-                //draw station marker
-                for (var j = 0; j < stations.length; j++) {
-                    var station = stations[j];
-                    if (station.type == qq.maps.PoiType.SUBWAY_STATION) {
-                        var station_icon = subway_icon;
-                    } else {
-                        var station_icon = bus_icon;
-                    }
-                    var station_marker = new qq.maps.Marker({
-                        icon: station_icon,
-                        position: station.latLng,
-                        map: map,
-                        zIndex: 0
-                    });
-                    station_markers.push(station_marker);
-                }
-
-                //draw bus line
-                for (var j = 0; j < lines.length; j++) {
-                    var line = lines[j];
-                    var polyline = new qq.maps.Polyline({
-                        path: line.path,
-                        strokeColor: '#3893F9',
-                        strokeWeight: 6,
-                        map: map
-                    });
-                    transfer_lines.push(polyline);
-                }
-
-                //draw walk line
-                for (var j = 0; j < walks.length; j++) {
-                    var walk = walks[j];
-                    var polyline = new qq.maps.Polyline({
-                        path: walk.path,
-                        strokeColor: '#3FD2A3',
-                        strokeWeight: 6,
-                        map: map
-                    });
-                    walk_lines.push(polyline);
-                }
-            }
-
-            init();
-        },
-        driving: function (sLat, sLng, eLat, eLng) {
-            var map,
-                directions_routes,
-                directions_placemarks = [],
-                directions_labels = [],
-                start_marker,
-                end_marker,
-                route_lines = [],
-                step_line,
-                route_steps = [],
-                that = this;
-
-            var directionsService = new qq.maps.DrivingService({
-                location: "北京",
-                complete: function (result) {
-                    result = result.detail;
-                    var start = result.start,
-                        end = result.end;
-                    var anchor = new qq.maps.Point(6, 6),
-                        size = new qq.maps.Size(24, 36),
-                        start_icon = new qq.maps.MarkerImage(
-                            'images/busmarker.png',
-                            size
-                        ),
-                        end_icon = new qq.maps.MarkerImage(
-                            'images/busmarker.png',
-                            size,
-                            new qq.maps.Point(24, 0)
-                        );
-
-                    start_marker && start_marker.setMap(null);
-                    end_marker && end_marker.setMap(null);
-                    start_marker = new qq.maps.Marker({
-                        icon: start_icon,
-                        position: start.latLng,
-                        map: map,
-                        zIndex: 1
-                    });
-                    end_marker = new qq.maps.Marker({
-                        icon: end_icon,
-                        position: end.latLng,
-                        map: map,
-                        zIndex: 1
-                    });
-
-
-                    directions_routes = result.routes;
-                    var routes_desc = [];
-                    //所有可选路线方案
-                    var route = directions_routes[0],
-                        legs = route;
-                    //调整地图窗口显示所有路线
-                    map.fitBounds(result.bounds);
-                    //所有路程信息
-                    //for(var j = 0 ; j < legs.length; j++){
-                    var steps = legs.steps;
-                    route_steps = steps;
-                    polyline = new qq.maps.Polyline(
-                        {
-                            path: route.path,
-                            strokeColor: '#3893F9',
-                            strokeWeight: 6,
-                            map: map
-                        }
-                    );
-                    route_lines.push(polyline);
-                    //所有路段信息
-                    for (var k = 0; k < steps.length; k++) {
-                        var step = steps[k];
-                        //路段途经地标
-                        directions_placemarks.push(step.placemarks);
-                        //转向
-                        var turning = step.turning,
-                            img_position;
-                        switch (turning.text) {
-                            case '左转':
-                                img_position = '0px 0px'
-                                break;
-                            case '右转':
-                                img_position = '-19px 0px'
-                                break;
-                            case '直行':
-                                img_position = '-38px 0px'
-                                break;
-                            case '偏左转':
-                            case '靠左':
-                                img_position = '-57px 0px'
-                                break;
-                            case '偏右转':
-                            case '靠右':
-                                img_position = '-76px 0px'
-                                break;
-                            case '左转调头':
-                                img_position = '-95px 0px'
-                                break;
-                            default:
-                                mg_position = ''
-                                break;
-                        }
-                        var turning_img = '<span' +
-                            ' style="margin-bottom: -3px;' +
-                            'display:inline-block;background:' +
-                            'url(images/turning.png) no-repeat ' +
-                            img_position + ';width:19px;height:' +
-                            '19px"></span>&nbsp;';
-                        routes_desc.push("<li>" + turning_img + step.instructions + "</li>");
-                    }
-                    //方案文本描述
-                    document.getElementById('carPlan').innerHTML = routes_desc.join('');
-                    new IScroll('#car_wrapper', {mouseWheel: true, click: true});
-                },
-                error: function () {
-                    that.driving(sLat, sLng, eLat, eLng)
-                }
-            });
-
-            function init() {
-                map = new qq.maps.Map(document.getElementById("drivingMap"), {
-                    // 地图的中心地理坐标。
-                    center: new qq.maps.LatLng(eLat, eLng),
-                    disableDefaultUI: true
-                });
-                that.DRIVING_MAP = map;
-                calcRoute();
-            }
-
-            function calcRoute() {
-                route_steps = [];
-                //directionsService.setPolicy(qq.maps.DrivingPolicy["LEAST_TIME"]);
-                directionsService.search(new qq.maps.LatLng(sLat, sLng), new qq.maps.LatLng(eLat, eLng));
-            }
-
-            //清除地图上的marker
-            function clearOverlay(overlays) {
-                var overlay;
-                while (overlay = overlays.pop()) {
-                    overlay.setMap(null);
-                }
-            }
-
-            init();
-        }
-    };
 
     var Pano = {
         PANO: null,
@@ -1170,13 +886,13 @@
             if (result.status == 0) {
                 var count = result.count;
                 if (count == 0) {
-                    $searchList.html('<li style="text-align: center;">未找到相关地点</li>');
+                    $searchList.html('<li tabindex="-1" style="text-align: center;">未找到相关地点</li>');
                 } else {
                     $searchList.html(this.searchDot(result.data));
                 }
                 new IScroll('#resultContainer', {mouseWheel: true, click: true});
             } else {
-                $searchList.html('<li style="text-align: center;">未找到相关地点</li>');
+                $searchList.html('<li tabindex="-1" style="text-align: center;">未找到相关地点</li>');
             }
             keyListener.searchList();
             $($searchList.find("li")[0]).focus();
@@ -1228,110 +944,6 @@
 
 
     var keyListener = {
-        pageBody: function () {
-            GHSMLib.keyCon.keyListener({
-                id: "pageBody",
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    return false;
-                }
-            });
-        },
-        container: function () {
-            GHSMLib.keyCon.keyListener({
-                id: "container",
-                pageUp: function () {
-                    Lib.MAP.setZoom(Lib.MAP.getZoom() + 1);
-                },
-                pageDown: function () {
-                    Lib.MAP.setZoom(Lib.MAP.getZoom() - 1);
-                },
-                enter: function () {
-                    $("#pageBody").focus();
-                    menus_effect(true);
-                    keyListener.menus();
-                    setTimeout(function () {
-                        $("#menus").attr("tabindex", "-1").focus().trigger("click");
-                    }, 500);
-                },
-                /*left: function () {
-                 Lib.MAP.panBy(-20, 0);
-                 },
-                 right: function () {
-                 Lib.MAP.panBy(20, 0);
-                 },
-                 up: function () {
-                 Lib.MAP.panBy(0, -20);
-                 },
-                 down: function () {
-                 Lib.MAP.panBy(0, 20);
-                 },*/
-                click: function () {
-                    return false;
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    exit();
-                    return false;
-                }
-            });
-        },
-        menus: function () {
-            GHSMLib.keyCon.keyListener({
-                id: "menus",
-                enter: function () {
-                    $("#pageBody").focus();
-                    menus_effect(false);
-                    Lib.mapFocus();
-                },
-                up: function () {
-                    $("#pageBody").focus();
-                    $("#search").css("top", "0");
-                    $("#tv_keyboard").css("bottom", "0");
-                    menus_effect(false);
-                    setTimeout(function () {
-                        $($("#tv_keyboard").find("li")[0]).focus();
-                    }, 1000);
-                },
-                down: function () {
-                    $("#pageBody").focus();
-                    $("#vicinity").css("bottom", "0");
-                    menus_effect(false);
-                    setTimeout(function () {
-                        $($("#vicinityList").find("li")[0]).focus();
-                    }, 1000);
-                },
-                left: function () {
-                    controlStatus.control(function () {
-                        menus_effect(false);
-                        Pano.showPano();
-                    }, 100)
-                },
-                right: function () {
-                    $("#pageBody").focus();
-                    window.location.href = '../list/list.html?id=cff4c78b6825bc3d112df4781700528c&click=true';
-                },
-                click: function (item) {
-                    return false;
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    $("#pageBody").focus();
-                    menus_effect(false);
-                    Lib.mapFocus();
-                    return false;
-                }
-            });
-        },
         pano: function () {
             GHSMLib.keyCon.keyListener({
                 id: "_panoSwf_0",
@@ -1468,112 +1080,19 @@
         }
     };
 
-
-    var menus_effect = function (flag) {
-        var time = 500;
-        if (flag) {
-            $("#menus").animate({
-                width: "300px",
-                height: "300px",
-                top: "210px",
-                left: "490px",
-                opacity: "1"
-            }, time);
-            $("#menus_top").animate({
-                width: "98px",
-                height: "88px",
-                top: "6px",
-                left: "101px"
-            }, time);
-
-            $("#menus_zuo").animate({
-                width: "98px",
-                height: "88px",
-                top: "112px",
-                left: "0"
-            }, time);
-
-            $("#menus_you").animate({
-                width: "98px",
-                height: "88px",
-                top: "112px",
-                right: "0"
-            }, time);
-
-            $("#menus_xia").animate({
-                width: "98px",
-                height: "88px",
-                bottom: "0",
-                left: "101px"
-            }, time);
-
-            $("#menus_zhong").animate({
-                width: "76px",
-                height: "76px",
-                top: "112px",
-                left: "112px"
-            }, time);
-        } else {
-            $("#menus").animate({
-                width: "0",
-                height: "0",
-                top: "360px",
-                left: "640px",
-                opacity: "0"
-            }, time);
-            $("#menus_top").animate({
-                width: "0",
-                height: "0",
-                top: "0",
-                left: "0"
-            }, time);
-
-            $("#menus_zuo").animate({
-                width: "0",
-                height: "0",
-                top: "0",
-                left: "0"
-            }, time);
-
-            $("#menus_you").animate({
-                width: "0",
-                height: "0",
-                top: "0",
-                right: "0"
-            }, time);
-
-            $("#menus_xia").animate({
-                width: "0",
-                height: "0",
-                bottom: "0",
-                left: "0"
-            }, time);
-
-            $("#menus_zhong").animate({
-                width: "0",
-                height: "0",
-                top: "0",
-                left: "0"
-            }, time);
-        }
-    };
-
-    var controlStatus = {
-        status: false,
-        control: function (fun, time) {
-            var self = this;
-            if (this.status) {
-                this.status = false;
-                fun();
-                if (time && time > 0) {
-                    setTimeout(function () {
-                        self.status = true;
-                    }, time)
+    var pageBody = {
+        keyListener: function () {
+            GHSMLib.keyCon.keyListener({
+                id: "pageBody",
+                esc: function () {
+                    exit();
+                    return false;
+                },
+                back: function () {
+                    return false;
                 }
-
-            }
+            });
         }
-
     };
 
     var exit = function () {
