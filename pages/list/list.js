@@ -40,12 +40,12 @@
                         return false;
                     } else {
                         if (e && e.keyCode == 40) {//下键
-                            if ((Lib["MENU_INDEX"] + 1) % 6 == 0 && Lib["MENU_INDEX"] + 1 < that.MENU.length) {
-                                $("#menuList").css("margin-top", "-" + parseInt((Lib["MENU_INDEX"] + 1) / 6) * 486 + "px");
+                            if ((Lib["MENU_INDEX"] + 1) % 7 == 0 && Lib["MENU_INDEX"] < that.MENU.list.length) {
+                                $("#menuList").css("margin-top", "-" + parseInt((Lib["MENU_INDEX"] + 1) / 7) * 567 + "px");
                             }
                         } else if (e && e.keyCode == 38) {//上键
-                            if ((Lib["MENU_INDEX"]) % 6 == 0) {
-                                $("#menuList").css("margin-top", "-" + parseInt((Lib["MENU_INDEX"] - 1) / 6) * 486 + "px");
+                            if ((Lib["MENU_INDEX"]) % 7 == 0) {
+                                $("#menuList").css("margin-top", "-" + (parseInt(Lib["MENU_INDEX"] / 7) - 1) * 567 + "px");
                             }
                         }
                         Lib.listAreaListener({
@@ -91,6 +91,8 @@
                             if (id == "cff4c78b6825bc3d112df4781700528c") {
                                 var house = that.list[$(e.target).attr('data-index')];
                                 window.location.href = '../house/index.html?hid=' + house.hid + '&tel=' + house.tel + '&lat=' + house.lat + '&lng=' + house.lng + "&" + $(e.target).attr('data-pano').split('#')[1];
+                            } else if (that.DATAID == "e8e117653c782fcaaeb5caf7a096967b") {
+                                window.location.href = '../viewVB/view.html?id=' + id + '&cid=' + that.DATAID + "&" + $(e.target).attr('data-pano').split('#')[1];
                             } else {
                                 window.location.href = '../view/view.html?id=' + id + '&cid=' + that.DATAID + "&" + $(e.target).attr('data-pano').split('#')[1];
                             }
@@ -146,8 +148,10 @@
 
                         new IScroll('#menu_wrapper', {mouseWheel: true, click: true});
 
-                        Lib["MENU_INDEX"] = sessionStorage["StreetView.history.list.menu"];
-                        $($('#menuList li')[sessionStorage["StreetView.history.list.menu"]]).attr('tabindex', -1).focus();
+                        Lib["MENU_INDEX"] = parseInt(sessionStorage["StreetView.history.list.menu"]);
+
+                        $("#menuList").css("margin-top", "-" + parseInt(Lib["MENU_INDEX"] / 7) * 567 + "px");
+                        $($('#menuList li')[Lib["MENU_INDEX"]]).attr('tabindex', -1).focus();
 
                     }
                 });
