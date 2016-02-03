@@ -58,6 +58,7 @@
                     if (e && e.keyCode == 27 || e && e.keyCode == 8) { // 按 Esc/返回
                         that.exit();
                     }
+                    return false;
                 } else if (that.CUR_BLOCK == "DETAIL") {
                     Lib.listAreaListener({
                         e: e,
