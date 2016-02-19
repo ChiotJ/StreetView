@@ -194,7 +194,10 @@
 <script id="vicinityDot" type="text/x-dot-template">
     {{~it:value:index}}
     <li tabindex="-1">
-        <img src="../../data/images/vicinity/{{=value.id}}.jpg">
+        <img width="162px" height="194px" src="{{=value.logo_fang}}">
+        {{? value.isDiscount}}
+        <img src="images/discount.png" style="position: relative;left: 102px;top: -198px;width: 60px;height: 60px;">
+        {{?}}
     </li>
     {{~}}
 </script>
@@ -271,7 +274,7 @@
 <script src="../../lib/iscroll/iscroll.js"></script>
 <script src="../../lib/sockjs-1.0.0.min.js" type="text/javascript"></script>
 <script src="../../lib/stomp.min.js" type="text/javascript"></script>
-<script id="GHSMLib" src="http://172.16.188.26/web/GHSMLib/GHSMLib-1.0.0.min.js" type="text/javascript"></script>
+<script id="GHSMLib" src="http://172.16.188.26/web/GHSMLib/GHSMLib.js" type="text/javascript"></script>
 <script src="search.js" type="text/javascript"></script>
 </body>
 </html>

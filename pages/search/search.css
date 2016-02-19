@@ -447,16 +447,21 @@ audio {
 #vicinity {
     position: absolute;
     bottom: -250px;
-    height: 250px;
-    width: 100%;
+    height: 200px;
+    width: 1164px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.7);
     transition: all 1s;
+    float: left;
+    padding: 25px 58px;
+}
 
+#vicinity div {
+    float: left;
 }
 
 #vicinityList {
-    margin: 25px 58px;
+    float: left;
 }
 
 #vicinityList li {

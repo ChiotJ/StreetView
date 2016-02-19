@@ -24,6 +24,15 @@
                 Lib.mapFocus();
             };
         },
+        centerChange: function () {
+            var a = Math.abs(Lib.MAP.center.lat - vicinity.lat);
+            var b = Math.abs(Lib.MAP.center.lng - vicinity.lng);
+            if (a + b > 0.001 && !vicinity.isInVicinity) {
+                vicinity.lat = Lib.MAP.center.lat;
+                vicinity.lng = Lib.MAP.center.lng;
+                vicinity.getData();
+            }
+        },
         keyListener: function () {
             GHSMLib.keyCon.keyListener({
                 id: "container",
@@ -166,6 +175,8 @@
                 down: function () {
                     $("#pageBody").focus();
                     $("#vicinity").css("bottom", "0");
+                    vicinity.isInVicinity = true;
+                    vicinity.center = Lib.MAP.center;
                     self.menus_effect(false);
                     setTimeout(function () {
                         $($("#vicinityList").find("li")[0]).focus();
@@ -227,27 +238,116 @@
         data: null,
         label: [],
         vicinityDot: doT.template($('#vicinityDot').text()),
+        isDefault: true,
+        lat: null,
+        lng: null,
+        isInVicinity: false,
+        center: null,
+        vicinityLW: null,
+        dataLoader: null,
         getData: function () {
+            var self = this, from = GHSMLib.utils.getQueryString("from");
+            var lat = Lib.MAP.center.lat;
+            var lng = Lib.MAP.center.lng;
+            switch (from) {
+                case "11e6801f-9a5d-4a6b-be6c-e6bc7820cc57":
+                    if (!self.data) {
+                        Lib.MAP.setZoom(17);
+                    }
+                    self.dataLoader && self.dataLoader.abort(), self.dataLoader = $.ajax({
+                        url: "http://172.16.188.26/chaowai/business/listByRange",
+                        data: {
+                            latitude: lat,
+                            longitude: lng,
+                            range: 0.4
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.success && data.result.length > 0) {
+                                var l = data.result, list = [];
+                                for (var k in l) {
+                                    var item = l[k];
+                                    var i = {
+                                        "id": item.id,
+                                        "name": item.name,
+                                        "map": {
+                                            "lat": item.latitude,
+                                            "lng": item.longitude
+                                        },
+                                        "url": "http://172.16.188.26/web/LifeCircle/cwstreet/pages/livingCircle/shop.html?businessTypeId=" + item.type + "&userId=" + item.userId + "&businessId=" + item.id + "&back=" + encodeURIComponent("http://172.16.188.26/web/StreetView/pages/search/search.html?from=11e6801f-9a5d-4a6b-be6c-e6bc7820cc57&backUrl=http://172.16.188.26/web/LifeCircle/chaowai/pages/index/index.html?id=86b374a18c9cbf3fd58002d4d937a7f5"),
+                                        "logo_heng": "http://172.16.188.26/chaowai/images/" + item.logo,
+                                        "logo_fang": "http://172.16.188.26/chaowai/images/" + item.logo,
+                                        "isDiscount": item.isDiscount
+                                    };
+                                    list.push(i);
+
+                                }
+                                self.isDefault = false;
+                                self.data = list;
+                                self.showLabel(list);
+                                $("#vicinityList").css("width", list.length * 194 + "px").html(self.vicinityDot(list));
+                                self.keyListener();
+
+                                self.vicinityLW = new IScroll('#vicinity', {
+                                    mouseWheel: true,
+                                    click: true,
+                                    scrollX: true,
+                                    scrollY: false
+                                });
+                                self.dataLoader = null;
+
+                            } else {
+                                self.getDefaultData();
+                            }
+                        }
+                    });
+                    break;
+                default:
+                    this.getDefaultData();
+                    break;
+
+            }
+
+
+        },
+        getDefaultData: function () {
             var self = this;
-            $.ajax({
+            self.dataLoader && self.dataLoader.abort(), self.dataLoader = $.ajax({
                 url: "../../data/json/vicinity.json",
                 dataType: "json",
                 success: function (data) {
                     self.data = data.list;
                     if (data.status == 1) {
                         self.showLabel(data.list);
-                        $("#vicinityList").html(self.vicinityDot(data.list))
+                        $("#vicinityList").css("width", self.data.length * 194 + "px").html(self.vicinityDot(data.list));
                         self.keyListener();
-
                         var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=300";
                         $("#DDCode").attr("src", qr);
                         var qr2 = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=250";
                         $("#vicinityDetailQr").attr("src", qr2);
+                        self.isDefault = true;
+
+                        self.vicinityLW = new IScroll('#vicinity', {
+                            mouseWheel: true,
+                            click: true,
+                            scrollX: true,
+                            scrollY: false
+                        });
+
+                        self.dataLoader = null
                     }
                 }
             });
         },
         showLabel: function (list) {
+            if (!this.isDefault && this.label.length > 0) {
+                for (var j = 0; j < this.label.length; j++) {
+                    var oldLabel = this.label[j];
+                    oldLabel.destroy();
+                }
+                this.label = [];
+            }
+
             var Label = function (opts) {
                 qq.maps.Overlay.call(this, opts);
             };
@@ -262,8 +362,12 @@
                     'text-align:center;' +
                     'width:206px' +
                     'height:122px';
-                this.dom.innerHTML = '<img src="' + this.image + '" style="position: absolute;top:0 ;z-index: 1"/><img src="images/ad.png" style="position: absolute;top: 0;left: 0;;">';
+                var html = '<img width="122px" height="65px" src="' + this.image + '" style="border-radius:3px;position: absolute;top:1px;left:1px;z-index: 1;border: 2px solid #FFFFFF;"/><img src="images/ad.png" style="position: absolute;top: 0;left: 0;;">';
+                if (this.isDiscount) {
+                    html += '<img width="30px" height="30px" src="images/discount.png" style="position: absolute;z-index:1;top: 3px;left: 95px;">';
+                }
 
+                this.dom.innerHTML = html;
                 this.getPanes().overlayMouseTarget.appendChild(this.dom);
                 //设置自定义覆盖物点击事件
                 this.dom.onclick = function () {
@@ -291,7 +395,8 @@
                     map: Lib.MAP,
                     position: new qq.maps.LatLng(list[i].map.lat, list[i].map.lng),
                     id: list[i].id,
-                    image: "../../data/images/vicinity/" + list[i].id + "_m.png"
+                    image: list[i].logo_heng,
+                    isDiscount: list[i].isDiscount
                 });
                 this.label.push(label);
             }
@@ -300,28 +405,58 @@
             var self = this;
             GHSMLib.keyCon.listKeyListener({
                 id: "vicinityList",
-                columnNum: 6,
+                columnNum: self.data.length,
                 label: "li",
+                focus: function (item) {
+                    var idx = $(item).index();
+                    Lib.MAP.panTo(new qq.maps.LatLng(self.data[idx].map.lat, self.data[idx].map.lng));
+                },
                 enter: function (item) {
                     var idx = $(item).index();
-                    var id = self.data[idx].id;
-                    if (id == 1 || id == 3 || id == 7) {
-                        $("#pageBody").focus();
-                        $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
-                        setTimeout(function () {
-                            $("#vicinityDetail").attr("tabindex", "-1").focus();
-                        }, 1000);
-                    } else if (id == 4 || id == 5) {
-                        $("#pageBody").focus();
-                        /*view.getView(self.data[idx]);
-                         $("#viewDetail").css("left", "0");
-                         setTimeout(function () {
-                         $($("#viewDetailMenuList").find("li")[0]).focus();
-                         }, 1000)*/
-                        window.location.href = self.data[idx].url;
-                    } else if (id == 2) {
-                        $("#pageBody").focus();
-                        buy.init();
+                    if (self.isDefault) {
+                        var id = self.data[idx].id;
+                        if (id == 1 || id == 3 || id == 7) {
+                            $("#pageBody").focus();
+                            $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
+                            setTimeout(function () {
+                                $("#vicinityDetail").attr("tabindex", "-1").focus();
+                            }, 1000);
+                        } else if (id == 4 || id == 5) {
+                            $("#pageBody").focus();
+                            /*view.getView(self.data[idx]);
+                             $("#viewDetail").css("left", "0");
+                             setTimeout(function () {
+                             $($("#viewDetailMenuList").find("li")[0]).focus();
+                             }, 1000)*/
+                            window.location.href = self.data[idx].url;
+                        } else if (id == 2) {
+                            $("#pageBody").focus();
+                            buy.init();
+                        }
+                    } else {
+                        var url = self.data[idx].url;
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    }
+
+                },
+                right: {
+                    before: function (item) {
+                        var idx = $(item).index();
+                        if (idx != (self.data.length - 1) && (idx + 1) % 6 == 0) {
+                            var margin = parseInt((idx + 1) / 6) * 1164;
+                            $("#vicinityList").css("margin-left", "-" + margin + "px");
+                        }
+                    }
+                },
+                left: {
+                    before: function (item) {
+                        var idx = $(item).index();
+                        if (idx != 0 && idx % 6 == 0) {
+                            var margin = parseInt((idx - 1) / 6) * 1164;
+                            $("#vicinityList").css("margin-left", "-" + margin + "px");
+                        }
                     }
                 },
                 esc: function () {
@@ -332,6 +467,11 @@
                     Lib.mapFocus();
                     $("#pageBody").focus();
                     $("#vicinity").css("bottom", "-250px");
+                    self.isInVicinity = false;
+                    Lib.MAP.panTo(vicinity.center);
+                    setTimeout(function () {
+                        $("#vicinityList").css("margin-left", "0");
+                    }, 1000);
                     return false;
                 }
             });
@@ -1096,7 +1236,13 @@
     };
 
     var exit = function () {
-        window.history.go(-1);
+        var backUrl = GHSMLib.utils.getQueryString("backUrl");
+        if (backUrl) {
+            window.location.href = backUrl;
+        } else {
+            window.history.go(-1);
+        }
+
         //window.location.href = '../index/index.html';
     };
 

@@ -8,7 +8,9 @@
       "map": {
         "lat": 39.948540,
         "lng": 116.424370
-      }
+      },
+      "logo_heng": "../../data/images/vicinity/3_m.png",
+      "logo_fang": "../../data/images/vicinity/3.jpg"
     },
     {
       "id": "4",
@@ -20,7 +22,9 @@
         "lng": 116.417257,
         "zoom": 17
       },
-      "url": "../view/view.html?id=8524b7c3b8211bde617fa77502658e12&cid=9223a76ef92e72715b6e32fde2fc9f63&pano=10011508120328092108400&heading=359&pitch=0&zoom=1"
+      "url": "../view/view.html?id=8524b7c3b8211bde617fa77502658e12&cid=9223a76ef92e72715b6e32fde2fc9f63&pano=10011508120328092108400&heading=359&pitch=0&zoom=1",
+      "logo_heng": "../../data/images/vicinity/4_m.png",
+      "logo_fang": "../../data/images/vicinity/4.jpg"
     },
     {
       "id": "5",
@@ -32,7 +36,9 @@
         "lng": 116.415453,
         "zoom": 16
       },
-      "url": "../view/view.html?id=8524b7c3b8211bde617fa77502658e12&cid=9223a76ef92e72715b6e32fde2fc9f63&pano=100130Y6130226164151270&heading=353&pitch=-2&zoom=1"
+      "url": "../view/view.html?id=8524b7c3b8211bde617fa77502658e12&cid=9223a76ef92e72715b6e32fde2fc9f63&pano=100130Y6130226164151270&heading=353&pitch=-2&zoom=1",
+      "logo_heng": "../../data/images/vicinity/5_m.png",
+      "logo_fang": "../../data/images/vicinity/5.jpg"
     },
     {
       "id": "7",
@@ -40,7 +46,9 @@
       "map": {
         "lat": 39.948547,
         "lng": 116.427344
-      }
+      },
+      "logo_heng": "../../data/images/vicinity/7_m.png",
+      "logo_fang": "../../data/images/vicinity/7.jpg"
     }
   ]
 }
