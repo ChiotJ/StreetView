@@ -456,24 +456,67 @@ audio {
     padding: 25px 58px;
 }
 
-#vicinity div {
+.scroller {
     float: left;
 }
 
-#vicinityList {
+#vicinityTitleBody li {
+    cursor: pointer;
+    float: left;
+    display: inline;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0 6px 0 0;
+    font-size: 16px;
+}
+
+#vicinityViewBody .cur {
+    border: 2px solid #97DCFF;
+    box-shadow: 0 0 15px #97DCFF;
+}
+
+#vicinityViewBody ul {
+    margin-left: 0;
+    height: 120px;
+    overflow: hidden;
     float: left;
 }
 
-#vicinityList li {
+#vicinityTitleBody {
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    width: 1150px;
+    overflow: hidden;
+    color: #FFFFFF;
     float: left;
-    width: 162px;
-    height: 194px;
-    border: 3px solid transparent;
-    margin: 0 13px;
 }
 
-#vicinityList li:focus {
-    border: 3px solid #148fff;
+#vicinityTitleBody li:focus {
+    background-color: #f2ae2a;
+}
+
+#vicinityViewBody li.PanoPhotoCell:focus {
+    border: 2px solid #f2ae2a;
+    box-shadow: 0 0 15px #f2ae2a;
+}
+
+#vicinityTitle_wrapper {
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 1164px;
+    height: 25px;
+}
+
+#vicinityBody_wrapper {
+    position: relative;
+    top: 5px;
+    left: 0;
+    overflow: hidden;
+    height: 120px;
+    width: 1164px;
 }
 
 #vicinityDetail {

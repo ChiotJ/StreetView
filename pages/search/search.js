@@ -2,7 +2,7 @@
     var init = function () {
         $("#pageBody").focus();
         container.init();
-        vicinity.getData();
+        vicinity.init();
         menus.keyListener();
         keyListener.keyborad();
         pageBody.keyListener();
@@ -174,13 +174,8 @@
                 },
                 down: function () {
                     $("#pageBody").focus();
-                    $("#vicinity").css("bottom", "0");
-                    vicinity.isInVicinity = true;
-                    vicinity.center = Lib.MAP.center;
                     self.menus_effect(false);
-                    setTimeout(function () {
-                        $($("#vicinityList").find("li")[0]).focus();
-                    }, 1000);
+                    vicinity.focus();
                 },
                 left: function () {
                     $("#pageBody").focus();
@@ -236,6 +231,8 @@
 
     var vicinity = {
         data: null,
+        dataList: null,
+        type: {},
         label: [],
         vicinityDot: doT.template($('#vicinityDot').text()),
         isDefault: true,
@@ -245,6 +242,34 @@
         center: null,
         vicinityLW: null,
         dataLoader: null,
+        init: function () {
+            var self = this;
+            this.initMethod();
+            self.dataLoader && self.dataLoader.abort(), self.dataLoader = $.ajax({
+                url: "http://172.16.188.26/chaowai/businessType/list",
+                dataType: "json",
+                success: function (data) {
+                    self.dataLoader = null;
+                    if (data.success && data.result.length > 0) {
+                        var l = data.result;
+                        for (var k in l) {
+                            var item = l[k];
+                            self.type[item.id] = item;
+                        }
+                        self.getData();
+                    }
+                }
+            });
+        },
+        focus: function () {
+            var self = this;
+            $("#vicinity").css("bottom", "0");
+            vicinity.isInVicinity = true;
+            vicinity.center = Lib.MAP.center;
+            setTimeout(function () {
+                self.photo.selectElement(0);
+            }, 1000);
+        },
         getData: function () {
             var self = this, from = GHSMLib.utils.getQueryString("from");
             var lat = Lib.MAP.center.lat;
@@ -270,6 +295,7 @@
                                     var i = {
                                         "id": item.id,
                                         "name": item.name,
+                                        "type": item.type,
                                         "map": {
                                             "lat": item.latitude,
                                             "lng": item.longitude
@@ -280,22 +306,19 @@
                                         "isDiscount": item.isDiscount
                                     };
                                     list.push(i);
-
                                 }
                                 self.isDefault = false;
                                 self.data = list;
                                 self.showLabel(list);
                                 $("#vicinityList").css("width", list.length * 194 + "px").html(self.vicinityDot(list));
-                                self.keyListener();
-
                                 self.vicinityLW = new IScroll('#vicinity', {
                                     mouseWheel: true,
                                     click: true,
                                     scrollX: true,
                                     scrollY: false
                                 });
-                                self.dataLoader = null;
-
+                                self.dataLoader = null
+                                self.templateData();
                             } else {
                                 self.getDefaultData();
                             }
@@ -307,8 +330,6 @@
                     break;
 
             }
-
-
         },
         getDefaultData: function () {
             var self = this;
@@ -320,7 +341,6 @@
                     if (data.status == 1) {
                         self.showLabel(data.list);
                         $("#vicinityList").css("width", self.data.length * 194 + "px").html(self.vicinityDot(data.list));
-                        self.keyListener();
                         var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=300";
                         $("#DDCode").attr("src", qr);
                         var qr2 = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=250";
@@ -335,6 +355,7 @@
                         });
 
                         self.dataLoader = null
+                        self.templateData();
                     }
                 }
             });
@@ -401,87 +422,343 @@
                 this.label.push(label);
             }
         },
+        templateData: function () {
+            this.dataList = null;
+            this.dataList = {
+                "building": {
+                    "floors": [
+                        {
+                            "id": 0,
+                            "name": "全部",
+                            "sort_name": "全部"
+                        }
+                    ]
+                },
+                "scenes": {
+                    "0": []
+                }
+
+            };
+            for (var k in this.data) {
+                var item = this.data[k];
+                var type = item.type;
+                if (type) {
+                    type = this.type[type];
+                    if (!this.dataList.scenes[type.id]) {
+                        this.dataList.building.floors[type.sequence + 1] = {
+                            "id": type.id,
+                            "name": type.name,
+                            "sort_name": type.name
+                        };
+                        this.dataList.scenes[type.id] = [];
+                    }
+                    this.dataList.scenes[type.id].push(item);
+                }
+                this.dataList.scenes[0].push(item);
+            }
+
+
+            this.photo ?
+                this.photo.changeRegion(0, this.dataList.scenes[0], true) :
+                this.photo = new this.Photo({
+                    regionId: 0
+                }, this.dataList.scenes[0]);
+            this.regeionList ?
+                this.regeionList.setFloorData(this.dataList.building.floors) :
+                this.regeionList = new this.RegionList(this.photo, this.dataList.building.floors);
+
+            this.regeionList.selectFloor(0);
+            this.keyListener();
+        },
+        initMethod: function () {
+            var self = this;
+            //相册
+            function Photo(b, data) {
+                this.photoData = null;
+                this.regionId = null;
+                this.container = null;
+                this.select = null;
+                this.dataLoader = null;
+                this.cellWidth = b.cellWidth || 186;
+                this.cellPadding = b.cellPadding || 20;
+                this.cellHeight = b.cellHeight || 115;
+                this.photoData = null;
+                this.scrollLeft = 0;
+                this.left = 0;
+                this.init();
+                this.changeRegion(b.regionId, data)
+            }
+
+            var photoP = Photo.prototype;
+            photoP.init = function (a) {
+                var b = this, c = document.createElement("ul");
+                c.id = "vicinityViewList";
+                this.container = c;
+                var d = document.getElementById("vicinityViewBody");
+                d.appendChild(c), a && a()
+            };
+            photoP.changeRegion = function (a, data, flag) {
+                if (this.regionId != a || flag) {
+                    this.regionId = a;
+                    this.photoData = data;
+                    this.scrollTo(0);
+                    this._draw();
+                }
+            };
+            photoP._draw = function (a) {
+                var c = this, data = c.photoData;
+                c.container.innerHTML = "";
+                if (data && data.length > 0) {
+                    var photoLength = data.length;
+                    c.container.style.width = (c.cellWidth + 4 + c.cellPadding) * photoLength + 4 + "px";
+                    for (var e = 0; photoLength > e; e++) {
+                        var f = data[e], isFirst = !1;
+                        f.index = e;
+                        0 === e && (isFirst = !0);
+                        c._createCell(f, isFirst)
+                    }
+                    a && a()
+                }
+                new IScroll('#vicinityBody_wrapper', {
+                    mouseWheel: true,
+                    scrollX: true,
+                    scrollY: false
+                });
+                c.keyListener();
+            };
+            photoP._createCell = function (a, isFirst) {
+                var b = document.createElement("li");
+                b.className = "PanoPhotoCell";
+                var c = this, d = a.logo_fang;
+                b.innerHTML = '<img src="' + d + '"><div class="PanoPhotoTitle">' + a.name + "</div>", b.idx = a.index;
+                $(b).attr("tabindex", "-1");
+                isFirst && (c.select = $(b));
+                return c.container.appendChild(b), b;
+            };
+            photoP.scrollTo = function (a) {
+                var b = this.container.parentNode.offsetWidth, c = this.container.offsetWidth;
+                this.left = a;
+                $(this.container).css({'transform': 'translate( -' + a + 'px, 0px) translateZ(0px)'});
+
+            };
+            photoP.scrollToIndex = function (a) {
+                var b = a * (this.cellWidth + this.cellPadding);
+                this.scrollTo(b)
+            };
+            photoP.selectElement = function (a) {
+                var b = this, c = b.photoData[a];
+                b.select = $($(this.container).find("li")[a]);
+                b.select.attr('tabindex', -1).focus();
+            };
+            photoP.nextScene = function () {
+                var a = this.select[0].idx, b = this.photoData.length;
+                a++, (b - 1) >= a && this.selectElement(a), this.scrollNext();
+            };
+            photoP.preScene = function () {
+                var a = this.select[0].idx;
+                a--, a >= 0 && this.selectElement(a), this.scrollPre();
+            };
+            photoP.scrollNext = function () {
+                var a = this.select[0].idx, b = this.photoData.length;
+                if (a < b - 1) {
+                    if (a % 5 == 0) {
+                        var margin = parseInt(a / 5) * 1040;
+                        //$(this.container).css({marginLeft: -margin + "px"});
+                        this.scrollTo(margin);
+                    }
+                }
+            };
+            photoP.scrollPre = function () {
+                var a = this.select[0].idx, b = this.photoData.length;
+                if (a > 0) {
+                    if (a % 5 == 4) {
+                        var margin = parseInt(a / 5) * 1040;
+                        //$(this.container).css({marginLeft: -margin + "px"});
+                        this.scrollTo(margin);
+                    }
+                }
+            };
+            photoP.keyListener = function () {
+                var c = this;
+                GHSMLib.keyCon.listKeyListener({
+                    id: "vicinityViewList",
+                    columnNum: 0,
+                    label: "li",
+                    focus: function (item) {
+                        var idx = $(item).index();
+                        Lib.MAP.panTo(new qq.maps.LatLng(c.photoData[idx].map.lat, c.photoData[idx].map.lng));
+                    },
+                    enter: function (item) {
+                        var idx = $(item).index();
+                        if (self.isDefault) {
+                            var id = c.photoData[idx].id;
+                            if (id == 1 || id == 3 || id == 7) {
+                                $("#pageBody").focus();
+                                $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
+                                setTimeout(function () {
+                                    $("#vicinityDetail").attr("tabindex", "-1").focus();
+                                }, 1000);
+                            } else if (id == 4 || id == 5) {
+                                $("#pageBody").focus();
+                                /*view.getView(self.data[idx]);
+                                 $("#viewDetail").css("left", "0");
+                                 setTimeout(function () {
+                                 $($("#viewDetailMenuList").find("li")[0]).focus();
+                                 }, 1000)*/
+                                window.location.href = c.photoData[idx].url;
+                            } else if (id == 2) {
+                                $("#pageBody").focus();
+                                buy.init();
+                            }
+                        } else {
+                            var url = c.photoData[idx].url;
+                            if (url) {
+                                window.location.href = url;
+                            }
+                        }
+                    },
+                    click: function (item) {
+                        var idx = $(item).index();
+                        c.selectElement(idx);
+                    },
+                    right: function () {
+                        c.nextScene();
+                        return false;
+                    },
+                    left: function () {
+                        c.preScene();
+                        return false;
+                    },
+                    up: function () {
+                        $(self.regeionList.select[0]).focus();
+                    },
+                    esc: function () {
+                        exit();
+                        return false;
+                    },
+                    back: function () {
+                        Lib.mapFocus();
+                        $("#pageBody").focus();
+                        $("#vicinity").css("bottom", "-250px");
+                        self.isInVicinity = false;
+                        Lib.MAP.panTo(vicinity.center);
+                        setTimeout(function () {
+                            $("#vicinityList").css("margin-left", "0");
+                        }, 1000);
+                        return false;
+                    }
+                });
+            };
+
+
+            //分类列表
+            function RegionList(a, b) {
+                this.container = null;
+                this.photo = a;
+                this.data = null;
+                this.select = null;
+                this.init();
+                this.setFloorData(b);
+            }
+
+            var RP = RegionList.prototype;
+            RP.init = function (a) {
+                var b = this, c = document.createElement("ul");
+                c.id = "vicinityTitleList";
+                this.container = c;
+                var d = document.getElementById("vicinityTitleBody");
+                d.appendChild(c), a && a()
+            }, RP._createLi = function (a, e) {
+                var b = this, c = document.createElement("li");
+                c.innerHTML = a.name, c.index = a.index;
+                $(c).attr("tabindex", "-1");
+                return b.container.appendChild(c), $(c).width();
+            }, RP.selectFloor = function (a) {
+                var c = this;
+                c.select && c.select.removeClass("select"), c.select = $($(this.container).find("li")[a]), c.select.addClass("select");
+            }, RP.nextFloor = function () {
+                var a = this.select[0].index, b = this.data.length
+                a++, b > a && this.selectFloor(a, !0)
+            }, RP.preFloor = function () {
+                var a = this.select[0].index;
+                a--, a >= 0 && this.selectFloor(a, !0)
+            }, RP.draw = function () {
+                var b = 0, c = this, width = 0, w = 0, data = [], i = 0;
+                c.container.innerHTML = "";
+                for (var d in c.data) {
+                    var e = !1;
+                    data.push(c.data[d]);
+                    0 === d && (e = !0), c.data[d].index = i, w = c._createLi(c.data[d], e), b += w, width = width + w + 16;
+                    i++;
+                }
+                this.data = data;
+                $("#vicinityTitleBody").width(width);
+                new IScroll('#vicinityTitle_wrapper', {
+                    mouseWheel: true,
+                    scrollX: true,
+                    scrollY: false
+                });
+                c.keyListener();
+            }, RP.setFloorData = function (a) {
+                this.data = a, this.draw()
+            }, RP.keyListener = function () {
+                var c = this;
+                GHSMLib.keyCon.listKeyListener({
+                    id: "vicinityTitleList",
+                    columnNum: self.data.length,
+                    label: "li",
+                    focus: function (item) {
+                        var idx = $(item).index();
+                        self.regeionList.selectFloor(idx);
+                        var fId = self.regeionList.data[idx].id;
+                        self.photo.changeRegion(fId, self.dataList.scenes[fId])
+                    },
+                    enter: function (item) {
+                    },
+                    right: function () {
+                        c.nextFloor();
+                        $(c.select[0]).focus();
+                        return false;
+                    },
+                    left: function () {
+                        c.preFloor();
+                        $(c.select[0]).focus();
+                        return false;
+                    },
+                    down: function () {
+                        $(self.photo.select[0]).focus();
+                    },
+                    esc: function () {
+                        exit();
+                        return false;
+                    },
+                    back: function () {
+                        Lib.mapFocus();
+                        $("#pageBody").focus();
+                        $("#vicinity").css("bottom", "-250px");
+                        self.isInVicinity = false;
+                        Lib.MAP.panTo(vicinity.center);
+                        setTimeout(function () {
+                            $("#vicinityList").css("margin-left", "0");
+                        }, 1000);
+                        return false;
+                    }
+                });
+            };
+
+
+            this.Photo = Photo;
+            this.RegionList = RegionList;
+        },
         keyListener: function () {
             var self = this;
-            GHSMLib.keyCon.listKeyListener({
-                id: "vicinityList",
-                columnNum: self.data.length,
-                label: "li",
-                focus: function (item) {
-                    var idx = $(item).index();
-                    Lib.MAP.panTo(new qq.maps.LatLng(self.data[idx].map.lat, self.data[idx].map.lng));
-                },
-                enter: function (item) {
-                    var idx = $(item).index();
-                    if (self.isDefault) {
-                        var id = self.data[idx].id;
-                        if (id == 1 || id == 3 || id == 7) {
-                            $("#pageBody").focus();
-                            $($("#vicinityDetail").css("left", "0").find("img")[0]).attr("src", "../../data/images/vicinity/" + id + "_d.png");
-                            setTimeout(function () {
-                                $("#vicinityDetail").attr("tabindex", "-1").focus();
-                            }, 1000);
-                        } else if (id == 4 || id == 5) {
-                            $("#pageBody").focus();
-                            /*view.getView(self.data[idx]);
-                             $("#viewDetail").css("left", "0");
-                             setTimeout(function () {
-                             $($("#viewDetailMenuList").find("li")[0]).focus();
-                             }, 1000)*/
-                            window.location.href = self.data[idx].url;
-                        } else if (id == 2) {
-                            $("#pageBody").focus();
-                            buy.init();
-                        }
-                    } else {
-                        var url = self.data[idx].url;
-                        if (url) {
-                            window.location.href = url;
-                        }
-                    }
-
-                },
-                right: {
-                    before: function (item) {
-                        var idx = $(item).index();
-                        if (idx != (self.data.length - 1) && (idx + 1) % 6 == 0) {
-                            var margin = parseInt((idx + 1) / 6) * 1164;
-                            $("#vicinityList").css("margin-left", "-" + margin + "px");
-                        }
-                    }
-                },
-                left: {
-                    before: function (item) {
-                        var idx = $(item).index();
-                        if (idx != 0 && idx % 6 == 0) {
-                            var margin = parseInt((idx - 1) / 6) * 1164;
-                            $("#vicinityList").css("margin-left", "-" + margin + "px");
-                        }
-                    }
-                },
-                esc: function () {
-                    exit();
-                    return false;
-                },
-                back: function () {
-                    Lib.mapFocus();
-                    $("#pageBody").focus();
-                    $("#vicinity").css("bottom", "-250px");
-                    self.isInVicinity = false;
-                    Lib.MAP.panTo(vicinity.center);
-                    setTimeout(function () {
-                        $("#vicinityList").css("margin-left", "0");
-                    }, 1000);
-                    return false;
-                }
-            });
             GHSMLib.keyCon.keyListener({
                 id: "vicinityDetail",
                 enter: function (item) {
                     $("#pageBody").focus();
                     $("#vicinityDetail").css("left", "1280px");
                     setTimeout(function () {
-                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        $(self.photo.select[0]).focus();
                     }, 1000)
                 },
                 esc: function () {
@@ -492,7 +769,7 @@
                     $("#pageBody").focus();
                     $("#vicinityDetail").css("left", "1280px");
                     setTimeout(function () {
-                        $("#vicinityList").find("li")[GHSMLib.keyCon.index["vicinityList"]].focus();
+                        $(self.photo.select[0]).focus();
                     }, 1000);
                     return false;
                 }
