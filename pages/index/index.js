@@ -172,7 +172,7 @@
                     return false;
                 },
                 back: function () {
-                    window.location.href = "http://172.16.188.26/web/flytvYun/pages/index/index.html";
+                    GHSMLib.backYunPage("http://172.16.188.26/web/flytvYun/pages/index/index.html");
                     return false;
                 }
             });
