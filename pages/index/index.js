@@ -52,7 +52,10 @@
             this.getMenuList();
             var qr = "http://172.16.188.13/api/common/Image/qrCode.png?text=http://211.99.155.46/web/StreetView/pages/position/index.html?cardId=" + GHSMLib.cardId + "&size=150";
             $("#saoma").attr("src", qr);
-
+            familyCard.init({
+                show: true,
+                getQR: true
+            });
         },
         getMenuList: function () {
             var self = this;
@@ -106,6 +109,10 @@
                 left: {
                     before: function (item) {
                         var idx = $(item).index();
+                        if (idx == 0 || idx == 3) {
+                            $("#familyCardLogo").focus();
+                            return false;
+                        }
                         if (idx == 0) {
                             $($("#menu").find("li")[self.size - 1]).focus();
                         }
@@ -158,7 +165,7 @@
                     var dataId = m.id;
                     if (type == 1) {
                         if (dataId == "d7b6338e720fe92bbd31e1ae52e56a5e") {
-                            window.location.href = "../search/search.html?click=true";
+                            window.location.href = "../search/search.html";
                         }
                     } else if (type == 2) {
                         window.location.href = "../list/list.html?id=" + dataId + "&click=true";
@@ -173,7 +180,7 @@
                 },
                 back: function () {
                     GHSMLib.backYunPage("http://172.16.188.26/web/flytvYun/pages/index/index.html");
-                    
+
                     return false;
                 }
             });

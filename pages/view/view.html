@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="view.css" rel="stylesheet" type="text/css"/>
+    <link href="../familyCard/familyCard.css" rel="stylesheet" type="text/css"/>
     <script src="../../lib/closeFunction.js" type="text/javascript"></script>
 </head>
 <body>
@@ -63,7 +64,30 @@
     <div id="exit" onselectstart="return false">
         返回
     </div>
+    <div id="fc-list" class="fc-list">
+        <div class="fc-one">
+            <img src="../familyCard/images-FC/c6032f64-e6c9-4d83-a00e-5965a0fd959c.png">
+            <div id="c6032f64-e6c9-4d83-a00e-5965a0fd959c-num" class="num">×0</div>
+        </div>
+        <div class="fc-one">
+            <img src="../familyCard/images-FC/8296622e-7a9b-4dfd-ac67-d7607cf9f98e.png">
+            <div id="8296622e-7a9b-4dfd-ac67-d7607cf9f98e-num" class="num">×0</div>
+        </div>
+        <div class="fc-one">
+            <img src="../familyCard/images-FC/db75b3fc-b0c6-427f-acb5-12fab39018cb.png">
+            <div id="db75b3fc-b0c6-427f-acb5-12fab39018cb-num" class="num">×0</div>
 
+        </div>
+    </div>
+    <div id="getFamilyCard" class="getFamilyCard">
+        <img class="fc" src="">
+        <img class="an5" src="../familyCard/images-FC/an5jian.png">
+    </div>
+    <div id="finishGetFamilyCard" class="finishGetFamilyCard">
+        <img class="notice" src="">
+        <img class="qrCode"
+             src="">
+    </div>
 </div>
 <script id="template-view-detail" type="text/x-dot-template">
     <div class="title">
@@ -113,6 +137,16 @@
         </div>
     </div>
 </script>
+<script>
+    var CyberCloud = {
+        GetParam: function () {
+            return {
+                ParamValue: "1372322291"
+            }
+        }
+    };
+</script>
+
 <script src="../../lib/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="../../lib/pano.js" type="text/javascript"></script>
 <script src="../../lib/mapT.js" type="text/javascript"></script>
@@ -121,6 +155,7 @@
 <script src="../../lib/doT.min.js"></script>
 <script src="../../lib/iscroll/iscroll.js"></script>
 <script id="GHSMLib" src="http://172.16.188.26/web/GHSMLib/GHSMLib.js" type="text/javascript"></script>
+<script src="../familyCard/familyCard.js" type="text/javascript"></script>
 <script src="view.js" type="text/javascript"></script>
 </body>
 </html>

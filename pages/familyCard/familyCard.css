@@ -1,0 +1,93 @@
+.fc-list {
+    position: absolute;
+    top: 60px;
+    right: 60px;
+    width: 300px;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.fc-list .fc-one {
+    width: 100px;
+    text-align: center;
+    float: left;
+}
+
+.fc-list .fc-one img {
+    width: 85px;
+    height: 85px;
+}
+
+.fc-list .fc-one .num {
+    background-color: #F5A623;
+    border-radius: 100px;
+    width: 60px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 20px;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 3px auto;
+}
+
+.getFamilyCard {
+    width: 180px;
+    height: 230px;
+    position: absolute;
+    top: 60px;
+    left: 200px;
+    text-align: center;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.getFamilyCard .fc {
+    width: 180px;
+    height: 180px;
+
+}
+
+.getFamilyCard .an5 {
+    width: 180px;
+    height: 38px;
+    transition: all 0.5s;
+    margin-top: 12px;
+
+}
+
+.finishGetFamilyCard {
+    position: absolute;
+    top: 190px;
+    left: 293px;
+    z-index: 100;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.finishGetFamilyCard .qrCode {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.familyCardLogo {
+    background: url("../familyCard/images-FC/familyCardLogo.png") no-repeat 0 0;
+    width: 247px;
+    height: 489px;
+    position: absolute;
+    top: 160px;
+    left: 60px;
+    border: 4px solid transparent;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.familyCardLogo:focus {
+    border: 4px solid #F36E5D;
+}
+
+.familyCardLogo img {
+    position: absolute;
+    top: 245px;
+    left: 50px;
+}

@@ -24,6 +24,9 @@
                 this.initPano();
                 this.initListener();
                 //this.getDetail();
+                familyCard.init({
+                    show: true
+                });
             },
             initPano: function () {
                 var that = this;

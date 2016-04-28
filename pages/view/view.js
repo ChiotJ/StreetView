@@ -24,6 +24,10 @@
                 this.initPano();
                 this.initListener();
                 this.getDetail();
+                familyCard.init({
+                    show: true,
+                    getFamilyCard: true
+                });
             },
             initPano: function () {
                 var that = this;
@@ -57,6 +61,35 @@
                 if (that.CUR_BLOCK == "PANO") {
                     if (e && e.keyCode == 27 || e && e.keyCode == 8) { // 按 Esc/返回
                         that.exit();
+                    }
+                    if (e && e.keyCode == 53 && familyCard.isGeting) {
+                        that.CUR_BLOCK = "FAMILYCARD";
+                        that.AREA = that.PANO.area;
+                        that.PANO.changeArea(-1);
+                        Lib['VIEWDETAILMENU_INDEX'] = 0;
+                        familyCard.getFamilyCard();
+                        $("#pageBody").focus();
+                        setTimeout(function () {
+                            $("#finishiGetFamilyCard").attr("tabindex", "-1").focus();
+                        }, 1000);
+                    }
+                    return false;
+                } else if (that.CUR_BLOCK == "FAMILYCARD") {
+                    if (e && e.keyCode == 27 || e && e.keyCode == 8 || e && e.keyCode == 13) {
+                        if (familyCard.isFailed) {
+                            familyCard.failedGet();
+                        } else {
+                            familyCard.finishGet();
+                        }
+
+                        that.CUR_BLOCK = "PAGE_BODY";
+                        $("#pageBody").focus();
+                        $('#viewDetail').css('left', '1280px');
+                        setTimeout(function () {
+                            that.PANO.changeArea(that.AREA);
+                            that.CUR_BLOCK = 'PANO';
+                        }, 1000);
+                        return false;
                     }
                     return false;
                 } else if (that.CUR_BLOCK == "DETAIL") {

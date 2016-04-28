@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>地图街景</title>
     <link href="index.css" rel="stylesheet" type="text/css"/>
-    <link href="familyCard.css" rel="stylesheet" type="text/css"/>
+    <link href="../familyCard/familyCard.css" rel="stylesheet" type="text/css"/>
     <script src="../../lib/closeFunction.js" type="text/javascript"></script>
 </head>
 <body>
@@ -20,10 +20,23 @@
         <img id="saoma" src="">
     </div>
 
-    <div class="fc-list">
+    <div id="fc-list" class="fc-list">
         <div class="fc-one">
-            <img src="images-FC/"
+            <img src="../familyCard/images-FC/c6032f64-e6c9-4d83-a00e-5965a0fd959c.png">
+            <div id="c6032f64-e6c9-4d83-a00e-5965a0fd959c-num" class="num">×0</div>
         </div>
+        <div class="fc-one">
+            <img src="../familyCard/images-FC/8296622e-7a9b-4dfd-ac67-d7607cf9f98e.png">
+            <div id="8296622e-7a9b-4dfd-ac67-d7607cf9f98e-num" class="num">×0</div>
+        </div>
+        <div class="fc-one">
+            <img src="../familyCard/images-FC/db75b3fc-b0c6-427f-acb5-12fab39018cb.png">
+            <div id="db75b3fc-b0c6-427f-acb5-12fab39018cb-num" class="num">×0</div>
+
+        </div>
+    </div>
+    <div id="familyCardLogo" class="familyCardLogo" tabindex="-1">
+        <img id="familyCardQRCode" src="http://172.16.188.13/api/common/Image/qrCode.png?text=http://t.cn/RG8jxjR&size=150">
     </div>
 </div>
 <script id="menuDot" type="text/x-dot-template">
@@ -38,6 +51,7 @@
 <script src="../../lib/doT.min.js"></script>
 <script src="../../lib/common.js"></script>
 <script id="GHSMLib" src="http://172.16.188.26/web/GHSMLib/GHSMLib.js" type="text/javascript"></script>
+<script src="../familyCard/familyCard.js" type="text/javascript"></script>
 <script src="index.js" type="text/javascript"></script>
 </body>
 </html>
