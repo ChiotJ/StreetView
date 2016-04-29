@@ -181,7 +181,8 @@
                     GHSMLib.keyCon.keyListener({
                         id: "familyCardLogo",
                         enter: function (item) {
-
+                            window.location.href = "http://172.16.188.26/web/family/pages/familyCard/index.html";
+                            return false;
                         },
                         right: function (item) {
                             $("#menu").find("li")[GHSMLib.keyCon.index["menu"]].focus();
