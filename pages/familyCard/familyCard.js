@@ -3,6 +3,7 @@
  */
 !function (window, document) {
     var INF_URL = "http://10.191.255.121:18080/family/";
+    /*var INF_URL = "http://localhost:82/";*/
 
     var showFamilyCard = function () {
         $.ajax({
@@ -23,6 +24,19 @@
 
                 } else {
                     console.error("获取亲情卡数量失败");
+                }
+            }
+        });
+
+        $.ajax({
+            url: INF_URL + "lottery/getFamilyTimes?deviceNo=" + GHSMLib.cardId,
+            type: "GET",
+            success: function (data) {
+                if (data.success) {
+                    $("#lotteryTimes").html(data.result);
+                    $(".lotteryTimes").css("opacity", "1");
+                } else {
+                    console.error("获取抽奖次数失败");
                 }
             }
         });
@@ -127,12 +141,12 @@
                     var escapeDeviceNo = data.result.encryStr;
                     var downloadurl = "http://t.cn/RG8jxjR";
                     var qrurl = "http://172.16.188.13/api/common/Image/qrCode.png?text="
-                        + downloadurl + "?stbid=" + escapeDeviceNo + "&size=";
+                        + downloadurl + "?stbid=" + escapeDeviceNo + "%26isOpen=false&size=150";
 
                     if (index) {
-                        $("#familyCardQRCode").attr("src", qrurl + 150);
+                        $("#familyCardQRCode").attr("src", qrurl);
                     } else {
-                        $($("#finishGetFamilyCard").find("img")[1]).attr("src", qrurl + 140);
+                        $($("#finishGetFamilyCard").find("img")[1]).attr("src", qrurl);
                     }
 
                 }
@@ -168,9 +182,43 @@
         getInterval: null,
         hideTimeout: null,
         init: function (option) {
+            var self = this;
             if (option) {
                 if (option.show) {
                     showFamilyCard();
+
+                    var sock = new SockJS(INF_URL + "tvapi?token=" + GHSMLib.cardId);
+                    var client = Stomp.over(sock);
+
+                    client.debug = function (msg) {
+                        //console.debug(msg)
+                    };
+
+                    client.connect({}, function () {
+                        client.subscribe('/user/topic/receive', function (data) {
+                            data = eval("[" + data.body + "]")[0];
+                            if (data && data.subject == "activity") {
+                                if (data.cmdType == "reduceTimes") {
+                                    showFamilyCard();
+                                } else if (data.cmdType == "firstBind") {
+                                    if (self.isFailed) {
+                                        getFamilyCard();
+                                    }
+                                }
+                            }
+
+                        });
+
+                    });
+
+
+                    $(document).unload(function () {
+
+                        client.disconnect(function () {
+
+                            sock.close();
+                        });
+                    });
                 }
                 if (option.getFamilyCard) {
                     getQRCode();
@@ -211,7 +259,7 @@
             var self = this, $finishGetFamilyCard = $("#finishGetFamilyCard"), failedFun = function () {
                 self.isFailed = true;
                 $($finishGetFamilyCard.find("img")[0]).attr("src", "../familyCard/images-FC/failedGetCard.png");
-                $($finishGetFamilyCard.find("img")[1]).css("top", "130px").css("left", "500px");
+                $($finishGetFamilyCard.find("img")[1]).css("top", "130px").css("left", "500px").show();
 
                 setTimeout(function () {
                     $finishGetFamilyCard.css("opacity", "1");
@@ -235,12 +283,13 @@
                             }
                             if (isAddTimes == 2) {
                                 $($finishGetFamilyCard.find("img")[0]).attr("src", "../familyCard/images-FC/getLotteryTimes.png");
-                                $($finishGetFamilyCard.find("img")[1]).css("top", "130px").css("left", "265px");
+                                $($finishGetFamilyCard.find("img")[1]).hide();
+                                $("#lotteryTimes").html(parseInt($("#lotteryTimes").html()) + 1);
                             } else {
                                 $($finishGetFamilyCard.find("img")[0]).attr("src", "../familyCard/images-FC/getFamilyCard.png");
-                                $($finishGetFamilyCard.find("img")[1]).css("top", "175px").css("left", "265px");
+                                $($finishGetFamilyCard.find("img")[1]).hide();
                             }
-
+                            self.isFailed = false;
 
                             setTimeout(function () {
                                 $finishGetFamilyCard.css("opacity", "1");
@@ -258,6 +307,7 @@
         },
         failedGet: function () {
             familyCard.isGeting = false;
+            self.isFailed = false;
             familyCard.getInterval = getIntervalFun();
             $("#finishGetFamilyCard").css("opacity", "0");
         },
