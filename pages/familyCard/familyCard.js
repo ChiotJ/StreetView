@@ -2,8 +2,7 @@
  * Created by jian_ on 2016/4/26.
  */
 !function (window, document) {
-    var INF_URL = "http://10.191.255.121:18080/family/";
-    /*var INF_URL = "http://localhost:82/";*/
+    var INF_URL = "http://172.16.188.26/family/";
 
     var showFamilyCard = function () {
         $.ajax({
@@ -45,7 +44,7 @@
 
     var radix = 0, timestamp = "", cardId = "", FCList = [];
     var getFamilyCard = function () {
-        var lookedScene = parseInt(window.sessionStorage.getItem("lookedScene"));
+        var lookedScene = parseInt(window.sessionStorage.getItem("lookedScene" + GHSMLib.cardId));
         //console.log("lookedScene:" + lookedScene + " === timestamp:" + timestamp);
         if (lookedScene && lookedScene > 2) {
             var ran = parseInt(Math.random() * 10);
@@ -135,7 +134,7 @@
     var getQRCode = function (index) {
         $.ajax({
             type: "GET",
-            url: "http://172.16.188.26/family/stb/deviceNoEscape?deviceNo=" + GHSMLib.cardId,
+            url: INF_URL + "stb/deviceNoEscape?deviceNo=" + GHSMLib.cardId,
             success: function (data) {
                 if (data && data.success) {
                     var escapeDeviceNo = data.result.encryStr;
@@ -161,7 +160,7 @@
         $.ajax({
             type: "GET",
             async: false,
-            url: "http://172.16.188.26/family/user/tv/listStbUser?deviceNo=" + GHSMLib.cardId,
+            url: INF_URL + "user/tv/listStbUser?deviceNo=" + GHSMLib.cardId,
             success: function (data) {
                 if (data) {
                     result = data.result.length;
@@ -317,7 +316,7 @@
             familyCard.isGeting = false;
             familyCard.getInterval = getIntervalFun();
             $("#finishGetFamilyCard").css("opacity", "0");
-            window.sessionStorage.setItem("lookedScene", 0);
+            window.sessionStorage.setItem("lookedScene" + GHSMLib.cardId, 0);
         }
     }
 }(window, document);

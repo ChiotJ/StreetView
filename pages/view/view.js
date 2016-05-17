@@ -21,9 +21,13 @@
                 }
             },
             init: function () {
+                var that = this;
                 this.initPano();
                 this.initListener();
-                this.getDetail();
+                setTimeout(function(){
+                    that.getDetail();
+                },5000);
+
                 familyCard.init({
                     show: true,
                     getFamilyCard: true

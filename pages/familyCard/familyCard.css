@@ -36,11 +36,12 @@
     text-align: center;
     right: 70px;
     top: 190px;
-    background-color: #F5A623;
+    background-color: rgba(0,0,0,0.2);
     color: #FFFFFF;
-    font-size: 20px;
-    text-indent: 1em;
+    font-size: 24px;
     width: 280px;
+    height: 50px;
+    line-height: 50px;
     opacity: 0;
     transition: all 0.5s;
 
@@ -49,6 +50,8 @@
 .lotteryTimes #lotteryTimes{
     margin: 0 5px;
     display: inline;
+    color: #F36E5D;
+    font-size: 28px;
 }
 
 .getFamilyCard {
