@@ -671,7 +671,7 @@
             search: function () {
                 var that = this, cLat = Lib.MAP.getCenter().getLat(), cLng = Lib.MAP.getCenter().getLng();
                 $.ajax({
-                    url: TXConneturl + 'http://120.24.89.67/Mobile/Qmap/getLoupanList?',
+                    url: TXConneturl + 'http://app.szzunhao.com/Mobile/Qmap/getLoupanList?',
                     type: "GET",
                     data: {
                         lat: cLat,
@@ -791,7 +791,7 @@
                 var that = this;
                 //请求房源详情
                 $.ajax({
-                    url: TXConneturl + 'http://120.24.89.67/Mobile/Qmap/getLoupanDetail?',
+                    url: TXConneturl + 'http://app.szzunhao.com/Mobile/Qmap/getLoupanDetail?',
                     type: "GET",
                     data: {
                         id: id
@@ -862,7 +862,7 @@
                 lng1 = Lib.MAP.getCenter().getLng();
 
                 $.ajax({
-                    url: TXConneturl + 'http://120.24.89.67/Mobile/TvSearch/getSearchList?',
+                    url: TXConneturl + 'http://app.szzunhao.com/Mobile/TvSearch/getSearchList?',
                     type: "GET",
                     data: {
                         title: input,

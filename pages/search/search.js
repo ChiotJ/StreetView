@@ -20,9 +20,9 @@
             Lib.mapInit(this, GHSMLib.cardId);
             $('#hintContainer').attr('class', 'searchMap').show();
             this.keyListener();
-            window.onload = function () {
+            setTimeout(function () {
                 Lib.mapFocus();
-            };
+            }, 1000);
         },
         centerChange: function () {
             var a = Math.abs(Lib.MAP.center.lat - vicinity.lat);
@@ -180,11 +180,14 @@
                 left: function () {
                     $("#pageBody").focus();
                     self.menus_effect(false);
-                    var flag = Pano.showPano();
-                    if (!flag) {
-                        $('#dialog').html('此地暂无街景，敬请期待').fadeIn();
-                        Lib.mapFocus();
-                    }
+                    setTimeout(function () {
+                        var flag = Pano.showPano();
+                        if (!flag) {
+                            $('#dialog').html('此地暂无街景，敬请期待').fadeIn();
+                            Lib.mapFocus();
+                        }
+                    }, 200);
+
                 },
                 right: function () {
                     $("#pageBody").focus();

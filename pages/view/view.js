@@ -24,9 +24,7 @@
                 var that = this;
                 this.initPano();
                 this.initListener();
-                setTimeout(function(){
-                    that.getDetail();
-                },5000);
+                that.getDetail();
 
                 familyCard.init({
                     show: true,
@@ -61,6 +59,7 @@
             },
             control: function (e) {
                 var that = this;
+                console.log(that.CUR_BLOCK);
 
                 if (that.CUR_BLOCK == "PANO") {
                     if (e && e.keyCode == 27 || e && e.keyCode == 8) { // 按 Esc/返回
@@ -280,9 +279,9 @@
 
                 document.getElementById("viewBody_wrapper").onkeydown = function (e) {
                     if (e && e.keyCode == 40) {
-                        that.CUR_BLOCK = "PAGE_BODY";
-                        $("#pageBody").focus();
                         if ((that.PANO.PANO.planeInfo || !that.PANO.PANO.planeInfo) && that.DETAIL) {
+                            that.CUR_BLOCK = "PAGE_BODY";
+                            $("#pageBody").focus();
                             $('#viewDetail').css('left', '0px');
                             that.AREA = that.PANO.area;
                             that.PANO.changeArea(-1);
